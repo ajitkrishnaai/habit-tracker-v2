@@ -5,7 +5,7 @@
  * Handles login, logout, token management, and authentication state.
  *
  * Required Scopes:
- * - https://www.googleapis.com/auth/spreadsheets (full access to user's sheets)
+ * - https://www.googleapis.com/auth/drive.file (access only to files created by this app)
  * - https://www.googleapis.com/auth/userinfo.profile (user profile info)
  */
 
@@ -39,8 +39,9 @@ let userProfile: UserProfile | null = null;
 let tokenClient: any = null; // Google Identity Services token client
 
 // Required OAuth scopes
+// Using drive.file for security: only access files created by this app
 const SCOPES = [
-  'https://www.googleapis.com/auth/spreadsheets',
+  'https://www.googleapis.com/auth/drive.file',
   'https://www.googleapis.com/auth/userinfo.profile',
 ].join(' ');
 

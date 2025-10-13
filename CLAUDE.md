@@ -9,7 +9,7 @@ This is a **Habit Tracker Web Application** - a mobile-first Progressive Web App
 ### Core Architecture
 
 - **Frontend**: Single Page Application (SPA) with client-side routing
-- **Authentication**: Google OAuth 2.0 with minimal permissions (spreadsheet access only)
+- **Authentication**: Google OAuth 2.0 with minimal permissions (access only to files created by this app)
 - **Data Storage**: Dual-layer architecture
   - **Local**: IndexedDB/localStorage for offline-first functionality
   - **Remote**: Google Sheets API v4 as the persistent data store
@@ -92,7 +92,7 @@ When implementing features, follow the completion protocol from `agents/process-
 The PRD (`tasks/0001-prd-habit-tracker.md`) is the source of truth. Key requirements:
 
 ### Critical Technical Requirements
-- **OAuth Scopes**: `https://www.googleapis.com/auth/spreadsheets` and `userinfo.profile` only
+- **OAuth Scopes**: `https://www.googleapis.com/auth/drive.file` and `userinfo.profile` only (most restrictive scope - only files created by this app)
 - **Token Storage**: OAuth tokens in memory only (never localStorage)
 - **Performance**: <3s initial load on 4G; toggles respond immediately with optimistic UI
 - **Offline**: App must function 100% offline with queued sync
