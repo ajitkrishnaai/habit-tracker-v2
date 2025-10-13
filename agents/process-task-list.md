@@ -19,9 +19,10 @@ Guidelines for managing task lists in markdown files to track progress on comple
         ```
         git commit -m "feat: add payment validation logic" -m "- Validates card type and expiry" -m "- Adds unit tests for edge cases" -m "Related to T123 in PRD"
         ```
+  4. If a sub-task requires user input (like to go an setup something on Google Cloud) then ask the user for this. DON'T MAKE A GUESS. 
   3. Once all the subtasks are marked completed and changes have been committed, mark the **parent task** as completed.
 
-   - Stop after each parent‑task and wait for the user's go‑ahead.
+   - Stop after each parent‑task and wait for the user's go‑ahead before going to the next parent task.
 
 ## Task List Maintenance
 

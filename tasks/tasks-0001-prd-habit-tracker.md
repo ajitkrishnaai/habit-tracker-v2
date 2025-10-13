@@ -159,22 +159,22 @@ Based on PRD: `0001-prd-habit-tracker.md`
 ## Tasks
 
 - [ ] 1.0 Project Setup & Configuration
-  - [ ] 1.1 Initialize new project with chosen build tool (Vite recommended for modern SPA)
-  - [ ] 1.2 Create `package.json` and install core dependencies (framework, router, date library)
-  - [ ] 1.3 Install Google API dependencies (`gapi-script` or `@react-oauth/google`, Google Sheets API client)
-  - [ ] 1.4 Set up TypeScript configuration (recommended) or JavaScript with JSDoc
-  - [ ] 1.5 Configure ESLint and Prettier for code quality
-  - [ ] 1.6 Create folder structure (`src/pages/`, `src/components/`, `src/services/`, `src/utils/`, `src/types/`, `src/styles/`)
-  - [ ] 1.7 Set up environment variables file (`.env.example` with `VITE_GOOGLE_CLIENT_ID`, `VITE_GOOGLE_API_KEY`)
-  - [ ] 1.8 Configure PWA plugin/settings for offline capability and installability
-  - [ ] 1.9 Create PWA manifest file (`public/manifest.json`) with app metadata and icons
-  - [ ] 1.10 Set up service worker configuration for offline caching
-  - [ ] 1.11 Configure client-side routing (React Router, Vue Router, or vanilla routing)
-  - [ ] 1.12 Create basic HTML entry point (`index.html`) with viewport meta tags
-  - [ ] 1.13 Set up main CSS file with CSS variables for colors, spacing, typography
-  - [ ] 1.14 Add `.gitignore` file (ignore `node_modules/`, `.env.local`, `dist/`, `.DS_Store`)
-  - [ ] 1.15 Initialize git repository and make initial commit
-  - [ ] 1.16 Test: Verify development server runs and displays basic page
+  - [x] 1.1 Initialize new project with chosen build tool (Vite recommended for modern SPA)
+  - [x] 1.2 Create `package.json` and install core dependencies (framework, router, date library)
+  - [x] 1.3 Install Google API dependencies (`gapi-script` or `@react-oauth/google`, Google Sheets API client)
+  - [x] 1.4 Set up TypeScript configuration (recommended) or JavaScript with JSDoc
+  - [x] 1.5 Configure ESLint and Prettier for code quality
+  - [x] 1.6 Create folder structure (`src/pages/`, `src/components/`, `src/services/`, `src/utils/`, `src/types/`, `src/styles/`)
+  - [x] 1.7 Set up environment variables file (`.env.example` with `VITE_GOOGLE_CLIENT_ID`, `VITE_GOOGLE_API_KEY`)
+  - [x] 1.8 Configure PWA plugin/settings for offline capability and installability
+  - [x] 1.9 Create PWA manifest file (`public/manifest.json`) with app metadata and icons
+  - [x] 1.10 Set up service worker configuration for offline caching
+  - [x] 1.11 Configure client-side routing (React Router, Vue Router, or vanilla routing)
+  - [x] 1.12 Create basic HTML entry point (`index.html`) with viewport meta tags
+  - [x] 1.13 Set up main CSS file with CSS variables for colors, spacing, typography
+  - [x] 1.14 Add `.gitignore` file (ignore `node_modules/`, `.env.local`, `dist/`, `.DS_Store`)
+  - [x] 1.15 Initialize git repository and make initial commit
+  - [x] 1.16 Test: Verify development server runs and displays basic page
 
 - [ ] 2.0 Authentication & Google Integration
   - [ ] 2.1 Create Google Cloud Console project at console.cloud.google.com
