@@ -176,35 +176,35 @@ Based on PRD: `0001-prd-habit-tracker.md`
   - [x] 1.15 Initialize git repository and make initial commit
   - [x] 1.16 Test: Verify development server runs and displays basic page
 
-- [ ] 2.0 Authentication & Google Integration
-  - [ ] 2.1 Create Google Cloud Console project at console.cloud.google.com
-  - [ ] 2.2 Enable Google Sheets API and Google Drive API in the Cloud Console
-  - [ ] 2.3 Configure OAuth consent screen (app name, logo, scopes, privacy policy URL)
-  - [ ] 2.4 Create OAuth 2.0 client ID credentials for web application
-  - [ ] 2.5 Add authorized JavaScript origins and redirect URIs
-  - [ ] 2.6 Create authentication service (`src/services/auth.js`) with Google Identity Services
-  - [ ] 2.7 Implement `login()` function that initiates Google OAuth flow with required scopes
-  - [ ] 2.8 Implement `logout()` function to clear authentication state
-  - [ ] 2.9 Implement `getAccessToken()` function to retrieve current access token
-  - [ ] 2.10 Implement `isAuthenticated()` function to check authentication status
-  - [ ] 2.11 Create token manager utility (`src/utils/tokenManager.js`) for secure token storage in memory
-  - [ ] 2.12 Implement automatic token refresh before expiration
-  - [ ] 2.13 Create Google Sheets service (`src/services/googleSheets.js`) with API client initialization
-  - [ ] 2.14 Implement `createNewSheet(sheetName)` function to create Google Sheet in user's Drive
-  - [ ] 2.15 Implement `initializeSheetStructure(sheetId)` to create Habits, Logs, and Metadata tabs
-  - [ ] 2.16 Implement `checkSheetExists(sheetId)` to verify sheet accessibility
-  - [ ] 2.17 Implement batch read operations (`readHabits()`, `readLogs()`, `readMetadata()`)
-  - [ ] 2.18 Implement batch write operations (`writeHabits()`, `writeLogs()`, `writeMetadata()`)
-  - [ ] 2.19 Create protected route component/logic to redirect unauthenticated users to welcome page
-  - [ ] 2.20 Handle OAuth errors gracefully (insufficient permissions, user denial, network errors)
-  - [ ] 2.21 Test: Verify OAuth flow works end-to-end
-  - [ ] 2.22 Test: Verify token refresh works automatically
-  - [ ] 2.23 Test: Verify Google Sheet creation and tab initialization
+- [x] 2.0 Authentication & Google Integration
+  - [x] 2.1 Create Google Cloud Console project at console.cloud.google.com
+  - [x] 2.2 Enable Google Sheets API and Google Drive API in the Cloud Console
+  - [x] 2.3 Configure OAuth consent screen (app name, logo, scopes, privacy policy URL)
+  - [x] 2.4 Create OAuth 2.0 client ID credentials for web application
+  - [x] 2.5 Add authorized JavaScript origins and redirect URIs
+  - [x] 2.6 Create authentication service (`src/services/auth.ts`) with Google Identity Services
+  - [x] 2.7 Implement `login()` function that initiates Google OAuth flow with required scopes
+  - [x] 2.8 Implement `logout()` function to clear authentication state
+  - [x] 2.9 Implement `getAccessToken()` function to retrieve current access token
+  - [x] 2.10 Implement `isAuthenticated()` function to check authentication status
+  - [x] 2.11 Create token manager utility (`src/utils/tokenManager.ts`) for secure token storage in memory
+  - [x] 2.12 Implement automatic token refresh before expiration
+  - [x] 2.13 Create Google Sheets service (`src/services/googleSheets.ts`) with API client initialization
+  - [x] 2.14 Implement `createNewSheet(sheetName)` function to create Google Sheet in user's Drive
+  - [x] 2.15 Implement `initializeSheetStructure(sheetId)` to create Habits, Logs, and Metadata tabs
+  - [x] 2.16 Implement `checkSheetExists(sheetId)` to verify sheet accessibility
+  - [x] 2.17 Implement batch read operations (`readHabits()`, `readLogs()`, `readMetadata()`)
+  - [x] 2.18 Implement batch write operations (`writeHabits()`, `writeLogs()`, `writeMetadata()`)
+  - [x] 2.19 Create protected route component/logic to redirect unauthenticated users to welcome page
+  - [x] 2.20 Handle OAuth errors gracefully (insufficient permissions, user denial, network errors)
+  - [x] 2.21 Test: Verify OAuth flow works end-to-end
+  - [x] 2.22 Test: Verify token refresh works automatically
+  - [x] 2.23 Test: Verify Google Sheet creation and tab initialization
 
 - [ ] 3.0 Data Layer & Offline Storage
-  - [ ] 3.1 Define TypeScript interfaces or JSDoc types for Habit entity (habit_id, name, category, status, created_date, modified_date)
-  - [ ] 3.2 Define TypeScript interfaces or JSDoc types for LogEntry entity (log_id, habit_id, date, status, notes, timestamp)
-  - [ ] 3.3 Define TypeScript interfaces or JSDoc types for Metadata entity (sheet_version, last_sync, user_id, sheet_id)
+  - [x] 3.1 Define TypeScript interfaces or JSDoc types for Habit entity (habit_id, name, category, status, created_date, modified_date)
+  - [x] 3.2 Define TypeScript interfaces or JSDoc types for LogEntry entity (log_id, habit_id, date, status, notes, timestamp)
+  - [x] 3.3 Define TypeScript interfaces or JSDoc types for Metadata entity (sheet_version, last_sync, user_id, sheet_id)
   - [ ] 3.4 Create storage service (`src/services/storage.js`) using IndexedDB (recommended) or localStorage
   - [ ] 3.5 Implement `initDB()` function to initialize IndexedDB with object stores for habits, logs, metadata
   - [ ] 3.6 Implement `saveHabits(habits)` function to save habits to local storage

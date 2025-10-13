@@ -1,41 +1,49 @@
-import { createBrowserRouter, Navigate } from 'react-router-dom';
+import { createBrowserRouter } from 'react-router-dom';
+import { WelcomePage } from './pages/WelcomePage';
+import { ProtectedRoute } from './components/ProtectedRoute';
 
-// Pages will be imported here as they are created
-// import WelcomePage from './pages/WelcomePage';
-// import DailyLogPage from './pages/DailyLogPage';
-// import ProgressPage from './pages/ProgressPage';
-// import ManageHabitsPage from './pages/ManageHabitsPage';
-// import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
-// import TermsOfServicePage from './pages/TermsOfServicePage';
+// Placeholder pages (will be implemented in later tasks)
+const DailyLogPage = () => <div style={{ padding: '2rem' }}><h1>Daily Log Page (Coming Soon)</h1></div>;
+const ProgressPage = () => <div style={{ padding: '2rem' }}><h1>Progress Page (Coming Soon)</h1></div>;
+const ManageHabitsPage = () => <div style={{ padding: '2rem' }}><h1>Manage Habits Page (Coming Soon)</h1></div>;
+const PrivacyPolicyPage = () => <div style={{ padding: '2rem' }}><h1>Privacy Policy (Coming Soon)</h1></div>;
+const TermsOfServicePage = () => <div style={{ padding: '2rem' }}><h1>Terms of Service (Coming Soon)</h1></div>;
 
 export const router = createBrowserRouter([
   {
     path: '/',
-    element: <Navigate to="/welcome" replace />,
+    element: <WelcomePage />,
   },
-  // Routes will be added as pages are created
-  // {
-  //   path: '/welcome',
-  //   element: <WelcomePage />,
-  // },
-  // {
-  //   path: '/daily',
-  //   element: <DailyLogPage />,
-  // },
-  // {
-  //   path: '/progress',
-  //   element: <ProgressPage />,
-  // },
-  // {
-  //   path: '/manage',
-  //   element: <ManageHabitsPage />,
-  // },
-  // {
-  //   path: '/privacy',
-  //   element: <PrivacyPolicyPage />,
-  // },
-  // {
-  //   path: '/terms',
-  //   element: <TermsOfServicePage />,
-  // },
+  {
+    path: '/daily-log',
+    element: (
+      <ProtectedRoute>
+        <DailyLogPage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: '/progress',
+    element: (
+      <ProtectedRoute>
+        <ProgressPage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: '/manage-habits',
+    element: (
+      <ProtectedRoute>
+        <ManageHabitsPage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: '/privacy',
+    element: <PrivacyPolicyPage />,
+  },
+  {
+    path: '/terms',
+    element: <TermsOfServicePage />,
+  },
 ]);
