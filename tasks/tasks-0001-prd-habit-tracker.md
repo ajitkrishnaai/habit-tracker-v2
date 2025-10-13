@@ -158,7 +158,7 @@ Based on PRD: `0001-prd-habit-tracker.md`
 
 ## Tasks
 
-- [ ] 1.0 Project Setup & Configuration
+- [x] 1.0 Project Setup & Configuration
   - [x] 1.1 Initialize new project with chosen build tool (Vite recommended for modern SPA)
   - [x] 1.2 Create `package.json` and install core dependencies (framework, router, date library)
   - [x] 1.3 Install Google API dependencies (`gapi-script` or `@react-oauth/google`, Google Sheets API client)
