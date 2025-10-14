@@ -239,34 +239,34 @@ Based on PRD: `0001-prd-habit-tracker.md`
   - [x] 3.35 Test: Verify conflict resolution works with last-write-wins logic
   - [x] 3.36 Test: Verify data validation catches invalid inputs
 
-- [ ] 4.0 Core Features - Habit Management
-  - [ ] 4.1 Create ManageHabitsPage component (`src/pages/ManageHabitsPage.js`)
-  - [ ] 4.2 Create HabitForm component (`src/components/HabitForm.js`) for adding/editing habits
-  - [ ] 4.3 Implement form fields: habit name input (max 100 chars with counter), category input
-  - [ ] 4.4 Implement form validation: required name, character limit, no empty strings
-  - [ ] 4.5 Implement duplicate name check (case-insensitive) before saving
-  - [ ] 4.6 Display inline validation errors ("Habit name cannot be empty", "Habit already exists")
-  - [ ] 4.7 Implement "Add Habit" button that saves new habit to local storage and triggers sync
-  - [ ] 4.8 Generate UUID for new habits using UUID utility
-  - [ ] 4.9 Set created_date and modified_date timestamps (ISO 8601 format)
-  - [ ] 4.10 Create HabitListItem component (`src/components/HabitListItem.js`) for displaying habits
-  - [ ] 4.11 Display habit name, category (if present), and action buttons (edit, remove)
-  - [ ] 4.12 Implement edit functionality: populate form with existing habit data
-  - [ ] 4.13 Update modified_date timestamp when editing habits
-  - [ ] 4.14 Implement remove/delete functionality: mark habit status as 'inactive' (not permanent delete)
-  - [ ] 4.15 Show confirmation prompt before removing habit ("Are you sure?")
-  - [ ] 4.16 Create empty state component for when no habits exist ("You haven't added any habits yet...")
-  - [ ] 4.17 Display list of all active habits (status === 'active') sorted by created_date
-  - [ ] 4.18 Implement category badge/tag display for visual organization
-  - [ ] 4.19 Add optimistic UI updates (show changes immediately, sync in background)
-  - [ ] 4.20 Display sync status indicator during save operations
-  - [ ] 4.21 Handle sync errors gracefully with retry option
-  - [ ] 4.22 Test: Add a new habit and verify it appears in list
-  - [ ] 4.23 Test: Edit an existing habit and verify changes are saved
-  - [ ] 4.24 Test: Remove a habit and verify it's marked inactive (not visible, but data retained)
-  - [ ] 4.25 Test: Verify duplicate habit names are rejected
-  - [ ] 4.26 Test: Verify character limit validation works (100 chars)
-  - [ ] 4.27 Test: Verify empty state displays when no habits exist
+- [x] 4.0 Core Features - Habit Management
+  - [x] 4.1 Create ManageHabitsPage component (`src/pages/ManageHabitsPage.tsx`)
+  - [x] 4.2 Create HabitForm component (`src/components/HabitForm.tsx`) for adding/editing habits
+  - [x] 4.3 Implement form fields: habit name input (max 100 chars with counter), category input
+  - [x] 4.4 Implement form validation: required name, character limit, no empty strings
+  - [x] 4.5 Implement duplicate name check (case-insensitive) before saving
+  - [x] 4.6 Display inline validation errors ("Habit name cannot be empty", "Habit already exists")
+  - [x] 4.7 Implement "Add Habit" button that saves new habit to local storage and triggers sync
+  - [x] 4.8 Generate UUID for new habits using UUID utility
+  - [x] 4.9 Set created_date and modified_date timestamps (ISO 8601 format)
+  - [x] 4.10 Create HabitListItem component (`src/components/HabitListItem.tsx`) for displaying habits
+  - [x] 4.11 Display habit name, category (if present), and action buttons (edit, remove)
+  - [x] 4.12 Implement edit functionality: populate form with existing habit data
+  - [x] 4.13 Update modified_date timestamp when editing habits
+  - [x] 4.14 Implement remove/delete functionality: mark habit status as 'inactive' (not permanent delete)
+  - [x] 4.15 Show confirmation prompt before removing habit ("Are you sure?")
+  - [x] 4.16 Create empty state component for when no habits exist ("You haven't added any habits yet...")
+  - [x] 4.17 Display list of all active habits (status === 'active') sorted by created_date
+  - [x] 4.18 Implement category badge/tag display for visual organization
+  - [x] 4.19 Add optimistic UI updates (show changes immediately, sync in background)
+  - [x] 4.20 Display sync status indicator during save operations
+  - [x] 4.21 Handle sync errors gracefully with retry option
+  - [x] 4.22 Test: Add a new habit and verify it appears in list
+  - [x] 4.23 Test: Edit an existing habit and verify changes are saved
+  - [x] 4.24 Test: Remove a habit and verify it's marked inactive (not visible, but data retained)
+  - [x] 4.25 Test: Verify duplicate habit names are rejected
+  - [x] 4.26 Test: Verify character limit validation works (100 chars)
+  - [x] 4.27 Test: Verify empty state displays when no habits exist
 
 - [ ] 5.0 Core Features - Daily Logging Interface
   - [ ] 5.1 Create DailyLogPage component (`src/pages/DailyLogPage.js`)

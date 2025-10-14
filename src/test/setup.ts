@@ -5,6 +5,7 @@
  */
 
 import 'fake-indexeddb/auto';
+import '@testing-library/jest-dom';
 
 // Mock window.crypto for UUID generation
 if (typeof global.crypto === 'undefined') {
