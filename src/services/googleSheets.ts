@@ -481,3 +481,90 @@ export const writeMetadata = async (sheetId: string, metadata: Metadata): Promis
     throw error;
   }
 };
+
+/**
+ * Google Sheets Service
+ * Wrapper service that automatically gets sheetId from metadata
+ * This is used by syncService for easier API calls
+ */
+class GoogleSheetsService {
+  private cachedSheetId: string | null = null;
+
+  /**
+   * Get the current sheet ID from metadata
+   */
+  private async getSheetId(): Promise<string> {
+    if (this.cachedSheetId) {
+      return this.cachedSheetId;
+    }
+
+    // Import here to avoid circular dependency
+    const { storageService } = await import('./storage');
+    const metadata = await storageService.getMetadata();
+
+    if (!metadata || !metadata.sheet_id) {
+      throw new Error('No sheet ID found in metadata. User needs to authenticate first.');
+    }
+
+    this.cachedSheetId = metadata.sheet_id;
+    return this.cachedSheetId;
+  }
+
+  /**
+   * Clear cached sheet ID (useful after logout)
+   */
+  clearCache(): void {
+    this.cachedSheetId = null;
+  }
+
+  /**
+   * Read habits from Google Sheets
+   */
+  async readHabits(): Promise<Habit[]> {
+    const sheetId = await this.getSheetId();
+    return readHabits(sheetId);
+  }
+
+  /**
+   * Write habits to Google Sheets
+   */
+  async writeHabits(habits: Habit[]): Promise<void> {
+    const sheetId = await this.getSheetId();
+    return writeHabits(sheetId, habits);
+  }
+
+  /**
+   * Read logs from Google Sheets
+   */
+  async readLogs(): Promise<LogEntry[]> {
+    const sheetId = await this.getSheetId();
+    return readLogs(sheetId);
+  }
+
+  /**
+   * Write logs to Google Sheets
+   */
+  async writeLogs(logs: LogEntry[]): Promise<void> {
+    const sheetId = await this.getSheetId();
+    return writeLogs(sheetId, logs);
+  }
+
+  /**
+   * Read metadata from Google Sheets
+   */
+  async readMetadata(): Promise<Metadata | null> {
+    const sheetId = await this.getSheetId();
+    return readMetadata(sheetId);
+  }
+
+  /**
+   * Write metadata to Google Sheets
+   */
+  async writeMetadata(metadata: Metadata): Promise<void> {
+    const sheetId = await this.getSheetId();
+    return writeMetadata(sheetId, metadata);
+  }
+}
+
+// Export singleton instance
+export const googleSheetsService = new GoogleSheetsService();

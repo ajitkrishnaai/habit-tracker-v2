@@ -201,43 +201,43 @@ Based on PRD: `0001-prd-habit-tracker.md`
   - [x] 2.22 Test: Verify token refresh works automatically
   - [x] 2.23 Test: Verify Google Sheet creation and tab initialization
 
-- [ ] 3.0 Data Layer & Offline Storage
+- [x] 3.0 Data Layer & Offline Storage
   - [x] 3.1 Define TypeScript interfaces or JSDoc types for Habit entity (habit_id, name, category, status, created_date, modified_date)
   - [x] 3.2 Define TypeScript interfaces or JSDoc types for LogEntry entity (log_id, habit_id, date, status, notes, timestamp)
   - [x] 3.3 Define TypeScript interfaces or JSDoc types for Metadata entity (sheet_version, last_sync, user_id, sheet_id)
-  - [ ] 3.4 Create storage service (`src/services/storage.js`) using IndexedDB (recommended) or localStorage
-  - [ ] 3.5 Implement `initDB()` function to initialize IndexedDB with object stores for habits, logs, metadata
-  - [ ] 3.6 Implement `saveHabits(habits)` function to save habits to local storage
-  - [ ] 3.7 Implement `getHabits()` function to retrieve all habits from local storage
-  - [ ] 3.8 Implement `saveHabit(habit)` function to save single habit
-  - [ ] 3.9 Implement `deleteHabit(habitId)` function to mark habit as inactive
-  - [ ] 3.10 Implement `saveLogs(logs)` function to save log entries to local storage
-  - [ ] 3.11 Implement `getLogs(habitId?, date?)` function to retrieve logs with optional filters
-  - [ ] 3.12 Implement `saveLog(log)` function to save single log entry
-  - [ ] 3.13 Implement `saveMetadata(metadata)` function to save app metadata
-  - [ ] 3.14 Implement `getMetadata()` function to retrieve metadata
-  - [ ] 3.15 Create sync queue service (`src/services/syncQueue.js`) to track pending changes
-  - [ ] 3.16 Implement `addToQueue(operation, data)` to queue offline changes
-  - [ ] 3.17 Implement `getQueue()` to retrieve all pending operations
-  - [ ] 3.18 Implement `clearQueue()` after successful sync
-  - [ ] 3.19 Create sync service (`src/services/syncService.js`) to coordinate local and remote data
-  - [ ] 3.20 Implement `syncToRemote()` function to push local changes to Google Sheets
-  - [ ] 3.21 Implement `syncFromRemote()` function to pull changes from Google Sheets to local storage
-  - [ ] 3.22 Implement `fullSync()` function for complete bidirectional sync
-  - [ ] 3.23 Implement conflict resolution using last-write-wins strategy (compare timestamps)
-  - [ ] 3.24 Implement automatic sync retry with exponential backoff (30s, 60s, 120s intervals)
-  - [ ] 3.25 Add network status detection (online/offline event listeners)
-  - [ ] 3.26 Implement sync on online event when connection is restored
-  - [ ] 3.27 Create data validation utility (`src/utils/dataValidation.js`) for input validation
-  - [ ] 3.28 Implement habit name validation (1-100 chars, no duplicates, case-insensitive)
-  - [ ] 3.29 Implement date validation (ISO 8601 format, not more than 5 days in past)
-  - [ ] 3.30 Implement notes validation (max 5000 characters)
-  - [ ] 3.31 Create UUID utility (`src/utils/uuid.js`) for generating unique IDs
-  - [ ] 3.32 Test: Verify local storage CRUD operations work correctly
-  - [ ] 3.33 Test: Verify sync queue adds and processes operations correctly
-  - [ ] 3.34 Test: Verify sync service handles online/offline transitions
-  - [ ] 3.35 Test: Verify conflict resolution works with last-write-wins logic
-  - [ ] 3.36 Test: Verify data validation catches invalid inputs
+  - [x] 3.4 Create storage service (`src/services/storage.js`) using IndexedDB (recommended) or localStorage
+  - [x] 3.5 Implement `initDB()` function to initialize IndexedDB with object stores for habits, logs, metadata
+  - [x] 3.6 Implement `saveHabits(habits)` function to save habits to local storage
+  - [x] 3.7 Implement `getHabits()` function to retrieve all habits from local storage
+  - [x] 3.8 Implement `saveHabit(habit)` function to save single habit
+  - [x] 3.9 Implement `deleteHabit(habitId)` function to mark habit as inactive
+  - [x] 3.10 Implement `saveLogs(logs)` function to save log entries to local storage
+  - [x] 3.11 Implement `getLogs(habitId?, date?)` function to retrieve logs with optional filters
+  - [x] 3.12 Implement `saveLog(log)` function to save single log entry
+  - [x] 3.13 Implement `saveMetadata(metadata)` function to save app metadata
+  - [x] 3.14 Implement `getMetadata()` function to retrieve metadata
+  - [x] 3.15 Create sync queue service (`src/services/syncQueue.js`) to track pending changes
+  - [x] 3.16 Implement `addToQueue(operation, data)` to queue offline changes
+  - [x] 3.17 Implement `getQueue()` to retrieve all pending operations
+  - [x] 3.18 Implement `clearQueue()` after successful sync
+  - [x] 3.19 Create sync service (`src/services/syncService.js`) to coordinate local and remote data
+  - [x] 3.20 Implement `syncToRemote()` function to push local changes to Google Sheets
+  - [x] 3.21 Implement `syncFromRemote()` function to pull changes from Google Sheets to local storage
+  - [x] 3.22 Implement `fullSync()` function for complete bidirectional sync
+  - [x] 3.23 Implement conflict resolution using last-write-wins strategy (compare timestamps)
+  - [x] 3.24 Implement automatic sync retry with exponential backoff (30s, 60s, 120s intervals)
+  - [x] 3.25 Add network status detection (online/offline event listeners)
+  - [x] 3.26 Implement sync on online event when connection is restored
+  - [x] 3.27 Create data validation utility (`src/utils/dataValidation.js`) for input validation
+  - [x] 3.28 Implement habit name validation (1-100 chars, no duplicates, case-insensitive)
+  - [x] 3.29 Implement date validation (ISO 8601 format, not more than 5 days in past)
+  - [x] 3.30 Implement notes validation (max 5000 characters)
+  - [x] 3.31 Create UUID utility (`src/utils/uuid.js`) for generating unique IDs
+  - [x] 3.32 Test: Verify local storage CRUD operations work correctly
+  - [x] 3.33 Test: Verify sync queue adds and processes operations correctly
+  - [x] 3.34 Test: Verify sync service handles online/offline transitions
+  - [x] 3.35 Test: Verify conflict resolution works with last-write-wins logic
+  - [x] 3.36 Test: Verify data validation catches invalid inputs
 
 - [ ] 4.0 Core Features - Habit Management
   - [ ] 4.1 Create ManageHabitsPage component (`src/pages/ManageHabitsPage.js`)
