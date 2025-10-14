@@ -150,7 +150,7 @@ Before Task 2.0 (Authentication), you'll need:
 5. Add authorized origins and redirect URIs
 6. Set environment variables:
    - `VITE_GOOGLE_CLIENT_ID` (or equivalent for chosen build tool)
-   - `VITE_GOOGLE_API_KEY`
+   - Note: API key not required - app uses OAuth tokens directly
 
 ## Deployment Target
 

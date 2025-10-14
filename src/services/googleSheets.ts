@@ -10,49 +10,23 @@
  * - Metadata tab: sheet_version, last_sync, user_id, sheet_id
  */
 
-import { gapi } from 'gapi-script';
 import { getAccessToken } from './auth';
 import type { Habit } from '../types/habit';
 import type { LogEntry } from '../types/logEntry';
 import type { Metadata } from '../types/metadata';
 
 // API Configuration
-const API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
-const DISCOVERY_DOC = 'https://sheets.googleapis.com/$discovery/rest?version=v4';
 const SHEET_VERSION = '1.0';
-
-// Initialize flag
-let isInitialized = false;
 
 /**
  * Initialize Google Sheets API client
+ * Note: No initialization needed - we use OAuth tokens directly with REST API
  */
 export const initGoogleSheetsAPI = async (): Promise<void> => {
-  if (isInitialized) {
-    return;
-  }
-
-  try {
-    await new Promise<void>((resolve, reject) => {
-      gapi.load('client', async () => {
-        try {
-          await gapi.client.init({
-            apiKey: API_KEY,
-            discoveryDocs: [DISCOVERY_DOC],
-          });
-          isInitialized = true;
-          console.log('[GoogleSheets] API initialized');
-          resolve();
-        } catch (error) {
-          console.error('[GoogleSheets] Failed to initialize:', error);
-          reject(error);
-        }
-      });
-    });
-  } catch (error) {
-    console.error('[GoogleSheets] Initialization error:', error);
-    throw new Error('Failed to initialize Google Sheets API');
-  }
+  // OAuth tokens are handled by auth service
+  // No additional initialization required for REST API calls
+  console.log('[GoogleSheets] API ready (using OAuth tokens)');
+  return Promise.resolve();
 };
 
 /**
@@ -304,7 +278,7 @@ export const writeHabits = async (sheetId: string, habits: Habit[]): Promise<voi
     ]);
 
     const response = await fetch(
-      `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/Habits!A2:F`,
+      `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/Habits!A2:F?valueInputOption=RAW`,
       {
         method: 'PUT',
         headers: {
@@ -313,12 +287,13 @@ export const writeHabits = async (sheetId: string, habits: Habit[]): Promise<voi
         },
         body: JSON.stringify({
           values,
-          majorDimension: 'ROWS',
         }),
       }
     );
 
     if (!response.ok) {
+      const errorText = await response.text();
+      console.error('[GoogleSheets] Habits write error:', errorText);
       throw new Error(`Failed to write habits: ${response.statusText}`);
     }
 
@@ -394,7 +369,7 @@ export const writeLogs = async (sheetId: string, logs: LogEntry[]): Promise<void
     ]);
 
     const response = await fetch(
-      `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/Logs!A2:F`,
+      `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/Logs!A2:F?valueInputOption=RAW`,
       {
         method: 'PUT',
         headers: {
@@ -403,12 +378,13 @@ export const writeLogs = async (sheetId: string, logs: LogEntry[]): Promise<void
         },
         body: JSON.stringify({
           values,
-          majorDimension: 'ROWS',
         }),
       }
     );
 
     if (!response.ok) {
+      const errorText = await response.text();
+      console.error('[GoogleSheets] Logs write error:', errorText);
       throw new Error(`Failed to write logs: ${response.statusText}`);
     }
 
@@ -480,7 +456,7 @@ export const writeMetadata = async (sheetId: string, metadata: Metadata): Promis
     ];
 
     const response = await fetch(
-      `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/Metadata!A2:D2`,
+      `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/Metadata!A2:D2?valueInputOption=RAW`,
       {
         method: 'PUT',
         headers: {
@@ -489,12 +465,13 @@ export const writeMetadata = async (sheetId: string, metadata: Metadata): Promis
         },
         body: JSON.stringify({
           values,
-          majorDimension: 'ROWS',
         }),
       }
     );
 
     if (!response.ok) {
+      const errorText = await response.text();
+      console.error('[GoogleSheets] Metadata write error:', errorText);
       throw new Error(`Failed to write metadata: ${response.statusText}`);
     }
 
