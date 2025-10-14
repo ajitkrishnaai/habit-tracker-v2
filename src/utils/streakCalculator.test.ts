@@ -2,7 +2,7 @@
  * Tests for Streak Calculator Utility
  */
 
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import {
   calculateCurrentStreak,
   calculateLongestStreak,

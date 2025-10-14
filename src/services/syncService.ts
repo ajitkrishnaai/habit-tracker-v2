@@ -10,7 +10,6 @@ import { syncQueueService } from './syncQueue';
 import { googleSheetsService } from './googleSheets';
 import type { Habit } from '../types/habit';
 import type { LogEntry } from '../types/logEntry';
-import type { Metadata } from '../types/metadata';
 
 // Retry intervals in milliseconds: 30s, 60s, 120s
 const RETRY_INTERVALS = [30000, 60000, 120000];
@@ -281,7 +280,7 @@ class SyncService {
         } else if (operationType === 'DELETE') {
           const habits = await googleSheetsService.readHabits();
           const updatedHabits = habits.map((h: Habit) =>
-            h.habit_id === data.habit_id ? { ...h, status: 'inactive' } : h
+            h.habit_id === data.habit_id ? { ...h, status: 'inactive' as const } : h
           );
           await googleSheetsService.writeHabits(updatedHabits);
         }
@@ -341,13 +340,21 @@ class SyncService {
         result.push(localItem);
       } else {
         // In both - compare timestamps for last-write-wins
-        const localTime = new Date(localItem.modified_date || localItem.timestamp).getTime();
-        const remoteTime = new Date(remoteItem.modified_date || remoteItem.timestamp).getTime();
+        const localTimestamp = localItem.modified_date || localItem.timestamp || '';
+        const remoteTimestamp = remoteItem.modified_date || remoteItem.timestamp || '';
 
-        if (localTime >= remoteTime) {
+        if (!localTimestamp || !remoteTimestamp) {
+          // If we can't determine timestamps, prefer local
           result.push(localItem);
         } else {
-          result.push(remoteItem);
+          const localTime = new Date(localTimestamp).getTime();
+          const remoteTime = new Date(remoteTimestamp).getTime();
+
+          if (localTime >= remoteTime) {
+            result.push(localItem);
+          } else {
+            result.push(remoteItem);
+          }
         }
       }
     });

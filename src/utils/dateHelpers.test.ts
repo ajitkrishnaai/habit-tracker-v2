@@ -4,7 +4,7 @@
  * Unit tests for date manipulation and formatting utilities.
  */
 
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import {
   formatDateISO,
   formatDateDisplay,

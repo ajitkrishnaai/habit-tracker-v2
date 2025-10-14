@@ -10,7 +10,7 @@ import React, { useEffect, useState } from 'react';
 import './ProgressPage.css';
 import { Habit } from '../types/habit';
 import { LogEntry } from '../types/logEntry';
-import { getHabits, getLogs } from '../services/storage';
+import { storageService } from '../services/storage';
 import { ProgressCard } from '../components/ProgressCard';
 import { EmptyState } from '../components/EmptyState';
 
@@ -34,13 +34,13 @@ export const ProgressPage: React.FC = () => {
       setError(null);
 
       // Fetch all active habits
-      const allHabits = await getHabits();
-      const activeHabits = allHabits.filter(habit => habit.status === 'active');
+      const allHabits = await storageService.getHabits();
+      const activeHabits = allHabits.filter((habit: Habit) => habit.status === 'active');
 
       // Fetch logs for each habit
       const habitsData: HabitWithLogs[] = await Promise.all(
-        activeHabits.map(async habit => {
-          const logs = await getLogs(habit.habit_id);
+        activeHabits.map(async (habit: Habit) => {
+          const logs = await storageService.getLogs(habit.habit_id);
           return { habit, logs };
         })
       );
@@ -90,8 +90,8 @@ export const ProgressPage: React.FC = () => {
           <h1>Progress</h1>
         </div>
         <EmptyState
-          message="No habits to display"
-          subMessage="Add some habits in the Manage Habits page to see your progress here."
+          title="No habits to display"
+          message="Add some habits in the Manage Habits page to see your progress here."
           actionText="Go to Manage Habits"
           actionLink="/manage-habits"
         />

@@ -4,7 +4,7 @@
  * Tests for data validation utilities
  */
 
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import {
   validateHabitName,
   validateCategory,

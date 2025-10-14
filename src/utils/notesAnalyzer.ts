@@ -150,7 +150,6 @@ const generateCorrelationText = (
   }
 
   const donePositiveRate = doneEntries.length > 0 ? donePositive / doneEntries.length : 0;
-  const overallPositiveRate = sentimentSummary.positive / logs.length;
 
   if (donePositiveRate > 0.6) {
     return `When you complete this habit, you often mention feeling positive and accomplished.${keywordText} Keep up the great work!`;
