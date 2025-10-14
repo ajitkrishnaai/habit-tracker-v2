@@ -1,0 +1,218 @@
+/**
+ * DailyLogPage Styles
+ *
+ * Mobile-first styles for the daily logging interface.
+ */
+
+.daily-log-page {
+  padding: var(--spacing-md);
+  min-height: 100vh;
+  background-color: var(--color-background);
+}
+
+/* Loading state */
+.daily-log-page__loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 50vh;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-lg);
+}
+
+/* Error message */
+.daily-log-page__error {
+  padding: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
+  background-color: #fee;
+  color: var(--color-error);
+  border: 1px solid var(--color-error);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+}
+
+/* Sync indicator */
+.daily-log-page__sync-indicator {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+  background-color: var(--color-surface);
+  color: var(--color-text-secondary);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+}
+
+.daily-log-page__sync-spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--color-border);
+  border-top-color: var(--color-primary);
+  border-radius: var(--radius-full);
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Section title */
+.daily-log-page__section-title {
+  font-size: var(--font-size-xl);
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-md);
+}
+
+/* Habits section */
+.daily-log-page__habits {
+  margin-bottom: var(--spacing-xl);
+}
+
+.daily-log-page__habits-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.daily-log-page__habit-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  transition: background-color var(--transition-fast);
+}
+
+.daily-log-page__habit-item:hover {
+  background-color: var(--color-background);
+}
+
+.daily-log-page__habit-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.daily-log-page__habit-name {
+  font-size: var(--font-size-base);
+  font-weight: 500;
+  color: var(--color-text-primary);
+}
+
+.daily-log-page__habit-category {
+  display: inline-block;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  background-color: var(--color-primary);
+  color: var(--color-background);
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+  border-radius: var(--radius-sm);
+  width: fit-content;
+}
+
+/* Notes section */
+.daily-log-page__notes {
+  margin-bottom: var(--spacing-xl);
+}
+
+.daily-log-page__notes-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--spacing-sm);
+}
+
+.daily-log-page__notes-counter {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-tertiary);
+}
+
+.daily-log-page__notes-textarea {
+  width: 100%;
+  padding: var(--spacing-md);
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  color: var(--color-text-primary);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  resize: vertical;
+  min-height: 100px;
+  transition: border-color var(--transition-fast);
+}
+
+.daily-log-page__notes-textarea:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.daily-log-page__notes-textarea::placeholder {
+  color: var(--color-text-tertiary);
+}
+
+.daily-log-page__notes-save-btn {
+  margin-top: var(--spacing-md);
+  width: 100%;
+  min-height: var(--touch-target-min);
+  padding: var(--spacing-md);
+  background-color: var(--color-primary);
+  color: var(--color-background);
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+}
+
+.daily-log-page__notes-save-btn:hover {
+  background-color: var(--color-primary-hover);
+}
+
+.daily-log-page__notes-save-btn:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Tablet and desktop styles */
+@media (min-width: 768px) {
+  .daily-log-page {
+    padding: var(--spacing-xl);
+  }
+
+  .daily-log-page__section-title {
+    font-size: var(--font-size-2xl);
+  }
+
+  .daily-log-page__habit-item {
+    padding: var(--spacing-lg);
+  }
+
+  .daily-log-page__habit-name {
+    font-size: var(--font-size-lg);
+  }
+
+  .daily-log-page__notes-save-btn {
+    width: auto;
+    min-width: 200px;
+    padding: var(--spacing-md) var(--spacing-xl);
+  }
+}
+
+/* Desktop - constrain width */
+@media (min-width: 1024px) {
+  .daily-log-page {
+    max-width: var(--max-width-content);
+    margin: 0 auto;
+  }
+}

@@ -1,0 +1,139 @@
+/**
+ * ToggleSwitch Styles
+ *
+ * Mobile-first styles for accessible toggle switch component.
+ * Features large touch targets, smooth animations, and clear states.
+ */
+
+.toggle-switch-wrapper {
+  display: inline-block;
+}
+
+.toggle-switch {
+  /* Ensure minimum touch target size */
+  min-width: var(--touch-target-min);
+  min-height: var(--touch-target-min);
+
+  /* Layout */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-sm);
+
+  /* Remove default button styles */
+  background: none;
+  border: none;
+  cursor: pointer;
+
+  /* Transitions */
+  transition: opacity var(--transition-fast);
+}
+
+.toggle-switch:disabled,
+.toggle-switch--disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* Focus visible for keyboard navigation */
+.toggle-switch:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: var(--radius-full);
+}
+
+/* The slider background */
+.toggle-switch__slider {
+  position: relative;
+  display: inline-block;
+  width: 52px;
+  height: 28px;
+  background-color: var(--color-border);
+  border-radius: var(--radius-full);
+  transition: background-color var(--transition-normal);
+}
+
+/* The sliding thumb/circle */
+.toggle-switch__thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 24px;
+  height: 24px;
+  background-color: var(--color-background);
+  border-radius: var(--radius-full);
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--transition-normal);
+}
+
+/* OFF state - gray background */
+.toggle-switch--off .toggle-switch__slider {
+  background-color: var(--color-border);
+}
+
+.toggle-switch--off .toggle-switch__thumb {
+  transform: translateX(0);
+}
+
+/* ON state - primary color background, thumb slides right */
+.toggle-switch--on .toggle-switch__slider {
+  background-color: var(--color-success);
+}
+
+.toggle-switch--on .toggle-switch__thumb {
+  transform: translateX(24px);
+}
+
+/* Hover states (desktop only) */
+@media (hover: hover) {
+  .toggle-switch:not(:disabled):not(.toggle-switch--disabled):hover .toggle-switch__slider {
+    opacity: 0.9;
+  }
+}
+
+/* Active/pressed state */
+.toggle-switch:not(:disabled):active .toggle-switch__thumb {
+  width: 28px;
+}
+
+.toggle-switch--on:not(:disabled):active .toggle-switch__thumb {
+  transform: translateX(20px);
+}
+
+/* Screen reader only text */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Tablet and desktop - slightly larger toggle */
+@media (min-width: 768px) {
+  .toggle-switch__slider {
+    width: 56px;
+    height: 32px;
+  }
+
+  .toggle-switch__thumb {
+    width: 28px;
+    height: 28px;
+  }
+
+  .toggle-switch--on .toggle-switch__thumb {
+    transform: translateX(24px);
+  }
+
+  .toggle-switch:not(:disabled):active .toggle-switch__thumb {
+    width: 32px;
+  }
+
+  .toggle-switch--on:not(:disabled):active .toggle-switch__thumb {
+    transform: translateX(20px);
+  }
+}

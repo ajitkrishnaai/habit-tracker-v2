@@ -268,45 +268,45 @@ Based on PRD: `0001-prd-habit-tracker.md`
   - [x] 4.26 Test: Verify character limit validation works (100 chars)
   - [x] 4.27 Test: Verify empty state displays when no habits exist
 
-- [ ] 5.0 Core Features - Daily Logging Interface
-  - [ ] 5.1 Create DailyLogPage component (`src/pages/DailyLogPage.js`)
-  - [ ] 5.2 Create ToggleSwitch component (`src/components/ToggleSwitch.js`) with accessible markup
-  - [ ] 5.3 Style toggle switch: large touch target (min 44x44px), clear on/off states, smooth animation
-  - [ ] 5.4 Ensure toggle is keyboard accessible (tab navigation, space/enter to toggle)
-  - [ ] 5.5 Add ARIA labels for screen reader accessibility
-  - [ ] 5.6 Create DateNavigator component (`src/components/DateNavigator.js`) for date selection
-  - [ ] 5.7 Display current selected date prominently (e.g., "Today, October 13" or "October 12, 2025")
-  - [ ] 5.8 Implement "Previous Day" button to go back one day (up to 5 days in past)
-  - [ ] 5.9 Implement "Today" button to return to current date
-  - [ ] 5.10 Disable "Previous Day" button when at 5-day limit
-  - [ ] 5.11 Use date utility functions for date manipulation (add/subtract days)
-  - [ ] 5.12 Display all active habits with toggle switches for the selected date
-  - [ ] 5.13 Load existing log data for selected date from local storage
-  - [ ] 5.14 Display visual distinction: done (toggle on), not done (toggle off), no data (default state)
-  - [ ] 5.15 Implement toggle handler that creates/updates log entry immediately
-  - [ ] 5.16 Generate UUID for new log entries
-  - [ ] 5.17 Set date field to selected date (ISO 8601 YYYY-MM-DD format)
-  - [ ] 5.18 Set timestamp to current time when log is created/modified
-  - [ ] 5.19 Create shared notes text field (textarea) below habit list
-  - [ ] 5.20 Implement notes field with character counter (5000 max)
-  - [ ] 5.21 Save notes with log entries (shared notes applied to all habits logged in session)
-  - [ ] 5.22 Make notes optional (allow logging without notes)
-  - [ ] 5.23 Implement optimistic UI updates (toggle responds immediately)
-  - [ ] 5.24 Save changes to local storage immediately after toggle/notes change
-  - [ ] 5.25 Trigger background sync to Google Sheets after changes
-  - [ ] 5.26 Implement unsaved changes detection when navigating away from date
-  - [ ] 5.27 Show prompt if user tries to change date with unsaved notes
-  - [ ] 5.28 Add loading state when fetching data for past dates
-  - [ ] 5.29 Display empty state if no habits exist ("Go to Manage Habits to add your first habit")
-  - [ ] 5.30 Handle errors gracefully (sync failures, storage errors)
-  - [ ] 5.31 Test: Toggle habit to "done" and verify it saves locally and syncs
-  - [ ] 5.32 Test: Toggle habit to "not done" and verify state change
-  - [ ] 5.33 Test: Navigate to previous day and verify existing data loads
-  - [ ] 5.34 Test: Verify cannot navigate more than 5 days in past
-  - [ ] 5.35 Test: Add notes and verify they save with log entries
-  - [ ] 5.36 Test: Navigate between dates with unsaved changes and verify prompt appears
-  - [ ] 5.37 Test: Verify keyboard navigation works for toggles
-  - [ ] 5.38 Test: Verify toggle switches meet 44x44px minimum touch target
+- [x] 5.0 Core Features - Daily Logging Interface
+  - [x] 5.1 Create DailyLogPage component (`src/pages/DailyLogPage.tsx`)
+  - [x] 5.2 Create ToggleSwitch component (`src/components/ToggleSwitch.tsx`) with accessible markup
+  - [x] 5.3 Style toggle switch: large touch target (min 44x44px), clear on/off states, smooth animation
+  - [x] 5.4 Ensure toggle is keyboard accessible (tab navigation, space/enter to toggle)
+  - [x] 5.5 Add ARIA labels for screen reader accessibility
+  - [x] 5.6 Create DateNavigator component (`src/components/DateNavigator.tsx`) for date selection
+  - [x] 5.7 Display current selected date prominently (e.g., "Today, October 13" or "October 12, 2025")
+  - [x] 5.8 Implement "Previous Day" button to go back one day (up to 5 days in past)
+  - [x] 5.9 Implement "Today" button to return to current date
+  - [x] 5.10 Disable "Previous Day" button when at 5-day limit
+  - [x] 5.11 Use date utility functions for date manipulation (add/subtract days)
+  - [x] 5.12 Display all active habits with toggle switches for the selected date
+  - [x] 5.13 Load existing log data for selected date from local storage
+  - [x] 5.14 Display visual distinction: done (toggle on), not done (toggle off), no data (default state)
+  - [x] 5.15 Implement toggle handler that creates/updates log entry immediately
+  - [x] 5.16 Generate UUID for new log entries
+  - [x] 5.17 Set date field to selected date (ISO 8601 YYYY-MM-DD format)
+  - [x] 5.18 Set timestamp to current time when log is created/modified
+  - [x] 5.19 Create shared notes text field (textarea) below habit list
+  - [x] 5.20 Implement notes field with character counter (5000 max)
+  - [x] 5.21 Save notes with log entries (shared notes applied to all habits logged in session)
+  - [x] 5.22 Make notes optional (allow logging without notes)
+  - [x] 5.23 Implement optimistic UI updates (toggle responds immediately)
+  - [x] 5.24 Save changes to local storage immediately after toggle/notes change
+  - [x] 5.25 Trigger background sync to Google Sheets after changes
+  - [x] 5.26 Implement unsaved changes detection when navigating away from date
+  - [x] 5.27 Show prompt if user tries to change date with unsaved notes
+  - [x] 5.28 Add loading state when fetching data for past dates
+  - [x] 5.29 Display empty state if no habits exist ("Go to Manage Habits to add your first habit")
+  - [x] 5.30 Handle errors gracefully (sync failures, storage errors)
+  - [x] 5.31 Test: Toggle habit to "done" and verify it saves locally and syncs
+  - [x] 5.32 Test: Toggle habit to "not done" and verify state change
+  - [x] 5.33 Test: Navigate to previous day and verify existing data loads
+  - [x] 5.34 Test: Verify cannot navigate more than 5 days in past
+  - [x] 5.35 Test: Add notes and verify they save with log entries
+  - [x] 5.36 Test: Navigate between dates with unsaved changes and verify prompt appears
+  - [x] 5.37 Test: Verify keyboard navigation works for toggles
+  - [x] 5.38 Test: Verify toggle switches meet 44x44px minimum touch target
 
 - [ ] 6.0 Core Features - Progress & Analytics
   - [ ] 6.1 Create ProgressPage component (`src/pages/ProgressPage.js`)
