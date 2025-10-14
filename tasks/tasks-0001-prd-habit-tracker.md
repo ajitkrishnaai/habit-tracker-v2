@@ -308,52 +308,52 @@ Based on PRD: `0001-prd-habit-tracker.md`
   - [x] 5.37 Test: Verify keyboard navigation works for toggles
   - [x] 5.38 Test: Verify toggle switches meet 44x44px minimum touch target
 
-- [ ] 6.0 Core Features - Progress & Analytics
-  - [ ] 6.1 Create ProgressPage component (`src/pages/ProgressPage.js`)
-  - [ ] 6.2 Create ProgressCard component (`src/components/ProgressCard.js`) for expandable habit items
-  - [ ] 6.3 Create streak calculator utility (`src/utils/streakCalculator.js`)
-  - [ ] 6.4 Implement `calculateCurrentStreak(logs)` function to compute consecutive "done" days from today backward
-  - [ ] 6.5 Implement `calculateLongestStreak(logs)` function to find longest streak in all history
-  - [ ] 6.6 Handle streak reset when "not_done" is logged (reset to 0)
-  - [ ] 6.7 Create percentage calculator utility (`src/utils/percentageCalculator.js`)
-  - [ ] 6.8 Implement `calculateCompletionPercentage(logs)` function
-  - [ ] 6.9 Calculate percentage as: (done count / total logged days) × 100
-  - [ ] 6.10 Exclude "no_data" days from calculation (only count done/not_done)
-  - [ ] 6.11 Return both fraction format (e.g., "17/20 days") and percentage (e.g., "85%")
-  - [ ] 6.12 Fetch all active habits and their log entries from local storage
-  - [ ] 6.13 Display habits in list view with summary statistics visible
-  - [ ] 6.14 For each habit, display: name, category, current streak, longest streak, completion percentage
-  - [ ] 6.15 Format display as: "Current: 7 days | Best: 12 days | 17/20 days - 85%"
-  - [ ] 6.16 Implement expandable/collapsible functionality (click to expand habit details)
-  - [ ] 6.17 Show expand/collapse icon or affordance
-  - [ ] 6.18 Create NotesHistory component (`src/components/NotesHistory.js`) for displaying historical notes
-  - [ ] 6.19 Fetch all log entries with notes for selected habit
-  - [ ] 6.20 Display notes in reverse chronological order (newest first)
-  - [ ] 6.21 Show date and time alongside each note entry
-  - [ ] 6.22 Format timestamps in readable format (e.g., "Oct 12, 2025 at 9:30 AM")
-  - [ ] 6.23 Create notes analyzer utility (`src/utils/notesAnalyzer.js`) for pattern analysis
-  - [ ] 6.24 Install sentiment analysis library (compromise.js or ml-sentiment)
-  - [ ] 6.25 Implement `analyzeNotes(logs)` function that takes logs with notes
-  - [ ] 6.26 Extract keywords from notes using simple NLP (word frequency, remove stop words)
-  - [ ] 6.27 Perform sentiment analysis (positive/negative/neutral)
-  - [ ] 6.28 Identify correlations: "When you [habit status], you feel [sentiment]"
-  - [ ] 6.29 Generate summary text (e.g., "When you complete this habit, you often mention feeling energized and positive")
-  - [ ] 6.30 Only show pattern analysis if habit has 7+ log entries with notes
-  - [ ] 6.31 Display pattern analysis summary in expanded habit view
-  - [ ] 6.32 Update analysis in real-time when new logs with notes are added
-  - [ ] 6.33 Show placeholder message if insufficient data for analysis ("Add notes to at least 7 logs to see patterns")
-  - [ ] 6.34 Handle empty notes gracefully (skip in analysis)
-  - [ ] 6.35 Add loading state when calculating analytics for large datasets
-  - [ ] 6.36 Display "No habits to display" message if no active habits
-  - [ ] 6.37 Test: Verify current streak calculates correctly for consecutive done days
-  - [ ] 6.38 Test: Verify streak resets to 0 when habit marked not done
-  - [ ] 6.39 Test: Verify longest streak finds maximum streak in history
-  - [ ] 6.40 Test: Verify completion percentage excludes "no_data" days
-  - [ ] 6.41 Test: Verify completion percentage calculation is accurate (17/20 = 85%)
-  - [ ] 6.42 Test: Verify notes display in reverse chronological order
-  - [ ] 6.43 Test: Verify pattern analysis appears after 7+ notes entries
-  - [ ] 6.44 Test: Verify pattern analysis generates meaningful insights
-  - [ ] 6.45 Test: Verify expand/collapse functionality works smoothly
+- [x] 6.0 Core Features - Progress & Analytics
+  - [x] 6.1 Create ProgressPage component (`src/pages/ProgressPage.tsx`)
+  - [x] 6.2 Create ProgressCard component (`src/components/ProgressCard.tsx`) for expandable habit items
+  - [x] 6.3 Create streak calculator utility (`src/utils/streakCalculator.ts`)
+  - [x] 6.4 Implement `calculateCurrentStreak(logs)` function to compute consecutive "done" days from today backward
+  - [x] 6.5 Implement `calculateLongestStreak(logs)` function to find longest streak in all history
+  - [x] 6.6 Handle streak reset when "not_done" is logged (reset to 0)
+  - [x] 6.7 Create percentage calculator utility (`src/utils/percentageCalculator.ts`)
+  - [x] 6.8 Implement `calculateCompletionPercentage(logs)` function
+  - [x] 6.9 Calculate percentage as: (done count / total logged days) × 100
+  - [x] 6.10 Exclude "no_data" days from calculation (only count done/not_done)
+  - [x] 6.11 Return both fraction format (e.g., "17/20 days") and percentage (e.g., "85%")
+  - [x] 6.12 Fetch all active habits and their log entries from local storage
+  - [x] 6.13 Display habits in list view with summary statistics visible
+  - [x] 6.14 For each habit, display: name, category, current streak, longest streak, completion percentage
+  - [x] 6.15 Format display as: "Current: 7 days | Best: 12 days | 17/20 days - 85%"
+  - [x] 6.16 Implement expandable/collapsible functionality (click to expand habit details)
+  - [x] 6.17 Show expand/collapse icon or affordance
+  - [x] 6.18 Create NotesHistory component (`src/components/NotesHistory.tsx`) for displaying historical notes
+  - [x] 6.19 Fetch all log entries with notes for selected habit
+  - [x] 6.20 Display notes in reverse chronological order (newest first)
+  - [x] 6.21 Show date and time alongside each note entry
+  - [x] 6.22 Format timestamps in readable format (e.g., "Oct 12, 2025 at 9:30 AM")
+  - [x] 6.23 Create notes analyzer utility (`src/utils/notesAnalyzer.ts`) for pattern analysis
+  - [x] 6.24 Install sentiment analysis library (sentiment)
+  - [x] 6.25 Implement `analyzeNotes(logs)` function that takes logs with notes
+  - [x] 6.26 Extract keywords from notes using simple NLP (word frequency, remove stop words)
+  - [x] 6.27 Perform sentiment analysis (positive/negative/neutral)
+  - [x] 6.28 Identify correlations: "When you [habit status], you feel [sentiment]"
+  - [x] 6.29 Generate summary text (e.g., "When you complete this habit, you often mention feeling energized and positive")
+  - [x] 6.30 Only show pattern analysis if habit has 7+ log entries with notes
+  - [x] 6.31 Display pattern analysis summary in expanded habit view
+  - [x] 6.32 Update analysis in real-time when new logs with notes are added
+  - [x] 6.33 Show placeholder message if insufficient data for analysis ("Add notes to at least 7 logs to see patterns")
+  - [x] 6.34 Handle empty notes gracefully (skip in analysis)
+  - [x] 6.35 Add loading state when calculating analytics for large datasets
+  - [x] 6.36 Display "No habits to display" message if no active habits
+  - [x] 6.37 Test: Verify current streak calculates correctly for consecutive done days
+  - [x] 6.38 Test: Verify streak resets to 0 when habit marked not done
+  - [x] 6.39 Test: Verify longest streak finds maximum streak in history
+  - [x] 6.40 Test: Verify completion percentage excludes "no_data" days
+  - [x] 6.41 Test: Verify completion percentage calculation is accurate (17/20 = 85%)
+  - [x] 6.42 Test: Verify notes display in reverse chronological order
+  - [x] 6.43 Test: Verify pattern analysis appears after 7+ notes entries
+  - [x] 6.44 Test: Verify pattern analysis generates meaningful insights
+  - [x] 6.45 Test: Verify expand/collapse functionality works smoothly
 
 - [ ] 7.0 UI/UX & Responsive Design
   - [ ] 7.1 Create Navigation component (`src/components/Navigation.js`) for top navigation bar

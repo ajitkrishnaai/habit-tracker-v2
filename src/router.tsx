@@ -2,10 +2,10 @@ import { createBrowserRouter } from 'react-router-dom';
 import { WelcomePage } from './pages/WelcomePage';
 import { ManageHabitsPage } from './pages/ManageHabitsPage';
 import { DailyLogPage } from './pages/DailyLogPage';
+import { ProgressPage } from './pages/ProgressPage';
 import { ProtectedRoute } from './components/ProtectedRoute';
 
 // Placeholder pages (will be implemented in later tasks)
-const ProgressPage = () => <div style={{ padding: '2rem' }}><h1>Progress Page (Coming Soon)</h1></div>;
 const PrivacyPolicyPage = () => <div style={{ padding: '2rem' }}><h1>Privacy Policy (Coming Soon)</h1></div>;
 const TermsOfServicePage = () => <div style={{ padding: '2rem' }}><h1>Terms of Service (Coming Soon)</h1></div>;
 
