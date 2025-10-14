@@ -190,7 +190,7 @@ export const DailyLogPage: React.FC = () => {
 
     // Validate notes length
     const validation = validateNotes(newNotes);
-    if (!validation.valid) {
+    if (!validation.isValid) {
       setError(validation.error || 'Invalid notes');
       return;
     }

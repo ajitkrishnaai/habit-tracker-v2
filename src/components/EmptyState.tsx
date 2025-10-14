@@ -4,10 +4,13 @@
  * Reusable component for displaying empty states with customizable message and call-to-action.
  */
 
+import { Link } from 'react-router-dom';
+
 interface EmptyStateProps {
-  title: string;
+  title?: string;
   message?: string;
   actionText?: string;
+  actionLink?: string;
   onAction?: () => void;
 }
 
@@ -15,6 +18,7 @@ export const EmptyState = ({
   title,
   message,
   actionText,
+  actionLink,
   onAction,
 }: EmptyStateProps): JSX.Element => {
   return (
@@ -29,14 +33,16 @@ export const EmptyState = ({
         📋
       </div>
 
-      <h3 style={{
-        fontSize: '1.25rem',
-        fontWeight: '600',
-        color: '#374151',
-        marginBottom: '0.5rem',
-      }}>
-        {title}
-      </h3>
+      {title && (
+        <h3 style={{
+          fontSize: '1.25rem',
+          fontWeight: '600',
+          color: '#374151',
+          marginBottom: '0.5rem',
+        }}>
+          {title}
+        </h3>
+      )}
 
       {message && (
         <p style={{
@@ -48,7 +54,34 @@ export const EmptyState = ({
         </p>
       )}
 
-      {actionText && onAction && (
+      {actionText && actionLink && (
+        <Link
+          to={actionLink}
+          style={{
+            display: 'inline-block',
+            padding: '0.75rem 1.5rem',
+            fontSize: '1rem',
+            fontWeight: '600',
+            color: 'white',
+            backgroundColor: '#2563eb',
+            border: 'none',
+            borderRadius: '6px',
+            textDecoration: 'none',
+            cursor: 'pointer',
+            transition: 'background-color 0.2s',
+          }}
+          onMouseOver={(e) => {
+            e.currentTarget.style.backgroundColor = '#1d4ed8';
+          }}
+          onMouseOut={(e) => {
+            e.currentTarget.style.backgroundColor = '#2563eb';
+          }}
+        >
+          {actionText}
+        </Link>
+      )}
+
+      {actionText && onAction && !actionLink && (
         <button
           onClick={onAction}
           style={{
