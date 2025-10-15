@@ -31,6 +31,10 @@ yarn-error.log*
 
 # Testing
 coverage/
+e2e-report/
+test-results/
+playwright-report/
+playwright/.cache/
 
 # Temporary files
 *.tmp
