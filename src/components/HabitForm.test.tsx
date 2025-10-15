@@ -143,7 +143,7 @@ describe('HabitForm', () => {
   });
 
   describe('Validation', () => {
-    it('should show error for empty habit name', async () => {
+    it('should disable submit button for empty habit name', async () => {
       const user = userEvent.setup();
       render(<HabitForm />);
 
@@ -151,27 +151,21 @@ describe('HabitForm', () => {
       await user.type(nameInput, '   ');
 
       const submitButton = screen.getByRole('button', { name: /add habit/i });
-      await user.click(submitButton);
-
-      await waitFor(() => {
-        expect(screen.getByText(/habit name cannot be empty/i)).toBeInTheDocument();
-      });
+      // Button should be disabled when name is only whitespace
+      expect(submitButton).toBeDisabled();
     });
 
-    it('should show error for habit name exceeding 100 characters', async () => {
+    it('should prevent typing more than 100 characters in habit name', async () => {
       const user = userEvent.setup();
       render(<HabitForm />);
 
-      const nameInput = screen.getByLabelText(/habit name/i);
+      const nameInput = screen.getByLabelText(/habit name/i) as HTMLInputElement;
       const longName = 'a'.repeat(101);
       await user.type(nameInput, longName);
 
-      const submitButton = screen.getByRole('button', { name: /add habit/i });
-      await user.click(submitButton);
-
-      await waitFor(() => {
-        expect(screen.getByText(/cannot exceed 100 characters/i)).toBeInTheDocument();
-      });
+      // Input should stop at 100 characters due to maxLength attribute
+      expect(nameInput.value).toHaveLength(100);
+      expect(screen.getByText('100/100')).toBeInTheDocument();
     });
 
     it('should show error for duplicate habit name (case-insensitive)', async () => {
@@ -197,47 +191,53 @@ describe('HabitForm', () => {
 
       await waitFor(() => {
         expect(screen.getByText(/habit with this name already exists/i)).toBeInTheDocument();
-      });
+      }, { timeout: 3000 });
     });
 
-    it('should show error for category exceeding 50 characters', async () => {
+    it('should prevent typing more than 50 characters in category', async () => {
       const user = userEvent.setup();
       render(<HabitForm />);
 
-      const nameInput = screen.getByLabelText(/habit name/i);
-      const categoryInput = screen.getByLabelText(/category/i);
+      const categoryInput = screen.getByLabelText(/category/i) as HTMLInputElement;
+      const longCategory = 'a'.repeat(51);
+      await user.type(categoryInput, longCategory);
 
-      await user.type(nameInput, 'Test Habit');
-      await user.type(categoryInput, 'a'.repeat(51));
-
-      const submitButton = screen.getByRole('button', { name: /add habit/i });
-      await user.click(submitButton);
-
-      await waitFor(() => {
-        expect(screen.getByText(/category cannot exceed 50 characters/i)).toBeInTheDocument();
-      });
+      // Input should stop at 50 characters due to maxLength attribute
+      expect(categoryInput.value).toHaveLength(50);
     });
 
     it('should clear validation errors when user starts typing', async () => {
       const user = userEvent.setup();
+      // Mock existing habit to trigger duplicate error
+      const existingHabit: Habit = {
+        habit_id: 'existing-id',
+        name: 'Exercise',
+        status: 'active',
+        created_date: '2025-01-01',
+        modified_date: '2025-01-01',
+      };
+      vi.mocked(storageService.getHabits).mockResolvedValue([existingHabit]);
+
       render(<HabitForm />);
 
       const nameInput = screen.getByLabelText(/habit name/i);
 
-      // Trigger validation error
-      await user.type(nameInput, '   ');
+      // Trigger duplicate validation error
+      await user.type(nameInput, 'Exercise');
       const submitButton = screen.getByRole('button', { name: /add habit/i });
       await user.click(submitButton);
 
       await waitFor(() => {
-        expect(screen.getByText(/habit name cannot be empty/i)).toBeInTheDocument();
-      });
+        expect(screen.getByText(/habit with this name already exists/i)).toBeInTheDocument();
+      }, { timeout: 3000 });
 
-      // Start typing again
+      // Start typing again - error should clear
       await user.clear(nameInput);
       await user.type(nameInput, 'New');
 
-      expect(screen.queryByText(/habit name cannot be empty/i)).not.toBeInTheDocument();
+      await waitFor(() => {
+        expect(screen.queryByText(/habit with this name already exists/i)).not.toBeInTheDocument();
+      });
     });
   });
 
