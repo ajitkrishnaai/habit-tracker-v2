@@ -13,6 +13,7 @@ import { LogEntry } from '../types/logEntry';
 import { storageService } from '../services/storage';
 import { ProgressCard } from '../components/ProgressCard';
 import { EmptyState } from '../components/EmptyState';
+import LoadingSpinner from '../components/LoadingSpinner';
 
 interface HabitWithLogs {
   habit: Habit;
@@ -54,15 +55,14 @@ export const ProgressPage: React.FC = () => {
     }
   };
 
+  // Task 7.46: Use LoadingSpinner for better loading state
   if (isLoading) {
     return (
       <div className="progress-page">
         <div className="page-header">
           <h1>Progress</h1>
         </div>
-        <div className="loading-state">
-          <p>Loading your progress...</p>
-        </div>
+        <LoadingSpinner text="Loading your progress..." />
       </div>
     );
   }

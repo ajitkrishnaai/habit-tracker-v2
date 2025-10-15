@@ -4,10 +4,8 @@ import { ManageHabitsPage } from './pages/ManageHabitsPage';
 import { DailyLogPage } from './pages/DailyLogPage';
 import { ProgressPage } from './pages/ProgressPage';
 import { ProtectedRoute } from './components/ProtectedRoute';
-
-// Placeholder pages (will be implemented in later tasks)
-const PrivacyPolicyPage = () => <div style={{ padding: '2rem' }}><h1>Privacy Policy (Coming Soon)</h1></div>;
-const TermsOfServicePage = () => <div style={{ padding: '2rem' }}><h1>Terms of Service (Coming Soon)</h1></div>;
+import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
+import TermsOfServicePage from './pages/TermsOfServicePage';
 
 export const router = createBrowserRouter([
   {

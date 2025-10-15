@@ -2,9 +2,11 @@
  * Empty State Component
  *
  * Reusable component for displaying empty states with customizable message and call-to-action.
+ * Tasks 7.28-7.29: Support different messages and CTAs for various contexts
  */
 
 import { Link } from 'react-router-dom';
+import './EmptyState.css';
 
 interface EmptyStateProps {
   title?: string;
@@ -12,6 +14,7 @@ interface EmptyStateProps {
   actionText?: string;
   actionLink?: string;
   onAction?: () => void;
+  icon?: string;
 }
 
 export const EmptyState = ({
@@ -20,62 +23,31 @@ export const EmptyState = ({
   actionText,
   actionLink,
   onAction,
+  icon = '📋',
 }: EmptyStateProps): JSX.Element => {
   return (
-    <div style={{
-      textAlign: 'center',
-      padding: '3rem 1rem',
-    }}>
-      <div style={{
-        fontSize: '3rem',
-        marginBottom: '1rem',
-      }}>
-        📋
+    <div className="empty-state">
+      <div className="empty-state-icon" aria-hidden="true">
+        {icon}
       </div>
 
       {title && (
-        <h3 style={{
-          fontSize: '1.25rem',
-          fontWeight: '600',
-          color: '#374151',
-          marginBottom: '0.5rem',
-        }}>
+        <h3 className="empty-state-title">
           {title}
         </h3>
       )}
 
       {message && (
-        <p style={{
-          fontSize: '0.875rem',
-          color: '#6b7280',
-          marginBottom: actionText ? '1.5rem' : '0',
-        }}>
+        <p className="empty-state-message">
           {message}
         </p>
       )}
 
+      {/* Task 7.29: Support different call-to-action buttons for various contexts */}
       {actionText && actionLink && (
         <Link
           to={actionLink}
-          style={{
-            display: 'inline-block',
-            padding: '0.75rem 1.5rem',
-            fontSize: '1rem',
-            fontWeight: '600',
-            color: 'white',
-            backgroundColor: '#2563eb',
-            border: 'none',
-            borderRadius: '6px',
-            textDecoration: 'none',
-            cursor: 'pointer',
-            transition: 'background-color 0.2s',
-          }}
-          onMouseOver={(e) => {
-            e.currentTarget.style.backgroundColor = '#1d4ed8';
-          }}
-          onMouseOut={(e) => {
-            e.currentTarget.style.backgroundColor = '#2563eb';
-          }}
+          className="empty-state-button"
         >
           {actionText}
         </Link>
@@ -84,23 +56,7 @@ export const EmptyState = ({
       {actionText && onAction && !actionLink && (
         <button
           onClick={onAction}
-          style={{
-            padding: '0.75rem 1.5rem',
-            fontSize: '1rem',
-            fontWeight: '600',
-            color: 'white',
-            backgroundColor: '#2563eb',
-            border: 'none',
-            borderRadius: '6px',
-            cursor: 'pointer',
-            transition: 'background-color 0.2s',
-          }}
-          onMouseOver={(e) => {
-            e.currentTarget.style.backgroundColor = '#1d4ed8';
-          }}
-          onMouseOut={(e) => {
-            e.currentTarget.style.backgroundColor = '#2563eb';
-          }}
+          className="empty-state-button"
         >
           {actionText}
         </button>
