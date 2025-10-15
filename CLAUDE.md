@@ -125,19 +125,162 @@ The PRD (`tasks/0001-prd-habit-tracker.md`) is the source of truth. Key requirem
 - Top navigation: fixed/sticky with "Daily Log" (default), "Progress", "Manage Habits"
 - Footer must link to Privacy Policy and Terms of Service
 
-## Technology Stack Selection
+## Technology Stack (Implemented)
 
-The PRD allows developer choice for framework. When starting Task 1.0, select one and document it:
+**Build & Framework**:
+- **Build Tool**: Vite 5.0.8 with PWA plugin
+- **Language**: TypeScript 5.2.2
+- **Framework**: React 18.2 with React Router 6.20
+- **State Management**: React hooks (useState, useEffect) - no external state library
+- **Date Library**: date-fns 2.30.0
+- **NLP/Sentiment**: sentiment 5.0.2 (lightweight sentiment analysis)
+- **Testing**: Vitest 1.0.4 (unit/integration) with happy-dom environment
 
-**Recommended Stack**:
-- Build Tool: Vite (fast, modern, great PWA support)
-- Language: TypeScript (type safety for complex sync logic)
-- Framework: React or vanilla JavaScript (keep it simple for single-page needs)
-- Date Library: date-fns or day.js (small, immutable)
-- NLP: compromise.js or ml-sentiment (lightweight sentiment analysis)
-- Testing: Vitest (unit/integration), Playwright (E2E)
+**Key Dependencies**:
+- `@react-oauth/google` - Google OAuth integration
+- `react-router-dom` - Client-side routing
+- `vite-plugin-pwa` - PWA service worker generation
 
-**After Selection**: Update task list and create `package.json` as first step of Task 1.0
+## Essential Commands
+
+### Development
+```bash
+# Start development server (http://localhost:5173)
+npm run dev
+
+# Build for production (outputs to /dist)
+npm run build
+
+# Preview production build
+npm run preview
+
+# Lint TypeScript/React code
+npm run lint
+```
+
+### Testing
+```bash
+# Run all tests once
+npm test -- --run
+
+# Run tests in watch mode (default)
+npm test
+
+# Run specific test file
+npm test -- src/utils/streakCalculator.test.ts
+
+# Run tests with coverage report
+npm run test:coverage
+# Note: Requires @vitest/coverage-v8 to be installed first
+
+# Run tests with UI (if @vitest/ui is installed)
+npm test -- --ui
+```
+
+### Environment Setup
+Create `.env.local` for local development:
+```env
+VITE_GOOGLE_CLIENT_ID=your_client_id_here.apps.googleusercontent.com
+```
+
+**Note**: OAuth tokens are NEVER stored in localStorage - only in memory via tokenManager
+
+## Code Architecture (Implemented)
+
+### Service Layer (`src/services/`)
+The app uses a layered architecture with three core services:
+
+1. **storageService** (`storage.ts`) - IndexedDB operations
+   - Single source of truth for local data
+   - Three object stores: `habits`, `logs`, `metadata`
+   - All operations are async, return Promises
+   - Handles initialization, CRUD, and bulk operations
+   - Methods: `initDB()`, `saveHabit()`, `getHabits()`, `saveLogs()`, `getLogs()`, etc.
+
+2. **syncQueueService** (`syncQueue.ts`) - Offline operation queue
+   - Queues operations when offline: `CREATE_HABIT`, `UPDATE_HABIT`, `CREATE_LOG`, `UPDATE_LOG`
+   - Stores queue in localStorage (not IndexedDB for simplicity)
+   - Deduplicates operations (e.g., multiple updates to same habit collapse into one)
+   - Methods: `queueOperation()`, `getQueue()`, `removeOperation()`, `clearQueue()`
+
+3. **syncService** (`syncService.ts`) - Sync coordinator
+   - Orchestrates bi-directional sync between IndexedDB and Google Sheets
+   - Implements retry logic with exponential backoff (30s, 60s, 120s)
+   - Listens to online/offline events
+   - Conflict resolution: last-write-wins based on `modified_date` timestamps
+   - Methods: `syncToRemote()`, `syncFromRemote()`, `subscribe()` for state updates
+
+4. **googleSheetsService** (`googleSheets.ts`) - Google Sheets API wrapper
+   - Creates/finds user's habit tracking spreadsheet
+   - Uses batch operations for efficiency
+   - Three tabs: Habits, Logs, Metadata
+   - Methods: `initializeSheet()`, `saveHabits()`, `getHabits()`, `saveLogs()`, `getLogs()`
+
+5. **authService** (`auth.ts`) - Google OAuth manager
+   - Uses `@react-oauth/google` for OAuth flow
+   - Token storage: in-memory only via `tokenManager.ts`
+   - Scopes: `drive.file` (most restrictive), `userinfo.profile`
+   - Methods: `initAuth()`, `signIn()`, `signOut()`, `getAccessToken()`
+
+### Component Structure (`src/components/`)
+**Reusable UI Components**:
+- `ToggleSwitch.tsx` - Accessible toggle for habit logging (44x44px min, keyboard navigable)
+- `DateNavigator.tsx` - Date picker for navigating up to 5 days in past
+- `HabitForm.tsx` - Add/edit habit form with validation and character counters
+- `HabitListItem.tsx` - Habit card with edit/delete actions
+- `ProgressCard.tsx` - Expandable card showing streaks, percentages, pattern analysis
+- `NotesHistory.tsx` - Chronological display of notes with timestamps
+- `EmptyState.tsx` - Placeholder UI when no data exists
+- `ProtectedRoute.tsx` - Route guard requiring authentication
+
+### Pages (`src/pages/`)
+**Main Views** (all wrapped in ProtectedRoute except Welcome):
+- `WelcomePage.tsx` - Landing page with Google sign-in
+- `ManageHabitsPage.tsx` - CRUD interface for habits
+- `DailyLogPage.tsx` - Daily logging with toggle switches and shared notes
+- `ProgressPage.tsx` - Analytics dashboard with streaks, percentages, pattern analysis
+
+### Utilities (`src/utils/`)
+**Pure Functions** (all have corresponding `.test.ts` files):
+- `streakCalculator.ts` - Calculates current and longest streaks from log history
+- `percentageCalculator.ts` - Computes completion percentage (done/total logged days)
+- `notesAnalyzer.ts` - Extracts keywords, sentiment, correlations from notes (requires 7+ entries)
+- `dataValidation.ts` - Validates and sanitizes all user inputs (names, categories, dates, notes)
+- `uuid.ts` - Generates unique IDs with prefixes (`habit_`, `log_`)
+- `dateHelpers.ts` - Date formatting and calculations (uses date-fns)
+- `errorHandler.ts` - Centralized error handling and logging
+- `tokenManager.ts` - In-memory OAuth token storage (never persisted)
+
+### Routing (`src/router.tsx`)
+Uses React Router 6 with these routes:
+- `/` - WelcomePage (public)
+- `/daily-log` - DailyLogPage (protected, default after login)
+- `/progress` - ProgressPage (protected)
+- `/manage-habits` - ManageHabitsPage (protected)
+- `/privacy` - Privacy Policy (placeholder)
+- `/terms` - Terms of Service (placeholder)
+
+### Data Flow Pattern
+**Write Operations** (optimistic UI):
+1. User action (e.g., toggle habit, edit name)
+2. Immediate UI update (optimistic)
+3. Write to IndexedDB (`storageService.saveHabit()`)
+4. Queue operation (`syncQueueService.queueOperation()`)
+5. Background sync to Google Sheets (`syncService.syncToRemote()`)
+6. On success: remove from queue; On failure: retry with backoff
+
+**Read Operations**:
+1. Always read from IndexedDB (single source of truth)
+2. Never read directly from Google Sheets during normal usage
+3. Sync from remote only on: app load, manual refresh, or after network reconnection
+
+### Testing Strategy
+**Test Organization** (see `TESTING_TASKS_1-6.md`):
+- Unit tests colocated: `*.test.ts` next to `*.ts` files
+- Test environment: happy-dom (lightweight DOM simulation)
+- Setup: `src/test/setup.ts` configures fake-indexeddb
+- Coverage target: 85%+ (currently 254/260 tests passing - 97.7%)
+- Test utilities: `testHelpers.ts` provides mock data generators
 
 ## Google Cloud Setup
 
@@ -160,30 +303,49 @@ Before Task 2.0 (Authentication), you'll need:
 - Must update OAuth authorized origins with production URL
 - Requires HTTPS (provided automatically by both options)
 
-## Testing Requirements
+## Testing Requirements & Status
 
-**Unit Tests** (Task 8.0, 85% coverage target):
-- All services: auth, storage, sync, googleSheets
-- All utilities: streakCalculator, percentageCalculator, notesAnalyzer, dataValidation
-- Key components: ToggleSwitch, HabitForm, DateNavigator, ProgressCard
+**Current Test Status**: 254/260 passing (97.7%)
+- **6 known failures**: 4 HabitForm validation tests (timing issues), 2 date validation tests (timezone bugs)
+- See `TEST_REPORT_TASKS_1-6.md` for detailed failure analysis
 
-**Integration Tests**:
+**Unit Tests** (85% coverage target):
+- ✅ All services: auth, storage, syncQueue (23+23 tests)
+- ✅ All utilities: streakCalculator (21), percentageCalculator (14), notesAnalyzer (14), dataValidation (47), uuid (32), dateHelpers (21)
+- ✅ Key components: ToggleSwitch (12), HabitForm (12/16 passing), DateNavigator (10), HabitListItem (9)
+
+**Integration Tests** (TODO - Task 8.0):
 - Full auth flow including sheet creation
 - Habit CRUD with Google Sheets sync
 - Daily logging with notes
 - Offline → online sync with conflict resolution
 
-**E2E Tests** (critical paths):
+**E2E Tests** (TODO - Task 8.0, critical paths):
 - First-time user flow
 - Daily logging flow
 - Progress view with pattern analysis
 - Back-dating (navigate 5 days, log, return to today)
 - Offline sync (go offline, make changes, go online, verify sync)
 
-**Accessibility Tests**:
+**Accessibility Tests** (TODO - Task 7.0):
 - Lighthouse audit (target WCAG 2.1 AA)
 - Keyboard-only navigation
 - Screen reader compatibility (VoiceOver or NVDA)
+
+**Running Tests**:
+```bash
+# All tests (watch mode)
+npm test
+
+# Single run
+npm test -- --run
+
+# Specific file
+npm test -- src/utils/streakCalculator.test.ts
+
+# With coverage (requires @vitest/coverage-v8)
+npm run test:coverage
+```
 
 ## Open Questions from PRD
 
@@ -202,3 +364,41 @@ If you encounter these during implementation, document the decision in git commi
 - **No Real-time Multi-device Sync**: Out of scope (data in Google Sheets, but app doesn't poll)
 - **No Push Notifications**: No reminders or notifications system
 - **Single Log Per Day**: Each habit can only be logged once per day (done/not done)
+
+## Current Implementation Status
+
+**Completed Tasks** (as of latest commit):
+- ✅ **Task 1.0**: Project Setup & Configuration (Vite, TypeScript, React, PWA)
+- ✅ **Task 2.0**: Authentication & Google Integration (OAuth 2.0, token management)
+- ✅ **Task 3.0**: Data Layer & Offline Storage (IndexedDB, sync queue, conflict resolution)
+- ✅ **Task 4.0**: Core Features - Habit Management (CRUD, validation, soft delete)
+- ✅ **Task 5.0**: Core Features - Daily Logging Interface (toggles, date navigation, shared notes)
+- ✅ **Task 6.0**: Core Features - Progress & Analytics (streaks, percentages, sentiment analysis)
+
+**In Progress**:
+- 🔄 **Task 7.0**: UI/UX & Responsive Design (navigation, footer, accessibility polish)
+
+**Not Started**:
+- ⏳ **Task 8.0**: Testing & Quality Assurance (integration tests, E2E tests)
+- ⏳ **Task 9.0**: Deployment & Documentation (GCP deployment, user guide)
+
+**Known Issues**:
+1. 6 failing tests (4 validation display tests, 2 date validation edge cases) - non-blocking
+2. Privacy Policy and Terms of Service pages are placeholders
+3. Coverage reporting requires `@vitest/coverage-v8` installation
+4. No navigation component yet (Task 7.0)
+5. No offline indicator UI (Task 7.0)
+
+**Testing the App Locally**:
+1. Start dev server: `npm run dev`
+2. Open http://localhost:5173
+3. Mock auth bypass (no OAuth setup needed):
+   ```javascript
+   localStorage.setItem('habitTracker_mockAuth', 'true');
+   window.location.href = '/daily-log';
+   ```
+4. Test habit management at `/manage-habits`
+5. Test daily logging at `/daily-log`
+6. Test progress analytics at `/progress`
+
+**Comprehensive Testing Guide**: See `TESTING_TASKS_1-6.md` for full manual testing procedures
