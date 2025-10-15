@@ -337,21 +337,25 @@ export const DailyLogPage: React.FC = () => {
         </ul>
       </div>
 
-      {/* Shared notes */}
+      {/* Shared notes - Task 7.45: Ensure textarea has associated label */}
       <div className="daily-log-page__notes">
         <div className="daily-log-page__notes-header">
-          <h2 className="daily-log-page__section-title">Notes</h2>
+          <label htmlFor="daily-notes" className="daily-log-page__section-title">
+            Notes
+          </label>
           <span className="daily-log-page__notes-counter">
             {notes.length} / 5000
           </span>
         </div>
         <textarea
+          id="daily-notes"
           className="daily-log-page__notes-textarea"
           placeholder="Add notes about your day (optional)..."
           value={notes}
           onChange={handleNotesChange}
           maxLength={5000}
           rows={4}
+          aria-label="Daily notes for all habits"
         />
         {hasUnsavedNotes && (
           <button

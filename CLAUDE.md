@@ -230,15 +230,30 @@ The app uses a layered architecture with three core services:
 - `HabitListItem.tsx` - Habit card with edit/delete actions
 - `ProgressCard.tsx` - Expandable card showing streaks, percentages, pattern analysis
 - `NotesHistory.tsx` - Chronological display of notes with timestamps
-- `EmptyState.tsx` - Placeholder UI when no data exists
-- `ProtectedRoute.tsx` - Route guard requiring authentication
+- `EmptyState.tsx` - Placeholder UI when no data exists (supports custom icons and CTAs)
+- `ProtectedRoute.tsx` - Route guard requiring authentication (wraps content with Layout)
+
+**Navigation & Layout** (Task 7.0):
+- `Navigation.tsx` - Top navigation bar with active page highlighting, sticky on mobile
+- `Footer.tsx` - Footer with Privacy Policy and Terms links
+- `Layout.tsx` - Wrapper component providing Navigation, Footer, and OfflineIndicator to protected pages
+
+**Status & Error Indicators** (Task 7.0):
+- `SyncIndicator.tsx` - Shows sync status (spinning, success checkmark, error with retry)
+- `OfflineIndicator.tsx` - Banner that appears when offline, hides when back online
+- `ErrorMessage.tsx` - Unified error display for auth, sync, and validation errors with retry buttons
 
 ### Pages (`src/pages/`)
 **Main Views** (all wrapped in ProtectedRoute except Welcome):
-- `WelcomePage.tsx` - Landing page with Google sign-in
+- `WelcomePage.tsx` - Landing page with hero, features, and Google sign-in (Task 7.0: enhanced with external CSS)
 - `ManageHabitsPage.tsx` - CRUD interface for habits
 - `DailyLogPage.tsx` - Daily logging with toggle switches and shared notes
 - `ProgressPage.tsx` - Analytics dashboard with streaks, percentages, pattern analysis
+
+**Legal Pages** (Task 7.0):
+- `PrivacyPolicyPage.tsx` - Privacy policy with GDPR compliance statements
+- `TermsOfServicePage.tsx` - Terms of service with liability and usage rights
+- `LegalPage.css` - Shared styles for legal pages
 
 ### Utilities (`src/utils/`)
 **Pure Functions** (all have corresponding `.test.ts` files):
@@ -257,8 +272,10 @@ Uses React Router 6 with these routes:
 - `/daily-log` - DailyLogPage (protected, default after login)
 - `/progress` - ProgressPage (protected)
 - `/manage-habits` - ManageHabitsPage (protected)
-- `/privacy` - Privacy Policy (placeholder)
-- `/terms` - Terms of Service (placeholder)
+- `/privacy` - PrivacyPolicyPage (public - Task 7.0)
+- `/terms` - TermsOfServicePage (public - Task 7.0)
+
+**Note**: All protected routes are wrapped with the Layout component (Navigation + Footer + OfflineIndicator)
 
 ### Data Flow Pattern
 **Write Operations** (optimistic UI):
@@ -374,9 +391,20 @@ If you encounter these during implementation, document the decision in git commi
 - ✅ **Task 4.0**: Core Features - Habit Management (CRUD, validation, soft delete)
 - ✅ **Task 5.0**: Core Features - Daily Logging Interface (toggles, date navigation, shared notes)
 - ✅ **Task 6.0**: Core Features - Progress & Analytics (streaks, percentages, sentiment analysis)
+- ✅ **Task 7.0** (43/57 subtasks): UI/UX & Responsive Design
+  - ✅ Navigation component with sticky positioning and active states
+  - ✅ Footer with Privacy and Terms links
+  - ✅ Enhanced WelcomePage with hero, features, and CTA
+  - ✅ PrivacyPolicyPage with GDPR compliance
+  - ✅ TermsOfServicePage with legal content
+  - ✅ SyncIndicator, OfflineIndicator, ErrorMessage components
+  - ✅ Layout component wrapping protected routes
+  - ✅ Mobile-first responsive CSS with 768px breakpoint
+  - ✅ 44x44px touch targets, 16px base font, focus styles
+  - ⏳ Remaining: accessibility testing, responsive design testing, loading states
 
 **In Progress**:
-- 🔄 **Task 7.0**: UI/UX & Responsive Design (navigation, footer, accessibility polish)
+- 🔄 **Task 7.0**: UI/UX & Responsive Design (testing and polish remaining)
 
 **Not Started**:
 - ⏳ **Task 8.0**: Testing & Quality Assurance (integration tests, E2E tests)
@@ -384,10 +412,8 @@ If you encounter these during implementation, document the decision in git commi
 
 **Known Issues**:
 1. 6 failing tests (4 validation display tests, 2 date validation edge cases) - non-blocking
-2. Privacy Policy and Terms of Service pages are placeholders
+2. Accessibility testing pending (keyboard navigation, screen reader, contrast ratios)
 3. Coverage reporting requires `@vitest/coverage-v8` installation
-4. No navigation component yet (Task 7.0)
-5. No offline indicator UI (Task 7.0)
 
 **Testing the App Locally**:
 1. Start dev server: `npm run dev`

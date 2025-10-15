@@ -1,0 +1,213 @@
+/* Welcome Page Styles */
+
+.welcome-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-lg);
+  background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-background) 100%);
+}
+
+.welcome-container {
+  max-width: 800px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* Hero Section */
+.welcome-hero {
+  text-align: center;
+  margin-bottom: var(--spacing-2xl);
+}
+
+.welcome-title {
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin: 0 0 var(--spacing-md) 0;
+  line-height: 1.2;
+}
+
+.welcome-subtitle {
+  font-size: clamp(1rem, 3vw, 1.25rem);
+  color: var(--color-text-secondary);
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Features Grid */
+.welcome-features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--spacing-lg);
+  margin-bottom: var(--spacing-2xl);
+}
+
+.welcome-feature {
+  background-color: var(--color-background);
+  padding: var(--spacing-lg);
+  border-radius: var(--border-radius-lg);
+  border: 1px solid var(--color-border);
+  text-align: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.welcome-feature:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.welcome-feature-icon {
+  font-size: 2.5rem;
+  margin-bottom: var(--spacing-md);
+}
+
+.welcome-feature-title {
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin: 0 0 var(--spacing-sm) 0;
+}
+
+.welcome-feature-description {
+  font-size: var(--font-size-base);
+  color: var(--color-text-secondary);
+  margin: 0;
+  line-height: 1.6;
+}
+
+.welcome-feature-description strong {
+  color: var(--color-accent);
+  font-weight: 600;
+}
+
+/* Call to Action */
+.welcome-cta {
+  text-align: center;
+  margin-bottom: var(--spacing-2xl);
+}
+
+.welcome-button {
+  background-color: var(--color-accent);
+  color: white;
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  padding: var(--spacing-md) var(--spacing-2xl);
+  border: none;
+  border-radius: var(--border-radius-lg);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.2);
+
+  /* Ensure minimum touch target */
+  min-height: 52px;
+  min-width: 200px;
+}
+
+.welcome-button:hover:not(:disabled) {
+  background-color: var(--color-accent-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 123, 255, 0.3);
+}
+
+.welcome-button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.welcome-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.welcome-button:focus {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 4px;
+}
+
+.welcome-error {
+  color: var(--color-error);
+  font-size: var(--font-size-sm);
+  margin: var(--spacing-md) 0 0 0;
+  padding: var(--spacing-sm) var(--spacing-md);
+  background-color: rgba(220, 53, 69, 0.1);
+  border-radius: var(--border-radius);
+  border: 1px solid var(--color-error);
+}
+
+.welcome-privacy-note {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-tertiary);
+  margin: var(--spacing-md) 0 0 0;
+  font-style: italic;
+}
+
+/* Benefits Section */
+.welcome-benefits {
+  background-color: var(--color-background);
+  padding: var(--spacing-xl);
+  border-radius: var(--border-radius-lg);
+  border: 1px solid var(--color-border);
+}
+
+.welcome-benefits-title {
+  font-size: var(--font-size-xl);
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin: 0 0 var(--spacing-lg) 0;
+  text-align: center;
+}
+
+.welcome-benefits-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.welcome-benefits-list li {
+  font-size: var(--font-size-base);
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+  padding-left: var(--spacing-sm);
+}
+
+/* Mobile Optimizations */
+@media (max-width: 767px) {
+  .welcome-page {
+    padding: var(--spacing-md);
+  }
+
+  .welcome-hero {
+    margin-bottom: var(--spacing-xl);
+  }
+
+  .welcome-features {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-xl);
+  }
+
+  .welcome-feature {
+    padding: var(--spacing-md);
+  }
+
+  .welcome-button {
+    width: 100%;
+    font-size: var(--font-size-base);
+    padding: var(--spacing-md) var(--spacing-lg);
+  }
+
+  .welcome-benefits {
+    padding: var(--spacing-lg);
+  }
+}
+
+/* Tablet and Desktop */
+@media (min-width: 768px) {
+  .welcome-features {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

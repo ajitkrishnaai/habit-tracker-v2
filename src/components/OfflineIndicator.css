@@ -1,0 +1,59 @@
+/* Offline Indicator Component Styles */
+
+.offline-indicator {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1001;
+  background-color: #ffc107;
+  color: #000;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.offline-indicator-content {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: var(--spacing-sm) var(--spacing-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+}
+
+.offline-indicator-icon {
+  font-size: 1.25rem;
+}
+
+.offline-indicator-text {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  text-align: center;
+}
+
+/* Mobile Optimizations */
+@media (max-width: 767px) {
+  .offline-indicator-content {
+    padding: var(--spacing-xs) var(--spacing-md);
+  }
+
+  .offline-indicator-icon {
+    font-size: 1rem;
+  }
+
+  .offline-indicator-text {
+    font-size: var(--font-size-xs);
+  }
+}

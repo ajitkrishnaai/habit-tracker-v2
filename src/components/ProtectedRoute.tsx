@@ -3,11 +3,15 @@
  *
  * Wraps routes that require authentication.
  * Redirects unauthenticated users to the welcome page.
+ * Wraps authenticated content with Layout (Navigation + Footer)
+ * Task 7.46: Uses LoadingSpinner for better loading states
  */
 
 import { ReactNode, useEffect, useState } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { isAuthenticated } from '../services/auth';
+import Layout from './Layout';
+import LoadingSpinner from './LoadingSpinner';
 
 interface ProtectedRouteProps {
   children: ReactNode;
@@ -33,18 +37,9 @@ export const ProtectedRoute = ({ children }: ProtectedRouteProps): JSX.Element =
     checkAuth();
   }, [location]);
 
-  // Show loading state while checking
+  // Show loading state while checking - Task 7.46
   if (checking) {
-    return (
-      <div style={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        minHeight: '100vh'
-      }}>
-        <p>Loading...</p>
-      </div>
-    );
+    return <LoadingSpinner fullScreen text="Checking authentication..." />;
   }
 
   // Redirect to welcome if not authenticated
@@ -52,6 +47,6 @@ export const ProtectedRoute = ({ children }: ProtectedRouteProps): JSX.Element =
     return <Navigate to="/" replace state={{ from: location }} />;
   }
 
-  // Render protected content
-  return <>{children}</>;
+  // Render protected content wrapped in Layout
+  return <Layout>{children}</Layout>;
 };

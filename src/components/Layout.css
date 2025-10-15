@@ -1,0 +1,30 @@
+/* Layout Component Styles */
+
+.layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-background);
+}
+
+.layout-content {
+  flex: 1;
+  width: 100%;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: var(--spacing-lg);
+}
+
+/* Mobile Optimizations */
+@media (max-width: 767px) {
+  .layout-content {
+    padding: var(--spacing-md);
+  }
+}
+
+/* Ensure content doesn't hide under fixed navigation */
+@media (max-width: 767px) {
+  .layout {
+    padding-top: 0;
+  }
+}
