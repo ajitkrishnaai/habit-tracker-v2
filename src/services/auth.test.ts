@@ -54,7 +54,7 @@ describe('Authentication Service', () => {
     (window as any).google = mockGoogleAccounts;
 
     // Mock environment variable
-    import.meta.env.VITE_GOOGLE_CLIENT_ID = 'test-client-id.apps.googleusercontent.com';
+    vi.stubEnv('VITE_GOOGLE_CLIENT_ID', 'test-client-id.apps.googleusercontent.com');
 
     // Mock tokenManager functions
     vi.mocked(tokenManager.setToken).mockImplementation(() => {});
@@ -121,13 +121,13 @@ describe('Authentication Service', () => {
     });
 
     it('should reject if Google Client ID is not configured', async () => {
-      import.meta.env.VITE_GOOGLE_CLIENT_ID = '';
+      vi.stubEnv('VITE_GOOGLE_CLIENT_ID', '');
 
       await expect(initAuth()).rejects.toThrow('Google Client ID not configured');
     });
 
     it('should reject if Google Client ID is placeholder', async () => {
-      import.meta.env.VITE_GOOGLE_CLIENT_ID = 'your-google-client-id-here.apps.googleusercontent.com';
+      vi.stubEnv('VITE_GOOGLE_CLIENT_ID', 'your-google-client-id-here.apps.googleusercontent.com');
 
       await expect(initAuth()).rejects.toThrow('Google Client ID not configured');
     });

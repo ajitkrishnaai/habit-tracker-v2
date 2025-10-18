@@ -61,11 +61,9 @@ describe('tokenManager', () => {
     it('should calculate correct expiration timestamp', () => {
       const token = 'test-token';
       const expiresIn = 3600; // 1 hour in seconds
-      const beforeSetTime = Date.now();
 
       setToken(token, expiresIn);
 
-      const afterSetTime = Date.now();
       const timeUntilExpiry = getTimeUntilExpiry();
 
       // Time until expiry should be approximately expiresIn seconds

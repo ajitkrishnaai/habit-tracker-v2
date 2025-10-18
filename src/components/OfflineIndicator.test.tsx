@@ -5,11 +5,12 @@
  */
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import type { SpyInstance } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import OfflineIndicator from './OfflineIndicator';
 
 describe('OfflineIndicator', () => {
-  let onlineGetter: vi.SpyInstance;
+  let onlineGetter: SpyInstance;
 
   beforeEach(() => {
     // Mock navigator.onLine

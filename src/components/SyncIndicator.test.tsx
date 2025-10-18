@@ -7,7 +7,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import SyncIndicator, { SyncStatus } from './SyncIndicator';
+import SyncIndicator from './SyncIndicator';
 
 describe('SyncIndicator', () => {
   describe('Idle State', () => {
@@ -338,7 +338,7 @@ describe('SyncIndicator', () => {
       expect(screen.queryByRole('button')).not.toBeInTheDocument();
 
       // onRetry should be ignored for syncing state
-      const { rerender } = render(<SyncIndicator status="syncing" onRetry={onRetry} />);
+      render(<SyncIndicator status="syncing" onRetry={onRetry} />);
       expect(screen.queryByRole('button')).not.toBeInTheDocument();
     });
   });

@@ -257,7 +257,7 @@ describe('Navigation', () => {
     });
 
     it('should use proper list structure (ul/li)', () => {
-      const { container } = render(
+      render(
         <MemoryRouter>
           <Navigation />
         </MemoryRouter>
