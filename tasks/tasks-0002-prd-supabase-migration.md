@@ -29,8 +29,9 @@ Based on PRD: `0002-prd-supabase-migration.md`
 - `.env.example` - Example environment file with new variables
 - `package.json` - Add @supabase/supabase-js dependency
 - `vite.config.ts` - No changes needed (Vite already configured)
-- `supabase/migrations/001_initial_schema.sql` - Database schema and RLS policies
-- `supabase/seed.sql` - Optional seed data for testing
+- `supabase/migrations/001_initial_schema.sql` - **[CREATED]** Database schema and RLS policies
+- `supabase/seed.sql` - **[CREATED]** Optional seed data for testing
+- `SUPABASE_SETUP.md` - **[CREATED]** Complete Supabase setup documentation
 
 ### Documentation
 - `CLAUDE.md` - **[UPDATE]** Replace Google Sheets architecture with Supabase
@@ -47,14 +48,14 @@ Based on PRD: `0002-prd-supabase-migration.md`
 
 ## Tasks
 
-- [ ] 1.0 Supabase Infrastructure Setup
-  - [ ] 1.1 Create Supabase project at supabase.com (free tier, select region)
-  - [ ] 1.2 Create database schema (habits, logs, metadata tables with columns, constraints, indexes)
-  - [ ] 1.3 Implement Row-Level Security (RLS) policies for all tables (user_id filtering)
-  - [ ] 1.4 Create database triggers (auto-update modified_date, auto-create metadata on user signup)
-  - [ ] 1.5 Configure Google OAuth in Supabase Auth dashboard (client ID, secret, redirect URIs)
-  - [ ] 1.6 Test database schema via Supabase Table Editor (insert test rows, verify RLS)
-  - [ ] 1.7 Document Supabase project URL and anon key for environment setup
+- [x] 1.0 Supabase Infrastructure Setup
+  - [x] 1.1 Create Supabase project at supabase.com (free tier, select region)
+  - [x] 1.2 Create database schema (habits, logs, metadata tables with columns, constraints, indexes)
+  - [x] 1.3 Implement Row-Level Security (RLS) policies for all tables (user_id filtering)
+  - [x] 1.4 Create database triggers (auto-update modified_date, auto-create metadata on user signup)
+  - [x] 1.5 Configure email/password auth in Supabase (changed from Google OAuth to email/password)
+  - [x] 1.6 Test database schema via Supabase Table Editor (verified tables, RLS, policies, triggers)
+  - [x] 1.7 Document Supabase project URL and anon key for environment setup
 
 - [ ] 2.0 Frontend Dependencies & Configuration
   - [ ] 2.1 Install @supabase/supabase-js package (npm install @supabase/supabase-js)
