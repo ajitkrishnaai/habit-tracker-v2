@@ -128,9 +128,24 @@ export function validateDate(date: string): ValidationResult {
     };
   }
 
-  // Parse date
-  const dateObj = new Date(date);
+  // Parse date in local timezone (avoid UTC interpretation)
+  // Split YYYY-MM-DD and construct Date object directly
+  const [year, month, day] = date.split('-').map(Number);
+  const dateObj = new Date(year, month - 1, day);
+
   if (isNaN(dateObj.getTime())) {
+    return {
+      isValid: false,
+      error: 'Invalid date',
+    };
+  }
+
+  // Validate that the parsed date matches the input (catch overflow like month 13 or day 45)
+  if (
+    dateObj.getFullYear() !== year ||
+    dateObj.getMonth() !== month - 1 ||
+    dateObj.getDate() !== day
+  ) {
     return {
       isValid: false,
       error: 'Invalid date',
@@ -141,9 +156,8 @@ export function validateDate(date: string): ValidationResult {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
-  // Get date at midnight for comparison
-  const checkDate = new Date(date);
-  checkDate.setHours(0, 0, 0, 0);
+  // checkDate is already at midnight local time from constructor
+  const checkDate = dateObj;
 
   // Check if date is in the future
   if (checkDate > today) {
