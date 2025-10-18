@@ -16,7 +16,7 @@ export interface Habit {
 /**
  * Type guard to check if an object is a valid Habit
  */
-export const isHabit = (obj: any): obj is Habit => {
+export const isHabit = (obj: any): obj is Habit => { // eslint-disable-line @typescript-eslint/no-explicit-any
   return (
     typeof obj === 'object' &&
     obj !== null &&

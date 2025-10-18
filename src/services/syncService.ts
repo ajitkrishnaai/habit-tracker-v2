@@ -267,7 +267,7 @@ class SyncService {
   /**
    * Process a single queued operation
    */
-  private async processOperation(operation: any): Promise<void> {
+  private async processOperation(operation: any): Promise<void> { // eslint-disable-line @typescript-eslint/no-explicit-any
     const { operationType, entityType, data } = operation;
 
     switch (entityType) {
@@ -316,7 +316,7 @@ class SyncService {
   ): T[] {
     // Create a map of remote data by ID
     const remoteMap = new Map<string, T>();
-    remoteData.forEach((item: any) => {
+    remoteData.forEach((item: any) => { // eslint-disable-line @typescript-eslint/no-explicit-any
       const id = item.habit_id || item.log_id;
       if (id) {
         remoteMap.set(id, item);
@@ -328,7 +328,7 @@ class SyncService {
     const processedIds = new Set<string>();
 
     // Process local data
-    localData.forEach((localItem: any) => {
+    localData.forEach((localItem: any) => { // eslint-disable-line @typescript-eslint/no-explicit-any
       const id = localItem.habit_id || localItem.log_id;
       if (!id) return;
 
@@ -360,7 +360,7 @@ class SyncService {
     });
 
     // Add remote items that weren't in local
-    remoteData.forEach((remoteItem: any) => {
+    remoteData.forEach((remoteItem: any) => { // eslint-disable-line @typescript-eslint/no-explicit-any
       const id = remoteItem.habit_id || remoteItem.log_id;
       if (id && !processedIds.has(id)) {
         result.push(remoteItem);

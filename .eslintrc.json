@@ -16,5 +16,15 @@
       "warn",
       { "allowConstantExport": true }
     ]
-  }
+  },
+  "overrides": [
+    {
+      "files": ["**/*.test.ts", "**/*.test.tsx", "**/*.spec.ts", "e2e/**/*.ts", "src/test/**/*.ts", "src/utils/testHelpers.ts"],
+      "rules": {
+        "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/no-unused-vars": "off",
+        "@typescript-eslint/no-var-requires": "off"
+      }
+    }
+  ]
 }

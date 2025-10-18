@@ -239,7 +239,7 @@ export const readHabits = async (sheetId: string): Promise<Habit[]> => {
     const data = await response.json();
     const rows = data.values || [];
 
-    const habits: Habit[] = rows.map((row: any[]) => ({
+    const habits: Habit[] = rows.map((row: any[]) => ({ // eslint-disable-line @typescript-eslint/no-explicit-any
       habit_id: row[0] || '',
       name: row[1] || '',
       category: row[2] || undefined,
@@ -330,7 +330,7 @@ export const readLogs = async (sheetId: string): Promise<LogEntry[]> => {
     const data = await response.json();
     const rows = data.values || [];
 
-    const logs: LogEntry[] = rows.map((row: any[]) => ({
+    const logs: LogEntry[] = rows.map((row: any[]) => ({ // eslint-disable-line @typescript-eslint/no-explicit-any
       log_id: row[0] || '',
       habit_id: row[1] || '',
       date: row[2] || '',

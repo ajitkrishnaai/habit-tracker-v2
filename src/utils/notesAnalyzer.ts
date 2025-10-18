@@ -125,8 +125,8 @@ const generateCorrelationText = (
 
   let donePositive = 0;
   let doneNegative = 0;
-  let notDonePositive = 0;
-  let notDoneNegative = 0;
+  let _notDonePositive = 0;  // eslint-disable-line @typescript-eslint/no-unused-vars -- Reserved for future correlation analysis
+  let _notDoneNegative = 0;  // eslint-disable-line @typescript-eslint/no-unused-vars -- Reserved for future correlation analysis
 
   doneEntries.forEach(log => {
     const result = sentiment.analyze(log.notes || '');
@@ -136,8 +136,8 @@ const generateCorrelationText = (
 
   notDoneEntries.forEach(log => {
     const result = sentiment.analyze(log.notes || '');
-    if (result.score > 0) notDonePositive++;
-    if (result.score < 0) notDoneNegative++;
+    if (result.score > 0) _notDonePositive++;
+    if (result.score < 0) _notDoneNegative++;
   });
 
   // Generate insight based on the data

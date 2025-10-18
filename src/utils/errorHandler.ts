@@ -23,7 +23,7 @@ export interface AppError {
 /**
  * Parse and categorize errors into user-friendly AppError objects
  */
-export const parseError = (error: any): AppError => {
+export const parseError = (error: any): AppError => { // eslint-disable-line @typescript-eslint/no-explicit-any
   // Handle OAuth/Authentication errors
   if (error.message?.includes('auth') || error.message?.includes('token')) {
     return {
@@ -90,7 +90,7 @@ export const parseError = (error: any): AppError => {
 /**
  * Get user-friendly message for OAuth errors
  */
-const getAuthErrorMessage = (error: any): string => {
+const getAuthErrorMessage = (error: any): string => { // eslint-disable-line @typescript-eslint/no-explicit-any
   const errorString = error.message?.toLowerCase() || '';
 
   if (errorString.includes('popup_closed_by_user') || errorString.includes('user closed')) {
@@ -123,7 +123,7 @@ const getAuthErrorMessage = (error: any): string => {
 /**
  * Log error to console with context
  */
-export const logError = (context: string, error: any): void => {
+export const logError = (context: string, error: any): void => { // eslint-disable-line @typescript-eslint/no-explicit-any
   console.error(`[${context}]`, error);
 
   // In production, you could send errors to an error tracking service

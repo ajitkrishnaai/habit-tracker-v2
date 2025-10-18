@@ -14,7 +14,7 @@ export interface Metadata {
 /**
  * Type guard to check if an object is valid Metadata
  */
-export const isMetadata = (obj: any): obj is Metadata => {
+export const isMetadata = (obj: any): obj is Metadata => { // eslint-disable-line @typescript-eslint/no-explicit-any
   return (
     typeof obj === 'object' &&
     obj !== null &&

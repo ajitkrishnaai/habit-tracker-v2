@@ -36,7 +36,7 @@ interface UserProfile {
 
 // Authentication state
 let userProfile: UserProfile | null = null;
-let tokenClient: any = null; // Google Identity Services token client
+let tokenClient: any = null; // eslint-disable-line @typescript-eslint/no-explicit-any -- Google Identity Services token client
 
 // Required OAuth scopes
 // Using drive.file for security: only access files created by this app
@@ -66,7 +66,7 @@ export const initAuth = (): Promise<void> => {
 
     script.onload = () => {
       // Initialize token client for OAuth flow
-      tokenClient = (window as any).google.accounts.oauth2.initTokenClient({
+      tokenClient = (window as any).google.accounts.oauth2.initTokenClient({ // eslint-disable-line @typescript-eslint/no-explicit-any
         client_id: clientId,
         scope: SCOPES,
         callback: '', // Will be set per-request

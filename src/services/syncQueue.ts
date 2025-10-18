@@ -14,7 +14,7 @@ export interface QueuedOperation {
   operationType: OperationType;
   entityType: EntityType;
   entityId: string; // ID of the entity being modified
-  data: any; // The data to sync (Habit, LogEntry, or Metadata)
+  data: any; // eslint-disable-line @typescript-eslint/no-explicit-any -- The data to sync (Habit, LogEntry, or Metadata)
   retryCount: number; // Number of times this operation has been retried
   lastRetry?: string; // ISO 8601 datetime of last retry attempt
 }
@@ -36,7 +36,7 @@ class SyncQueueService {
     operationType: OperationType,
     entityType: EntityType,
     entityId: string,
-    data: any
+    data: any // eslint-disable-line @typescript-eslint/no-explicit-any
   ): Promise<void> {
     const queue = await this.getQueue();
 

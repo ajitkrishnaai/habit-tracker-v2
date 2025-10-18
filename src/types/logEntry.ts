@@ -16,7 +16,7 @@ export interface LogEntry {
 /**
  * Type guard to check if an object is a valid LogEntry
  */
-export const isLogEntry = (obj: any): obj is LogEntry => {
+export const isLogEntry = (obj: any): obj is LogEntry => { // eslint-disable-line @typescript-eslint/no-explicit-any
   return (
     typeof obj === 'object' &&
     obj !== null &&
