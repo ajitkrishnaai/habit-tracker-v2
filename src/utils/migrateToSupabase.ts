@@ -95,6 +95,7 @@ export async function migrateExistingDataToSupabase(): Promise<{
 }
 
 // Export for use in browser console
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 (window as any).migrateToSupabase = migrateExistingDataToSupabase;
 
 console.log('💡 Migration utility loaded! Run: await migrateToSupabase()');

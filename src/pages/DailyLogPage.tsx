@@ -174,13 +174,16 @@ export const DailyLogPage: React.FC = () => {
 
         if (logExistsInSupabase) {
           // Update existing log in Supabase
-          await supabaseDataService.updateLog({
-            log_id: logEntry.log_id,
-            habit_id: logEntry.habit_id,
-            date: logEntry.date,
-            status: logEntry.status,
-            notes: logEntry.notes || null,
-          });
+          // Get the full log object to pass all required fields
+          const existingLog = existingLogs.find(l => l.log_id === logEntry.log_id ||
+                                                      (l.habit_id === logEntry.habit_id && l.date === logEntry.date));
+          if (existingLog) {
+            await supabaseDataService.updateLog({
+              ...existingLog,
+              status: logEntry.status,
+              notes: logEntry.notes || null,
+            });
+          }
         } else {
           // Create new log in Supabase
           await supabaseDataService.createLog({
@@ -273,13 +276,16 @@ export const DailyLogPage: React.FC = () => {
 
             if (logExistsInSupabase) {
               // Update existing log
-              await supabaseDataService.updateLog({
-                log_id: logEntry.log_id,
-                habit_id: logEntry.habit_id,
-                date: logEntry.date,
-                status: logEntry.status,
-                notes: logEntry.notes || null,
-              });
+              // Get the full log object to pass all required fields
+              const existingLog = existingLogs.find(l => l.log_id === logEntry.log_id ||
+                                                          (l.habit_id === logEntry.habit_id && l.date === logEntry.date));
+              if (existingLog) {
+                await supabaseDataService.updateLog({
+                  ...existingLog,
+                  status: logEntry.status,
+                  notes: logEntry.notes || null,
+                });
+              }
             } else {
               // Create new log
               await supabaseDataService.createLog({
