@@ -10,9 +10,37 @@ import { syncQueueService } from './syncQueue';
 import { supabaseDataService } from './supabaseDataService';
 import type { Habit } from '../types/habit';
 import type { LogEntry } from '../types/logEntry';
+import type { Metadata } from '../types/metadata';
+import type { Log, Metadata as SupabaseMetadata } from '../types/database';
 
 // Retry intervals in milliseconds: 30s, 60s, 120s
 const RETRY_INTERVALS = [30000, 60000, 120000];
+
+/**
+ * Convert Supabase Log to LogEntry format
+ */
+function convertLogToLogEntry(log: Log): LogEntry {
+  return {
+    log_id: log.log_id,
+    habit_id: log.habit_id,
+    date: log.date,
+    status: log.status as 'done' | 'not_done' | 'no_data',
+    notes: log.notes || undefined,
+    timestamp: log.modified_date,
+  };
+}
+
+/**
+ * Convert Supabase Metadata to local Metadata format
+ */
+function convertSupabaseMetadata(metadata: SupabaseMetadata): Metadata {
+  return {
+    sheet_version: metadata.sheet_version || '1.0',
+    last_sync: metadata.last_sync || new Date().toISOString(),
+    user_id: metadata.user_id,
+    sheet_id: '', // Not used in Supabase
+  };
+}
 
 export type SyncStatus = 'idle' | 'syncing' | 'success' | 'error';
 
@@ -191,11 +219,16 @@ class SyncService {
 
     try {
       // Read data from Supabase
-      const [habits, logs, metadata] = await Promise.all([
+      const [supabaseHabits, supabaseLogs, supabaseMetadata] = await Promise.all([
         supabaseDataService.getHabits(),
         supabaseDataService.getLogs(),
         supabaseDataService.getMetadata(),
       ]);
+
+      // Convert Supabase types to local types
+      const habits = supabaseHabits as Habit[]; // Habit types are compatible
+      const logs: LogEntry[] = supabaseLogs.map(convertLogToLogEntry);
+      const metadata = supabaseMetadata ? convertSupabaseMetadata(supabaseMetadata) : null;
 
       // Get local data for conflict resolution
       const localHabits = await storageService.getHabits();

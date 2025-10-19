@@ -153,9 +153,9 @@ export async function createHabit(
         habit_id: habit.habit_id,
         user_id: userId,
         name: habit.name,
-        category: habit.category,
+        category: habit.category || null,
         status: habit.status,
-      } as any)
+      })
       .select()
       .single();
 
@@ -191,10 +191,10 @@ export async function updateHabit(habit: Habit): Promise<Habit> {
 
     const { data, error } = await supabase
       .from('habits')
-      // @ts-ignore - Supabase types infer 'never' for update, but this is valid
+      // @ts-expect-error - Supabase types infer 'never' for update, but this is valid
       .update({
         name: habit.name,
-        category: habit.category,
+        category: habit.category || null,
         status: habit.status,
       })
       .eq('habit_id', habit.habit_id)
@@ -234,7 +234,7 @@ export async function deleteHabit(habitId: string): Promise<Habit> {
 
     const { data, error } = await supabase
       .from('habits')
-      // @ts-ignore - Supabase types infer 'never' for update, but this is valid
+      // @ts-expect-error - Supabase types infer 'never' for update, but this is valid
       .update({
         status: 'inactive' as const,
       })
@@ -338,8 +338,8 @@ export async function createLog(
         user_id: userId,
         date: log.date,
         status: log.status,
-        notes: log.notes,
-      } as any)
+        notes: log.notes || null,
+      })
       .select()
       .single();
 
@@ -383,10 +383,10 @@ export async function updateLog(log: Log): Promise<Log> {
 
     const { data, error} = await supabase
       .from('logs')
-      // @ts-ignore - Supabase types infer 'never' for update, but this is valid
+      // @ts-expect-error - Supabase types infer 'never' for update, but this is valid
       .update({
         status: log.status,
-        notes: log.notes,
+        notes: log.notes || null,
         date: log.date,
       })
       .eq('log_id', log.log_id)
@@ -509,9 +509,9 @@ export async function updateMetadata(
       .upsert(
         {
           user_id: userId,
-          sheet_version: metadata.sheet_version,
-          last_sync: metadata.last_sync,
-        } as any,
+          sheet_version: metadata.sheet_version || null,
+          last_sync: metadata.last_sync || null,
+        },
         {
           onConflict: 'user_id', // Primary key
         }

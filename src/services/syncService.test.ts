@@ -89,16 +89,25 @@ describe('Sync Service - Integration Tests', () => {
     vi.mocked(syncQueueService.clearQueue).mockResolvedValue(undefined);
 
     // Mock Supabase Data Service
-    vi.mocked(supabaseDataService.getHabits).mockResolvedValue([...mockHabits]);
-    vi.mocked(supabaseDataService.getLogs).mockResolvedValue([...mockLogs]);
-    vi.mocked(supabaseDataService.getMetadata).mockResolvedValue({ ...mockMetadata });
-    vi.mocked(supabaseDataService.createHabit).mockImplementation((h) => Promise.resolve({ ...h, user_id: 'user_123', created_date: new Date().toISOString(), modified_date: new Date().toISOString() }));
-    vi.mocked(supabaseDataService.updateHabit).mockImplementation((h) => Promise.resolve(h));
-    vi.mocked(supabaseDataService.deleteHabit).mockImplementation((id) => Promise.resolve({ habit_id: id, status: 'inactive' } as any));
-    vi.mocked(supabaseDataService.createLog).mockImplementation((l) => Promise.resolve({ ...l, user_id: 'user_123', created_date: new Date().toISOString(), modified_date: new Date().toISOString() }));
-    vi.mocked(supabaseDataService.updateLog).mockImplementation((l) => Promise.resolve(l));
+    vi.mocked(supabaseDataService.getHabits).mockResolvedValue([...mockHabits] as any);
+    vi.mocked(supabaseDataService.getLogs).mockResolvedValue(mockLogs.map((log) => ({
+      ...log,
+      user_id: 'user_123',
+      created_date: log.timestamp,
+      modified_date: log.timestamp,
+    })) as any);
+    vi.mocked(supabaseDataService.getMetadata).mockResolvedValue({
+      ...mockMetadata,
+      created_date: new Date().toISOString(),
+      modified_date: new Date().toISOString(),
+    } as any);
+    vi.mocked(supabaseDataService.createHabit).mockImplementation((h: any) => Promise.resolve({ ...h, user_id: 'user_123', created_date: new Date().toISOString(), modified_date: new Date().toISOString() }));
+    vi.mocked(supabaseDataService.updateHabit).mockImplementation((h: any) => Promise.resolve(h));
+    vi.mocked(supabaseDataService.deleteHabit).mockImplementation((_id: string) => Promise.resolve({ habit_id: _id, status: 'inactive', user_id: 'user_123', name: '', created_date: '', modified_date: '' } as any));
+    vi.mocked(supabaseDataService.createLog).mockImplementation((l: any) => Promise.resolve({ ...l, user_id: 'user_123', created_date: new Date().toISOString(), modified_date: new Date().toISOString() }));
+    vi.mocked(supabaseDataService.updateLog).mockImplementation((l: any) => Promise.resolve(l));
     vi.mocked(supabaseDataService.deleteLog).mockResolvedValue(undefined);
-    vi.mocked(supabaseDataService.updateMetadata).mockImplementation((m) => Promise.resolve({ ...m, user_id: 'user_123', created_date: new Date().toISOString(), modified_date: new Date().toISOString() }));
+    vi.mocked(supabaseDataService.updateMetadata).mockImplementation((m: any) => Promise.resolve({ ...m, user_id: 'user_123', created_date: new Date().toISOString(), modified_date: new Date().toISOString() }));
 
     // Mock window.addEventListener to capture listeners
     const originalAddEventListener = window.addEventListener.bind(window);
