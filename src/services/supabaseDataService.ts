@@ -189,9 +189,9 @@ export async function updateHabit(habit: Habit): Promise<Habit> {
   try {
     const userId = await getCurrentUserId();
 
-    // @ts-expect-error - Supabase types infer 'never' for update, but this is valid
     const { data, error } = await supabase
       .from('habits')
+      // @ts-ignore - Supabase types infer 'never' for update, but this is valid
       .update({
         name: habit.name,
         category: habit.category,
@@ -232,9 +232,9 @@ export async function deleteHabit(habitId: string): Promise<Habit> {
   try {
     const userId = await getCurrentUserId();
 
-    // @ts-expect-error - Supabase types infer 'never' for update, but this is valid
     const { data, error } = await supabase
       .from('habits')
+      // @ts-ignore - Supabase types infer 'never' for update, but this is valid
       .update({
         status: 'inactive' as const,
       })
@@ -381,9 +381,9 @@ export async function updateLog(log: Log): Promise<Log> {
   try {
     const userId = await getCurrentUserId();
 
-    // @ts-expect-error - Supabase types infer 'never' for update, but this is valid
     const { data, error} = await supabase
       .from('logs')
+      // @ts-ignore - Supabase types infer 'never' for update, but this is valid
       .update({
         status: log.status,
         notes: log.notes,
