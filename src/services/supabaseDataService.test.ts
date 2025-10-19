@@ -207,10 +207,10 @@ describe('SupabaseDataService', () => {
         const result = await createHabit(newHabit);
 
         expect(supabase.from).toHaveBeenCalledWith('habits');
-        expect(queryMock.insert).toHaveBeenCalledWith({
+        expect(queryMock.insert).toHaveBeenCalledWith([{
           ...newHabit,
           user_id: 'test-user-id-123',
-        });
+        }]);
         expect(result).toHaveProperty('user_id', 'test-user-id-123');
       });
 
@@ -348,10 +348,10 @@ describe('SupabaseDataService', () => {
 
         const result = await createLog(newLog);
 
-        expect(queryMock.insert).toHaveBeenCalledWith({
+        expect(queryMock.insert).toHaveBeenCalledWith([{
           ...newLog,
           user_id: 'test-user-id-123',
-        });
+        }]);
         expect(result).toHaveProperty('user_id', 'test-user-id-123');
       });
 
@@ -454,10 +454,10 @@ describe('SupabaseDataService', () => {
 
         expect(supabase.from).toHaveBeenCalledWith('metadata');
         expect(queryMock.upsert).toHaveBeenCalledWith(
-          {
+          [{
             ...metadataUpdate,
             user_id: 'test-user-id-123',
-          },
+          }],
           { onConflict: 'user_id' }
         );
         expect(result.sheet_version).toBe('2.1');
