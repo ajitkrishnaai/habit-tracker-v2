@@ -96,19 +96,19 @@ Based on PRD: `0002-prd-supabase-migration.md`
   - [x] 4.13 Add error handling for all operations (catch Supabase errors, log, rethrow)
   - [x] 4.14 Test all CRUD operations in development (create test data, verify in Supabase dashboard)
 
-- [ ] 5.0 Sync Service Integration
-  - [ ] 5.1 Update src/services/syncService.ts imports (replace googleSheetsService with supabaseDataService)
-  - [ ] 5.2 Update syncFromRemote() to call supabaseData.getHabits(), getLogs(), getMetadata()
-  - [ ] 5.3 Update processOperation() for CREATE_HABIT to call supabaseData.createHabit(data)
-  - [ ] 5.4 Update processOperation() for UPDATE_HABIT to call supabaseData.updateHabit(data)
-  - [ ] 5.5 Update processOperation() for DELETE_HABIT to call supabaseData.deleteHabit(data.habit_id)
-  - [ ] 5.6 Update processOperation() for CREATE_LOG to call supabaseData.createLog(data)
-  - [ ] 5.7 Update processOperation() for UPDATE_LOG to call supabaseData.updateLog(data)
-  - [ ] 5.8 Update processOperation() for DELETE_LOG to call supabaseData.deleteLog(data.log_id)
-  - [ ] 5.9 Update processOperation() for UPDATE_METADATA to call supabaseData.updateMetadata(data)
-  - [ ] 5.10 Preserve conflict resolution logic (resolveConflicts() method unchanged)
-  - [ ] 5.11 Preserve retry logic with exponential backoff (scheduleRetry() unchanged)
-  - [ ] 5.12 Test sync service integration (queue operations, trigger sync, verify Supabase updates)
+- [x] 5.0 Sync Service Integration
+  - [x] 5.1 Update src/services/syncService.ts imports (replace googleSheetsService with supabaseDataService)
+  - [x] 5.2 Update syncFromRemote() to call supabaseData.getHabits(), getLogs(), getMetadata()
+  - [x] 5.3 Update processOperation() for CREATE_HABIT to call supabaseData.createHabit(data)
+  - [x] 5.4 Update processOperation() for UPDATE_HABIT to call supabaseData.updateHabit(data)
+  - [x] 5.5 Update processOperation() for DELETE_HABIT to call supabaseData.deleteHabit(data.habit_id)
+  - [x] 5.6 Update processOperation() for CREATE_LOG to call supabaseData.createLog(data)
+  - [x] 5.7 Update processOperation() for UPDATE_LOG to call supabaseData.updateLog(data)
+  - [x] 5.8 Update processOperation() for DELETE_LOG to call supabaseData.deleteLog(data.log_id)
+  - [x] 5.9 Update processOperation() for UPDATE_METADATA to call supabaseData.updateMetadata(data)
+  - [x] 5.10 Preserve conflict resolution logic (resolveConflicts() method unchanged)
+  - [x] 5.11 Preserve retry logic with exponential backoff (scheduleRetry() unchanged)
+  - [x] 5.12 Test sync service integration (queue operations, trigger sync, verify Supabase updates)
 
 - [ ] 6.0 Component Updates & Testing
   - [ ] 6.1 Run existing test suite (npm test -- --run) to identify failing tests
