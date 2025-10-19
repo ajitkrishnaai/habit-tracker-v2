@@ -1,481 +1,714 @@
 /**
- * Authentication Service Tests
+ * Supabase Authentication Service Tests
  *
- * Tests for Google OAuth authentication including init, login, logout, and token management.
+ * Comprehensive tests for Supabase Auth including:
+ * - Initialization and session management
+ * - Email/password login and signup
+ * - Google OAuth login flow
+ * - Logout and state cleanup
+ * - Authentication state listeners
+ * - User profile and session getters
  */
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import {
   initAuth,
+  loginWithEmail,
+  signUpWithEmail,
   login,
   logout,
-  getAccessToken,
   isAuthenticated,
   getUserProfile,
   getUserId,
+  getAccessToken,
+  getSession,
+  getCurrentUser,
+  onAuthChange,
 } from './auth';
-import * as tokenManager from '../utils/tokenManager';
+import type { Session, User, AuthError } from '@supabase/supabase-js';
 
-// Mock token manager
-vi.mock('../utils/tokenManager');
+// Mock the Supabase client
+vi.mock('../lib/supabaseClient', () => {
+  const mockAuth = {
+    getSession: vi.fn(),
+    onAuthStateChange: vi.fn(),
+    signInWithPassword: vi.fn(),
+    signUp: vi.fn(),
+    signInWithOAuth: vi.fn(),
+    signOut: vi.fn(),
+  };
 
-// Mock fetch globally
-global.fetch = vi.fn();
+  return {
+    supabase: {
+      auth: mockAuth,
+    },
+  };
+});
 
-describe('Authentication Service', () => {
-  let mockTokenClient: any;
-  let mockGoogleAccounts: any;
-  let mockScriptElement: HTMLScriptElement;
-  let originalCreateElement: typeof document.createElement;
+import { supabase } from '../lib/supabaseClient';
+
+describe('Supabase Authentication Service', () => {
+  // Mock data
+  const mockUser: User = {
+    id: 'user-123',
+    email: 'test@example.com',
+    aud: 'authenticated',
+    role: 'authenticated',
+    created_at: '2024-01-01T00:00:00Z',
+    updated_at: '2024-01-01T00:00:00Z',
+    app_metadata: {},
+    user_metadata: {
+      name: 'Test User',
+      avatar_url: 'https://example.com/avatar.jpg',
+    },
+  };
+
+  const mockSession: Session = {
+    access_token: 'mock-access-token',
+    refresh_token: 'mock-refresh-token',
+    expires_in: 3600,
+    expires_at: Date.now() / 1000 + 3600,
+    token_type: 'bearer',
+    user: mockUser,
+  };
+
+  const mockAuthError: AuthError = {
+    name: 'AuthApiError',
+    message: 'Invalid credentials',
+    status: 401,
+  };
+
+  // Store the auth state change callback
+  let authStateChangeCallback: ((event: string, session: Session | null) => void) | null = null;
 
   beforeEach(() => {
     // Clear all mocks
     vi.clearAllMocks();
 
-    // Reset DOM
-    document.head.innerHTML = '';
+    // Reset auth state change callback
+    authStateChangeCallback = null;
 
-    // Mock token client
-    mockTokenClient = {
-      callback: null,
-      requestAccessToken: vi.fn(),
-    };
+    // Mock console methods to reduce test noise
+    vi.spyOn(console, 'log').mockImplementation(() => {});
+    vi.spyOn(console, 'error').mockImplementation(() => {});
 
-    // Mock Google Identity Services
-    mockGoogleAccounts = {
-      accounts: {
-        oauth2: {
-          initTokenClient: vi.fn(() => mockTokenClient),
-        },
-      },
-    };
+    // Default mock implementations
+    vi.mocked(supabase.auth.getSession).mockResolvedValue({
+      data: { session: null },
+      error: null,
+    });
 
-    // Set up window.google
-    (window as any).google = mockGoogleAccounts;
-
-    // Mock environment variable
-    vi.stubEnv('VITE_GOOGLE_CLIENT_ID', 'test-client-id.apps.googleusercontent.com');
-
-    // Mock tokenManager functions
-    vi.mocked(tokenManager.setToken).mockImplementation(() => {});
-    vi.mocked(tokenManager.getToken).mockReturnValue(null);
-    vi.mocked(tokenManager.clearToken).mockImplementation(() => {});
-    vi.mocked(tokenManager.hasValidToken).mockReturnValue(false);
-    vi.mocked(tokenManager.setupAutoRefresh).mockImplementation(() => {});
-
-    // Mock document.createElement to intercept script creation
-    originalCreateElement = document.createElement.bind(document);
-    mockScriptElement = {
-      src: '',
-      async: false,
-      defer: false,
-      onload: null,
-      onerror: null,
-      setAttribute: vi.fn(),
-      getAttribute: vi.fn(),
-    } as any;
-
-    document.createElement = vi.fn((tagName: string) => {
-      if (tagName === 'script') {
-        return mockScriptElement;
-      }
-      return originalCreateElement(tagName);
-    }) as any;
-
-    // Mock appendChild to prevent happy-dom from trying to load the script
-    const originalAppendChild = document.head.appendChild.bind(document.head);
-    document.head.appendChild = vi.fn((node: Node) => {
-      if (node === mockScriptElement) {
-        // Don't actually append to avoid happy-dom script loading
-        return node;
-      }
-      return originalAppendChild(node);
-    }) as any;
+    vi.mocked(supabase.auth.onAuthStateChange).mockImplementation((callback) => {
+      authStateChangeCallback = callback as any;
+      return {
+        data: { subscription: { id: 'mock-subscription', unsubscribe: vi.fn() } },
+      };
+    });
   });
 
   afterEach(() => {
-    // Clean up
-    delete (window as any).google;
-    document.createElement = originalCreateElement;
     vi.restoreAllMocks();
   });
 
   describe('initAuth', () => {
-    it('should successfully initialize Google Identity Services', async () => {
-      const promise = initAuth();
-
-      // Verify script element was configured correctly
-      expect(mockScriptElement.src).toBe('https://accounts.google.com/gsi/client');
-      expect(mockScriptElement.async).toBe(true);
-      expect(mockScriptElement.defer).toBe(true);
-
-      // Simulate script load
-      mockScriptElement.onload?.(new Event('load'));
-
-      await expect(promise).resolves.toBeUndefined();
-      expect(mockGoogleAccounts.accounts.oauth2.initTokenClient).toHaveBeenCalledWith({
-        client_id: 'test-client-id.apps.googleusercontent.com',
-        scope: 'https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/userinfo.profile',
-        callback: '',
-      });
-    });
-
-    it('should reject if Google Client ID is not configured', async () => {
-      vi.stubEnv('VITE_GOOGLE_CLIENT_ID', '');
-
-      await expect(initAuth()).rejects.toThrow('Google Client ID not configured');
-    });
-
-    it('should reject if Google Client ID is placeholder', async () => {
-      vi.stubEnv('VITE_GOOGLE_CLIENT_ID', 'your-google-client-id-here.apps.googleusercontent.com');
-
-      await expect(initAuth()).rejects.toThrow('Google Client ID not configured');
-    });
-
-    it('should reject if script fails to load', async () => {
-      const promise = initAuth();
-
-      // Simulate script error
-      mockScriptElement.onerror?.(new Event('error'));
-
-      await expect(promise).rejects.toThrow('Failed to load Google Identity Services');
-    });
-  });
-
-  describe('login', () => {
-    beforeEach(async () => {
-      // Initialize auth first
-      const promise = initAuth();
-      mockScriptElement.onload?.(new Event('load'));
-      await promise;
-    });
-
-    it('should successfully complete OAuth login flow', async () => {
-      // Mock successful user profile fetch
-      (global.fetch as any).mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({
-          id: 'user-123',
-          email: 'test@example.com',
-          name: 'Test User',
-          picture: 'https://example.com/photo.jpg',
-        }),
+    it('should initialize successfully with no existing session', async () => {
+      vi.mocked(supabase.auth.getSession).mockResolvedValue({
+        data: { session: null },
+        error: null,
       });
 
-      const loginPromise = login();
+      await expect(initAuth()).resolves.toBeUndefined();
 
-      // Verify requestAccessToken was called
-      expect(mockTokenClient.requestAccessToken).toHaveBeenCalledWith({ prompt: 'consent' });
-
-      // Simulate successful OAuth response
-      await mockTokenClient.callback({
-        access_token: 'test-access-token',
-        expires_in: 3600,
-        scope: 'https://www.googleapis.com/auth/drive.file',
-        token_type: 'Bearer',
-      });
-
-      await loginPromise;
-
-      // Verify token was stored
-      expect(tokenManager.setToken).toHaveBeenCalledWith('test-access-token', 3600);
-
-      // Verify auto-refresh was set up
-      expect(tokenManager.setupAutoRefresh).toHaveBeenCalled();
-
-      // Verify user profile was fetched
-      expect(global.fetch).toHaveBeenCalledWith(
-        'https://www.googleapis.com/oauth2/v2/userinfo',
-        {
-          headers: {
-            Authorization: 'Bearer test-access-token',
-          },
-        }
+      expect(supabase.auth.getSession).toHaveBeenCalled();
+      expect(supabase.auth.onAuthStateChange).toHaveBeenCalled();
+      expect(console.log).toHaveBeenCalledWith(
+        '[Auth] Supabase Auth initialized',
+        'without session'
       );
     });
 
-    it('should reject if OAuth returns an error', async () => {
-      const loginPromise = login();
-
-      // Simulate OAuth error response
-      mockTokenClient.callback({
-        error: 'access_denied',
-        error_description: 'User denied access',
+    it('should initialize successfully with existing session', async () => {
+      vi.mocked(supabase.auth.getSession).mockResolvedValue({
+        data: { session: mockSession },
+        error: null,
       });
 
-      await expect(loginPromise).rejects.toThrow('User denied access');
+      await expect(initAuth()).resolves.toBeUndefined();
+
+      expect(supabase.auth.getSession).toHaveBeenCalled();
+      expect(supabase.auth.onAuthStateChange).toHaveBeenCalled();
+      expect(console.log).toHaveBeenCalledWith(
+        '[Auth] Supabase Auth initialized',
+        'with existing session'
+      );
     });
 
-    it('should reject if auth not initialized', async () => {
-      // We need to test the case where init was never called
-      // Reset the module state by importing fresh - but that's complex in vitest
-      // Instead, let's test what happens when tokenClient is null
-      // This is actually NOT testable easily since tokenClient is private
-      // Let's skip this test as it's an edge case (developer error, not runtime)
-      // The real check should be in integration tests
-    }, { skip: true });
-
-    it('should clear token if user profile fetch fails', async () => {
-      // Mock failed user profile fetch
-      (global.fetch as any).mockResolvedValueOnce({
-        ok: false,
-        statusText: 'Unauthorized',
+    it('should throw error if session check fails', async () => {
+      vi.mocked(supabase.auth.getSession).mockResolvedValue({
+        data: { session: null },
+        error: mockAuthError,
       });
 
-      const loginPromise = login();
+      await expect(initAuth()).rejects.toThrow();
+      expect(console.error).toHaveBeenCalledWith('[Auth] Error getting session:', mockAuthError);
+    });
 
-      // Simulate successful OAuth response
-      mockTokenClient.callback({
-        access_token: 'test-access-token',
-        expires_in: 3600,
-        scope: 'https://www.googleapis.com/auth/drive.file',
-        token_type: 'Bearer',
+    it('should set up auth state change listener', async () => {
+      await initAuth();
+
+      expect(supabase.auth.onAuthStateChange).toHaveBeenCalled();
+      expect(authStateChangeCallback).not.toBeNull();
+    });
+
+    it('should update state when auth state changes', async () => {
+      await initAuth();
+
+      // Simulate sign in event
+      authStateChangeCallback?.('SIGNED_IN', mockSession);
+
+      expect(console.log).toHaveBeenCalledWith(
+        '[Auth] Auth state changed:',
+        'SIGNED_IN',
+        'authenticated'
+      );
+    });
+
+    it('should notify listeners when auth state changes', async () => {
+      await initAuth();
+
+      const listener = vi.fn();
+      onAuthChange(listener);
+
+      // Simulate sign in (from null to authenticated)
+      authStateChangeCallback?.('SIGNED_IN', mockSession);
+
+      expect(listener).toHaveBeenCalledWith(true);
+
+      // Simulate sign out (from authenticated to null)
+      authStateChangeCallback?.('SIGNED_OUT', null);
+
+      expect(listener).toHaveBeenCalledWith(false);
+    });
+
+    it('should not notify listeners if auth state does not change', async () => {
+      vi.mocked(supabase.auth.getSession).mockResolvedValue({
+        data: { session: mockSession },
+        error: null,
       });
 
-      await expect(loginPromise).rejects.toThrow('Failed to fetch user profile');
-      expect(tokenManager.clearToken).toHaveBeenCalled();
+      await initAuth();
+
+      const listener = vi.fn();
+      onAuthChange(listener);
+
+      // Simulate token refresh (still authenticated)
+      authStateChangeCallback?.('TOKEN_REFRESHED', mockSession);
+
+      expect(listener).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('onAuthChange', () => {
+    it('should add listener and return unsubscribe function', async () => {
+      await initAuth();
+
+      const listener = vi.fn();
+      const unsubscribe = onAuthChange(listener);
+
+      expect(typeof unsubscribe).toBe('function');
+
+      // Trigger auth change
+      authStateChangeCallback?.('SIGNED_IN', mockSession);
+      expect(listener).toHaveBeenCalledWith(true);
+
+      // Unsubscribe
+      unsubscribe();
+
+      // Should not be called after unsubscribe
+      listener.mockClear();
+      authStateChangeCallback?.('SIGNED_OUT', null);
+      expect(listener).not.toHaveBeenCalled();
+    });
+
+    it('should support multiple listeners', async () => {
+      await initAuth();
+
+      const listener1 = vi.fn();
+      const listener2 = vi.fn();
+
+      onAuthChange(listener1);
+      onAuthChange(listener2);
+
+      authStateChangeCallback?.('SIGNED_IN', mockSession);
+
+      expect(listener1).toHaveBeenCalledWith(true);
+      expect(listener2).toHaveBeenCalledWith(true);
+    });
+  });
+
+  describe('loginWithEmail', () => {
+    beforeEach(async () => {
+      await initAuth();
+    });
+
+    it('should successfully login with email and password', async () => {
+      vi.mocked(supabase.auth.signInWithPassword).mockResolvedValue({
+        data: { user: mockUser, session: mockSession },
+        error: null,
+      });
+
+      await expect(loginWithEmail('test@example.com', 'password123')).resolves.toBeUndefined();
+
+      expect(supabase.auth.signInWithPassword).toHaveBeenCalledWith({
+        email: 'test@example.com',
+        password: 'password123',
+      });
+
+      expect(console.log).toHaveBeenCalledWith('[Auth] Login successful:', 'test@example.com');
+    });
+
+    it('should throw error on invalid credentials', async () => {
+      vi.mocked(supabase.auth.signInWithPassword).mockResolvedValue({
+        data: { user: null, session: null },
+        error: mockAuthError,
+      });
+
+      await expect(loginWithEmail('test@example.com', 'wrongpassword')).rejects.toThrow();
+
+      expect(console.error).toHaveBeenCalledWith('[Auth] Login error:', mockAuthError);
+    });
+
+    it('should update authentication state after successful login', async () => {
+      vi.mocked(supabase.auth.signInWithPassword).mockResolvedValue({
+        data: { user: mockUser, session: mockSession },
+        error: null,
+      });
+
+      expect(isAuthenticated()).toBe(false);
+
+      await loginWithEmail('test@example.com', 'password123');
+
+      expect(isAuthenticated()).toBe(true);
+      expect(getUserId()).toBe('user-123');
+      expect(getAccessToken()).toBe('mock-access-token');
+    });
+  });
+
+  describe('signUpWithEmail', () => {
+    beforeEach(async () => {
+      await initAuth();
+    });
+
+    it('should successfully sign up new user with email and password', async () => {
+      vi.mocked(supabase.auth.signUp).mockResolvedValue({
+        data: { user: mockUser, session: mockSession },
+        error: null,
+      });
+
+      await expect(signUpWithEmail('newuser@example.com', 'password123')).resolves.toBeUndefined();
+
+      expect(supabase.auth.signUp).toHaveBeenCalledWith({
+        email: 'newuser@example.com',
+        password: 'password123',
+        options: {
+          data: {
+            name: 'newuser',
+          },
+        },
+      });
+
+      expect(console.log).toHaveBeenCalledWith('[Auth] Sign up successful:', 'test@example.com');
+    });
+
+    it('should use provided name in signup', async () => {
+      vi.mocked(supabase.auth.signUp).mockResolvedValue({
+        data: { user: mockUser, session: mockSession },
+        error: null,
+      });
+
+      await signUpWithEmail('newuser@example.com', 'password123', 'John Doe');
+
+      expect(supabase.auth.signUp).toHaveBeenCalledWith({
+        email: 'newuser@example.com',
+        password: 'password123',
+        options: {
+          data: {
+            name: 'John Doe',
+          },
+        },
+      });
+    });
+
+    it('should default to email prefix as name if not provided', async () => {
+      vi.mocked(supabase.auth.signUp).mockResolvedValue({
+        data: { user: mockUser, session: mockSession },
+        error: null,
+      });
+
+      await signUpWithEmail('jane.smith@example.com', 'password123');
+
+      expect(supabase.auth.signUp).toHaveBeenCalledWith({
+        email: 'jane.smith@example.com',
+        password: 'password123',
+        options: {
+          data: {
+            name: 'jane.smith',
+          },
+        },
+      });
+    });
+
+    it('should throw error on signup failure', async () => {
+      vi.mocked(supabase.auth.signUp).mockResolvedValue({
+        data: { user: null, session: null },
+        error: mockAuthError,
+      });
+
+      await expect(signUpWithEmail('existing@example.com', 'password123')).rejects.toThrow();
+
+      expect(console.error).toHaveBeenCalledWith('[Auth] Sign up error:', mockAuthError);
+    });
+
+    it('should handle email confirmation required scenario', async () => {
+      // When email confirmation is required, session is null but user is created
+      vi.mocked(supabase.auth.signUp).mockResolvedValue({
+        data: { user: mockUser, session: null },
+        error: null,
+      });
+
+      await signUpWithEmail('pending@example.com', 'password123');
+
+      expect(isAuthenticated()).toBe(false); // No session yet
+    });
+  });
+
+  describe('login (Google OAuth)', () => {
+    beforeEach(async () => {
+      await initAuth();
+    });
+
+    it('should initiate Google OAuth flow', async () => {
+      vi.mocked(supabase.auth.signInWithOAuth).mockResolvedValue({
+        data: { provider: 'google', url: 'https://accounts.google.com/oauth' },
+        error: null,
+      });
+
+      await expect(login()).resolves.toBeUndefined();
+
+      expect(supabase.auth.signInWithOAuth).toHaveBeenCalledWith({
+        provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}/daily-log`,
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'consent',
+          },
+        },
+      });
+
+      expect(console.log).toHaveBeenCalledWith(
+        '[Auth] Redirecting to Google OAuth...',
+        expect.any(Object)
+      );
+    });
+
+    it('should throw error if OAuth initiation fails', async () => {
+      vi.mocked(supabase.auth.signInWithOAuth).mockResolvedValue({
+        data: { provider: 'google', url: null },
+        error: mockAuthError,
+      });
+
+      await expect(login()).rejects.toThrow();
+
+      expect(console.error).toHaveBeenCalledWith('[Auth] OAuth login error:', mockAuthError);
     });
   });
 
   describe('logout', () => {
     beforeEach(async () => {
-      // Initialize auth
-      const promise = initAuth();
-      mockScriptElement.onload?.(new Event('load'));
-      await promise;
+      await initAuth();
+      // Set up authenticated state
+      vi.mocked(supabase.auth.signInWithPassword).mockResolvedValue({
+        data: { user: mockUser, session: mockSession },
+        error: null,
+      });
+      await loginWithEmail('test@example.com', 'password123');
+    });
 
-      // Mock successful login
-      (global.fetch as any).mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({
-          id: 'user-123',
-          email: 'test@example.com',
-          name: 'Test User',
-        }),
+    it('should successfully logout user', async () => {
+      vi.mocked(supabase.auth.signOut).mockResolvedValue({
+        error: null,
       });
 
-      const loginPromise = login();
-      mockTokenClient.callback({
-        access_token: 'test-access-token',
-        expires_in: 3600,
-        scope: 'https://www.googleapis.com/auth/drive.file',
-        token_type: 'Bearer',
+      expect(isAuthenticated()).toBe(true);
+
+      await logout();
+
+      expect(supabase.auth.signOut).toHaveBeenCalled();
+      expect(isAuthenticated()).toBe(false);
+      expect(console.log).toHaveBeenCalledWith('[Auth] User logged out');
+    });
+
+    it('should clear all authentication state on logout', async () => {
+      vi.mocked(supabase.auth.signOut).mockResolvedValue({
+        error: null,
       });
-      await loginPromise;
+
+      await logout();
+
+      expect(getUserProfile()).toBeNull();
+      expect(getUserId()).toBeNull();
+      expect(getAccessToken()).toBeNull();
+      expect(getSession()).toBeNull();
+      expect(getCurrentUser()).toBeNull();
     });
 
-    it('should clear authentication state on logout', () => {
-      // Mock getToken to return a token
-      vi.mocked(tokenManager.getToken).mockReturnValue('test-access-token');
+    it('should throw error if logout fails', async () => {
+      vi.mocked(supabase.auth.signOut).mockResolvedValue({
+        error: mockAuthError,
+      });
 
-      // Mock token revocation
-      (global.fetch as any).mockResolvedValueOnce({ ok: true });
+      await expect(logout()).rejects.toThrow();
 
-      logout();
-
-      // Verify token was cleared
-      expect(tokenManager.clearToken).toHaveBeenCalled();
-
-      // Verify revocation was attempted
-      expect(global.fetch).toHaveBeenCalledWith(
-        'https://oauth2.googleapis.com/revoke?token=test-access-token',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-        }
-      );
-    });
-
-    it('should handle token revocation failure gracefully', () => {
-      vi.mocked(tokenManager.getToken).mockReturnValue('test-access-token');
-
-      // Mock failed revocation (should not throw)
-      (global.fetch as any).mockRejectedValueOnce(new Error('Network error'));
-
-      // Should not throw
-      expect(() => logout()).not.toThrow();
-
-      expect(tokenManager.clearToken).toHaveBeenCalled();
-    });
-
-    it('should clear state even if no token exists', () => {
-      vi.mocked(tokenManager.getToken).mockReturnValue(null);
-
-      logout();
-
-      expect(tokenManager.clearToken).toHaveBeenCalled();
-    });
-  });
-
-  describe('getAccessToken', () => {
-    it('should return token from tokenManager', () => {
-      vi.mocked(tokenManager.getToken).mockReturnValue('test-token');
-
-      const token = getAccessToken();
-
-      expect(token).toBe('test-token');
-      expect(tokenManager.getToken).toHaveBeenCalled();
-    });
-
-    it('should return null if no token exists', () => {
-      vi.mocked(tokenManager.getToken).mockReturnValue(null);
-
-      const token = getAccessToken();
-
-      expect(token).toBeNull();
+      expect(console.error).toHaveBeenCalledWith('[Auth] Logout error:', mockAuthError);
     });
   });
 
   describe('isAuthenticated', () => {
-    it('should return false if no valid token', () => {
-      vi.mocked(tokenManager.hasValidToken).mockReturnValue(false);
+    beforeEach(async () => {
+      await initAuth();
+    });
 
+    it('should return false when not authenticated', () => {
       expect(isAuthenticated()).toBe(false);
     });
 
-    it('should return false if token exists but no user profile', () => {
-      vi.mocked(tokenManager.hasValidToken).mockReturnValue(true);
-      // User profile is null (not logged in yet)
-
-      expect(isAuthenticated()).toBe(false);
-    });
-
-    it('should return true if both token and user profile exist', async () => {
-      // Set up authenticated state
-      const promise = initAuth();
-      mockScriptElement.onload?.(new Event('load'));
-      await promise;
-
-      (global.fetch as any).mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({
-          id: 'user-123',
-          email: 'test@example.com',
-          name: 'Test User',
-        }),
+    it('should return true when authenticated', async () => {
+      vi.mocked(supabase.auth.signInWithPassword).mockResolvedValue({
+        data: { user: mockUser, session: mockSession },
+        error: null,
       });
 
-      const loginPromise = login();
-      mockTokenClient.callback({
-        access_token: 'test-access-token',
-        expires_in: 3600,
-        scope: 'https://www.googleapis.com/auth/drive.file',
-        token_type: 'Bearer',
-      });
-      await loginPromise;
-
-      vi.mocked(tokenManager.hasValidToken).mockReturnValue(true);
+      await loginWithEmail('test@example.com', 'password123');
 
       expect(isAuthenticated()).toBe(true);
     });
   });
 
   describe('getUserProfile', () => {
-    it('should return null before login', () => {
-      // Clear any state from previous tests by logging out first
-      logout();
+    beforeEach(async () => {
+      await initAuth();
+    });
+
+    it('should return null when not authenticated', () => {
       expect(getUserProfile()).toBeNull();
     });
 
-    it('should return user profile after successful login', async () => {
-      const promise = initAuth();
-      mockScriptElement.onload?.(new Event('load'));
-      await promise;
-
-      (global.fetch as any).mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({
-          id: 'user-123',
-          email: 'test@example.com',
-          name: 'Test User',
-          picture: 'https://example.com/photo.jpg',
-        }),
+    it('should return user profile when authenticated', async () => {
+      vi.mocked(supabase.auth.signInWithPassword).mockResolvedValue({
+        data: { user: mockUser, session: mockSession },
+        error: null,
       });
 
-      const loginPromise = login();
-      mockTokenClient.callback({
-        access_token: 'test-access-token',
-        expires_in: 3600,
-        scope: 'https://www.googleapis.com/auth/drive.file',
-        token_type: 'Bearer',
-      });
-      await loginPromise;
+      await loginWithEmail('test@example.com', 'password123');
 
       const profile = getUserProfile();
+
       expect(profile).toEqual({
         id: 'user-123',
         email: 'test@example.com',
         name: 'Test User',
-        picture: 'https://example.com/photo.jpg',
+        picture: 'https://example.com/avatar.jpg',
       });
     });
 
-    it('should return null after logout', async () => {
-      // Login first
-      const promise = initAuth();
-      mockScriptElement.onload?.(new Event('load'));
-      await promise;
+    it('should handle missing name in user metadata', async () => {
+      const userWithoutName = {
+        ...mockUser,
+        user_metadata: {},
+      };
 
-      (global.fetch as any).mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({
-          id: 'user-123',
-          email: 'test@example.com',
-          name: 'Test User',
-        }),
+      vi.mocked(supabase.auth.signInWithPassword).mockResolvedValue({
+        data: { user: userWithoutName, session: mockSession },
+        error: null,
       });
 
-      const loginPromise = login();
-      mockTokenClient.callback({
-        access_token: 'test-access-token',
-        expires_in: 3600,
-        scope: 'https://www.googleapis.com/auth/drive.file',
-        token_type: 'Bearer',
+      await loginWithEmail('test@example.com', 'password123');
+
+      const profile = getUserProfile();
+
+      expect(profile?.name).toBe('test'); // Falls back to email prefix
+    });
+
+    it('should handle missing email', async () => {
+      const userWithoutEmail = {
+        ...mockUser,
+        email: undefined,
+        user_metadata: {},
+      };
+
+      vi.mocked(supabase.auth.signInWithPassword).mockResolvedValue({
+        data: { user: userWithoutEmail, session: mockSession },
+        error: null,
       });
-      await loginPromise;
 
-      expect(getUserProfile()).not.toBeNull();
+      await loginWithEmail('test@example.com', 'password123');
 
-      // Logout
-      vi.mocked(tokenManager.getToken).mockReturnValue('test-access-token');
-      (global.fetch as any).mockResolvedValueOnce({ ok: true });
-      logout();
+      const profile = getUserProfile();
 
-      expect(getUserProfile()).toBeNull();
+      expect(profile?.email).toBe('');
+      expect(profile?.name).toBe('User'); // Falls back to 'User'
     });
   });
 
   describe('getUserId', () => {
-    it('should return null before login', () => {
+    beforeEach(async () => {
+      await initAuth();
+    });
+
+    it('should return null when not authenticated', () => {
       expect(getUserId()).toBeNull();
     });
 
-    it('should return user ID after successful login', async () => {
-      const promise = initAuth();
-      mockScriptElement.onload?.(new Event('load'));
-      await promise;
-
-      (global.fetch as any).mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({
-          id: 'user-123',
-          email: 'test@example.com',
-          name: 'Test User',
-        }),
+    it('should return user ID when authenticated', async () => {
+      vi.mocked(supabase.auth.signInWithPassword).mockResolvedValue({
+        data: { user: mockUser, session: mockSession },
+        error: null,
       });
 
-      const loginPromise = login();
-      mockTokenClient.callback({
-        access_token: 'test-access-token',
-        expires_in: 3600,
-        scope: 'https://www.googleapis.com/auth/drive.file',
-        token_type: 'Bearer',
-      });
-      await loginPromise;
+      await loginWithEmail('test@example.com', 'password123');
 
       expect(getUserId()).toBe('user-123');
+    });
+  });
+
+  describe('getAccessToken', () => {
+    beforeEach(async () => {
+      await initAuth();
+    });
+
+    it('should return null when not authenticated', () => {
+      expect(getAccessToken()).toBeNull();
+    });
+
+    it('should return access token when authenticated', async () => {
+      vi.mocked(supabase.auth.signInWithPassword).mockResolvedValue({
+        data: { user: mockUser, session: mockSession },
+        error: null,
+      });
+
+      await loginWithEmail('test@example.com', 'password123');
+
+      expect(getAccessToken()).toBe('mock-access-token');
+    });
+  });
+
+  describe('getSession', () => {
+    beforeEach(async () => {
+      await initAuth();
+    });
+
+    it('should return null when not authenticated', () => {
+      expect(getSession()).toBeNull();
+    });
+
+    it('should return session when authenticated', async () => {
+      vi.mocked(supabase.auth.signInWithPassword).mockResolvedValue({
+        data: { user: mockUser, session: mockSession },
+        error: null,
+      });
+
+      await loginWithEmail('test@example.com', 'password123');
+
+      const session = getSession();
+
+      expect(session).toEqual(mockSession);
+      expect(session?.access_token).toBe('mock-access-token');
+      expect(session?.user.email).toBe('test@example.com');
+    });
+  });
+
+  describe('getCurrentUser', () => {
+    beforeEach(async () => {
+      await initAuth();
+    });
+
+    it('should return null when not authenticated', () => {
+      expect(getCurrentUser()).toBeNull();
+    });
+
+    it('should return user when authenticated', async () => {
+      vi.mocked(supabase.auth.signInWithPassword).mockResolvedValue({
+        data: { user: mockUser, session: mockSession },
+        error: null,
+      });
+
+      await loginWithEmail('test@example.com', 'password123');
+
+      const user = getCurrentUser();
+
+      expect(user).toEqual(mockUser);
+      expect(user?.id).toBe('user-123');
+      expect(user?.email).toBe('test@example.com');
+    });
+  });
+
+  describe('Integration: Full auth flow', () => {
+    it('should handle complete login -> logout flow', async () => {
+      await initAuth();
+
+      // Start unauthenticated
+      expect(isAuthenticated()).toBe(false);
+
+      // Login
+      vi.mocked(supabase.auth.signInWithPassword).mockResolvedValue({
+        data: { user: mockUser, session: mockSession },
+        error: null,
+      });
+      await loginWithEmail('test@example.com', 'password123');
+
+      expect(isAuthenticated()).toBe(true);
+      expect(getUserProfile()?.email).toBe('test@example.com');
+
+      // Logout
+      vi.mocked(supabase.auth.signOut).mockResolvedValue({ error: null });
+      await logout();
+
+      expect(isAuthenticated()).toBe(false);
+      expect(getUserProfile()).toBeNull();
+    });
+
+    it('should handle signup -> auto-login flow', async () => {
+      await initAuth();
+
+      // Sign up with auto-login (email confirmation disabled)
+      vi.mocked(supabase.auth.signUp).mockResolvedValue({
+        data: { user: mockUser, session: mockSession },
+        error: null,
+      });
+
+      await signUpWithEmail('newuser@example.com', 'password123', 'New User');
+
+      expect(isAuthenticated()).toBe(true);
+      expect(getUserId()).toBe('user-123');
+    });
+
+    it('should notify listeners throughout auth lifecycle', async () => {
+      await initAuth();
+
+      const listener = vi.fn();
+      onAuthChange(listener);
+
+      // Simulate sign in event (state changes from unauthenticated to authenticated)
+      authStateChangeCallback?.('SIGNED_IN', mockSession);
+      expect(listener).toHaveBeenCalledWith(true);
+
+      // Clear the listener mock
+      listener.mockClear();
+
+      // Simulate sign out event (state changes from authenticated to unauthenticated)
+      authStateChangeCallback?.('SIGNED_OUT', null);
+      expect(listener).toHaveBeenCalledWith(false);
     });
   });
 });
