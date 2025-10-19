@@ -196,9 +196,7 @@ VITE_GOOGLE_CLIENT_ID=your-google-client-id.apps.googleusercontent.com
    - Retry logic with exponential backoff (30s, 60s, 120s)
    - Conflict resolution: last-write-wins based on `modified_date` timestamps
 
-**Legacy Services** (being phased out):
-- `googleSheets.ts` - Google Sheets API wrapper (to be removed)
-- `auth.ts` - Google OAuth manager (replaced by Supabase Auth)
+**Note**: Legacy Google Sheets and Google OAuth services have been removed. All data operations now go through Supabase.
 
 ### Data Flow Pattern
 
@@ -401,14 +399,9 @@ The PRD (`tasks/0001-prd-habit-tracker.md`) is the source of truth. Key requirem
 
 **Supabase Migration Status**:
 - ✅ **Backend**: Complete (Auth + Database + Data Service)
-- 🔄 **Frontend**: In Progress (components still using legacy Google Sheets services)
-- 📋 **Next Steps**: Update all page components to use `supabaseDataService` instead of `googleSheetsService`
-
-**Legacy Code to Remove** (after frontend migration):
-- `src/services/googleSheets.ts` - Google Sheets API wrapper
-- `src/services/auth.ts` - Google OAuth manager
-- `VITE_GOOGLE_CLIENT_ID` environment variable
-- Google Sheets sync logic in `syncService.ts`
+- ✅ **Frontend**: Complete (all components migrated to Supabase)
+- ✅ **Legacy Code Cleanup**: Complete (Google Sheets and Google OAuth removed)
+- 📋 **Next Steps**: Add new features, then deploy to production
 
 **Migration Testing**:
 - Verify Supabase Auth works with Google OAuth provider
