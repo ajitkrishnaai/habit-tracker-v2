@@ -118,8 +118,8 @@ export function createMockQueryBuilder<T>(
     },
 
     // LIMIT
-    limit: (count: number) => {
-      // Store limit for later use
+    limit: (_count: number) => {
+      // Store limit for later use (currently not implemented)
       return builder;
     },
 
@@ -152,8 +152,8 @@ export function createMockQueryBuilder<T>(
         // Apply ordering
         if (orderByField) {
           data.sort((a, b) => {
-            const aVal = a[orderByField];
-            const bVal = b[orderByField];
+            const aVal = a[orderByField as keyof typeof a];
+            const bVal = b[orderByField as keyof typeof b];
             const comparison = aVal < bVal ? -1 : aVal > bVal ? 1 : 0;
             return orderByAscending ? comparison : -comparison;
           });
@@ -357,8 +357,9 @@ export function createMockSupabaseClient(store: MockSupabaseDataStore = new Mock
         return { error: null };
       },
 
-      onAuthStateChange: vi.fn((callback: (event: string, session: any) => void) => {
+      onAuthStateChange: vi.fn((_callback: (event: string, session: any) => void) => {
         // Return unsubscribe function
+        // callback parameter is for the actual implementation, not used in mock
         return {
           data: { subscription: { unsubscribe: vi.fn() } }
         };

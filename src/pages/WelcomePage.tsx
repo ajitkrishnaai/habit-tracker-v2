@@ -60,11 +60,12 @@ export const WelcomePage = (): JSX.Element => {
 
       // Navigate to daily log on successful auth
       navigate('/daily-log');
-    } catch (err: any) {
+    } catch (err) {
       logError(`WelcomePage:${isSignUp ? 'signup' : 'login'}`, err);
 
       // Provide user-friendly error messages
-      let errorMsg = err.message || 'Authentication failed';
+      const error = err as Error;
+      let errorMsg = error.message || 'Authentication failed';
       if (errorMsg.includes('Invalid login credentials')) {
         errorMsg = 'Invalid email or password. Please try again.';
       } else if (errorMsg.includes('Email not confirmed')) {
