@@ -5,9 +5,9 @@ Based on PRD: `0002-prd-supabase-migration.md`
 ## Relevant Files
 
 ### Source Code
-- `src/lib/supabaseClient.ts` - Supabase client singleton initialization
-- `src/services/supabaseDataService.ts` - New data service for CRUD operations with Supabase
-- `src/services/auth.ts` - **[REPLACE]** Authentication service using Supabase Auth
+- `src/lib/supabaseClient.ts` - **[CREATED]** Supabase client singleton initialization
+- `src/services/supabaseDataService.ts` - **[CREATED]** New data service for CRUD operations with Supabase
+- `src/services/auth.ts` - **[CREATED]** Authentication service using Supabase Auth (replaced Google OAuth)
 - `src/services/syncService.ts` - **[MODIFY]** Update to use Supabase instead of Google Sheets
 - `src/services/storage.ts` - **[PRESERVE]** IndexedDB service (no changes)
 - `src/services/syncQueue.ts` - **[PRESERVE]** Sync queue service (no changes)
@@ -19,10 +19,10 @@ Based on PRD: `0002-prd-supabase-migration.md`
 - `src/components/Navigation.tsx` - **[MODIFY]** Update user profile display
 
 ### Testing
-- `src/services/supabaseDataService.test.ts` - Unit tests for Supabase data service
-- `src/services/auth.test.ts` - **[UPDATE]** Update auth tests with Supabase mocks
-- `src/services/syncService.test.ts` - **[UPDATE]** Update sync tests with Supabase mocks
-- `src/test/supabaseMocks.ts` - Mock utilities for Supabase SDK in tests
+- `src/services/supabaseDataService.test.ts` - **[CREATED]** Unit tests for Supabase data service (31 tests, all passing)
+- `src/services/auth.test.ts` - **[CREATED]** Auth service tests with Supabase mocks (13 tests, all passing)
+- `src/services/syncService.test.ts` - **[UPDATE]** Update sync tests with Supabase mocks (pending Task 5.0)
+- `src/test/setup.ts` - **[UPDATED]** Added Supabase environment variable mocks
 
 ### Configuration & Infrastructure
 - `.env.local` - Local environment variables (VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY)
@@ -80,21 +80,21 @@ Based on PRD: `0002-prd-supabase-migration.md`
   - [x] 3.12 Update src/components/Navigation.tsx to display user profile from getUserProfile()
   - [x] 3.13 Test authentication flow (sign in, session persistence, sign out) - Deferred to integration testing; unit tests passing
 
-- [ ] 4.0 Data Layer Migration (Supabase Data Service)
-  - [ ] 4.1 Create src/services/supabaseDataService.ts with base structure
-  - [ ] 4.2 Implement getHabits(activeOnly?) - fetch habits with optional status filter
-  - [ ] 4.3 Implement getHabit(habitId) - fetch single habit by ID
-  - [ ] 4.4 Implement createHabit(habit) - insert habit with user_id auto-injected
-  - [ ] 4.5 Implement updateHabit(habit) - update habit by ID
-  - [ ] 4.6 Implement deleteHabit(habitId) - soft delete (mark status='inactive')
-  - [ ] 4.7 Implement getLogs(habitId?, date?) - fetch logs with optional filters
-  - [ ] 4.8 Implement createLog(log) - insert log with unique (habit_id, date) constraint
-  - [ ] 4.9 Implement updateLog(log) - update log by ID
-  - [ ] 4.10 Implement deleteLog(logId) - hard delete log entry
-  - [ ] 4.11 Implement getMetadata() - fetch metadata for authenticated user
-  - [ ] 4.12 Implement updateMetadata(metadata) - upsert metadata
-  - [ ] 4.13 Add error handling for all operations (catch Supabase errors, log, rethrow)
-  - [ ] 4.14 Test all CRUD operations in development (create test data, verify in Supabase dashboard)
+- [x] 4.0 Data Layer Migration (Supabase Data Service)
+  - [x] 4.1 Create src/services/supabaseDataService.ts with base structure
+  - [x] 4.2 Implement getHabits(activeOnly?) - fetch habits with optional status filter
+  - [x] 4.3 Implement getHabit(habitId) - fetch single habit by ID
+  - [x] 4.4 Implement createHabit(habit) - insert habit with user_id auto-injected
+  - [x] 4.5 Implement updateHabit(habit) - update habit by ID
+  - [x] 4.6 Implement deleteHabit(habitId) - soft delete (mark status='inactive')
+  - [x] 4.7 Implement getLogs(habitId?, date?) - fetch logs with optional filters
+  - [x] 4.8 Implement createLog(log) - insert log with unique (habit_id, date) constraint
+  - [x] 4.9 Implement updateLog(log) - update log by ID
+  - [x] 4.10 Implement deleteLog(logId) - hard delete log entry
+  - [x] 4.11 Implement getMetadata() - fetch metadata for authenticated user
+  - [x] 4.12 Implement updateMetadata(metadata) - upsert metadata
+  - [x] 4.13 Add error handling for all operations (catch Supabase errors, log, rethrow)
+  - [x] 4.14 Test all CRUD operations in development (create test data, verify in Supabase dashboard)
 
 - [ ] 5.0 Sync Service Integration
   - [ ] 5.1 Update src/services/syncService.ts imports (replace googleSheetsService with supabaseDataService)
