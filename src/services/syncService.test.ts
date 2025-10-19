@@ -1,7 +1,7 @@
 /**
  * Sync Service Integration Tests
  *
- * Tests bidirectional sync between local storage and Google Sheets,
+ * Tests bidirectional sync between local storage and Supabase,
  * including conflict resolution, retry logic, and offline/online transitions.
  */
 
@@ -14,13 +14,13 @@ import type { Metadata } from '../types/metadata';
 // Mock all dependencies
 vi.mock('./storage');
 vi.mock('./syncQueue');
-vi.mock('./googleSheets');
+vi.mock('./supabaseDataService');
 
 describe('Sync Service - Integration Tests', () => {
   let service: SyncService;
   let storageService: any;
   let syncQueueService: any;
-  let googleSheetsService: any;
+  let supabaseDataService: any;
   let onlineListener: ((event: Event) => void) | null = null;
   let offlineListener: ((event: Event) => void) | null = null;
 
@@ -65,11 +65,11 @@ describe('Sync Service - Integration Tests', () => {
     // Import mocked services
     const storage = await import('./storage');
     const syncQueue = await import('./syncQueue');
-    const googleSheets = await import('./googleSheets');
+    const supabaseData = await import('./supabaseDataService');
 
     storageService = storage.storageService;
     syncQueueService = syncQueue.syncQueueService;
-    googleSheetsService = googleSheets.googleSheetsService;
+    supabaseDataService = supabaseData.supabaseDataService;
 
     // Mock storage service
     vi.mocked(storageService.getHabits).mockResolvedValue([...mockHabits]);
@@ -88,13 +88,17 @@ describe('Sync Service - Integration Tests', () => {
     vi.mocked(syncQueueService.incrementRetryCount).mockResolvedValue(undefined);
     vi.mocked(syncQueueService.clearQueue).mockResolvedValue(undefined);
 
-    // Mock Google Sheets service
-    vi.mocked(googleSheetsService.readHabits).mockResolvedValue([...mockHabits]);
-    vi.mocked(googleSheetsService.readLogs).mockResolvedValue([...mockLogs]);
-    vi.mocked(googleSheetsService.readMetadata).mockResolvedValue({ ...mockMetadata });
-    vi.mocked(googleSheetsService.writeHabits).mockResolvedValue(undefined);
-    vi.mocked(googleSheetsService.writeLogs).mockResolvedValue(undefined);
-    vi.mocked(googleSheetsService.writeMetadata).mockResolvedValue(undefined);
+    // Mock Supabase Data Service
+    vi.mocked(supabaseDataService.getHabits).mockResolvedValue([...mockHabits]);
+    vi.mocked(supabaseDataService.getLogs).mockResolvedValue([...mockLogs]);
+    vi.mocked(supabaseDataService.getMetadata).mockResolvedValue({ ...mockMetadata });
+    vi.mocked(supabaseDataService.createHabit).mockImplementation((h) => Promise.resolve({ ...h, user_id: 'user_123', created_date: new Date().toISOString(), modified_date: new Date().toISOString() }));
+    vi.mocked(supabaseDataService.updateHabit).mockImplementation((h) => Promise.resolve(h));
+    vi.mocked(supabaseDataService.deleteHabit).mockImplementation((id) => Promise.resolve({ habit_id: id, status: 'inactive' } as any));
+    vi.mocked(supabaseDataService.createLog).mockImplementation((l) => Promise.resolve({ ...l, user_id: 'user_123', created_date: new Date().toISOString(), modified_date: new Date().toISOString() }));
+    vi.mocked(supabaseDataService.updateLog).mockImplementation((l) => Promise.resolve(l));
+    vi.mocked(supabaseDataService.deleteLog).mockResolvedValue(undefined);
+    vi.mocked(supabaseDataService.updateMetadata).mockImplementation((m) => Promise.resolve({ ...m, user_id: 'user_123', created_date: new Date().toISOString(), modified_date: new Date().toISOString() }));
 
     // Mock window.addEventListener to capture listeners
     const originalAddEventListener = window.addEventListener.bind(window);
@@ -288,8 +292,8 @@ describe('Sync Service - Integration Tests', () => {
 
       await service.syncToRemote();
 
-      expect(googleSheetsService.writeHabits).not.toHaveBeenCalled();
-      expect(googleSheetsService.writeLogs).not.toHaveBeenCalled();
+      expect(supabaseDataService.createHabit).not.toHaveBeenCalled();
+      expect(supabaseDataService.createLog).not.toHaveBeenCalled();
     });
 
     it('should skip sync when queue is empty', async () => {
@@ -298,7 +302,7 @@ describe('Sync Service - Integration Tests', () => {
       await service.syncToRemote();
 
       expect(syncQueueService.optimizeQueue).not.toHaveBeenCalled();
-      expect(googleSheetsService.writeHabits).not.toHaveBeenCalled();
+      expect(supabaseDataService.createHabit).not.toHaveBeenCalled();
     });
 
     it('should process CREATE_HABIT operation', async () => {
@@ -312,13 +316,10 @@ describe('Sync Service - Integration Tests', () => {
       };
 
       vi.mocked(syncQueueService.getRetryableOperations).mockResolvedValue([createOp]);
-      vi.mocked(googleSheetsService.readHabits).mockResolvedValue([mockHabits[1]]);
 
       await service.syncToRemote();
 
-      expect(googleSheetsService.writeHabits).toHaveBeenCalledWith(
-        expect.arrayContaining([mockHabits[0], mockHabits[1]])
-      );
+      expect(supabaseDataService.createHabit).toHaveBeenCalledWith(mockHabits[0]);
       expect(syncQueueService.removeOperation).toHaveBeenCalledWith('op_001');
     });
 
@@ -339,16 +340,10 @@ describe('Sync Service - Integration Tests', () => {
       };
 
       vi.mocked(syncQueueService.getRetryableOperations).mockResolvedValue([updateOp]);
-      vi.mocked(googleSheetsService.readHabits).mockResolvedValue([mockHabits[0], mockHabits[1]]);
 
       await service.syncToRemote();
 
-      expect(googleSheetsService.writeHabits).toHaveBeenCalledWith(
-        expect.arrayContaining([
-          expect.objectContaining({ name: 'Updated Exercise' }),
-          mockHabits[1],
-        ])
-      );
+      expect(supabaseDataService.updateHabit).toHaveBeenCalledWith(updatedHabit);
     });
 
     it('should process DELETE_HABIT operation (soft delete)', async () => {
@@ -362,16 +357,10 @@ describe('Sync Service - Integration Tests', () => {
       };
 
       vi.mocked(syncQueueService.getRetryableOperations).mockResolvedValue([deleteOp]);
-      vi.mocked(googleSheetsService.readHabits).mockResolvedValue([...mockHabits]);
 
       await service.syncToRemote();
 
-      expect(googleSheetsService.writeHabits).toHaveBeenCalledWith(
-        expect.arrayContaining([
-          expect.objectContaining({ habit_id: 'habit_001', status: 'inactive' }),
-          mockHabits[1],
-        ])
-      );
+      expect(supabaseDataService.deleteHabit).toHaveBeenCalledWith('habit_001');
     });
 
     it('should process CREATE_LOG operation', async () => {
@@ -393,13 +382,10 @@ describe('Sync Service - Integration Tests', () => {
       };
 
       vi.mocked(syncQueueService.getRetryableOperations).mockResolvedValue([createLogOp]);
-      vi.mocked(googleSheetsService.readLogs).mockResolvedValue([mockLogs[0]]);
 
       await service.syncToRemote();
 
-      expect(googleSheetsService.writeLogs).toHaveBeenCalledWith(
-        expect.arrayContaining([mockLogs[0], newLog])
-      );
+      expect(supabaseDataService.createLog).toHaveBeenCalledWith(newLog);
     });
 
     it('should update metadata after successful sync', async () => {
@@ -421,7 +407,7 @@ describe('Sync Service - Integration Tests', () => {
           last_sync: expect.any(String),
         })
       );
-      expect(googleSheetsService.writeMetadata).toHaveBeenCalled();
+      expect(supabaseDataService.updateMetadata).toHaveBeenCalled();
     });
 
     it('should handle operation processing errors and increment retry count', async () => {
@@ -436,7 +422,7 @@ describe('Sync Service - Integration Tests', () => {
 
       vi.mocked(syncQueueService.getRetryableOperations).mockResolvedValue([failingOp]);
       vi.mocked(syncQueueService.getQueue).mockResolvedValue([failingOp]);
-      vi.mocked(googleSheetsService.readHabits).mockRejectedValue(new Error('API error'));
+      vi.mocked(supabaseDataService.createHabit).mockRejectedValue(new Error('API error'));
 
       const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
@@ -486,10 +472,10 @@ describe('Sync Service - Integration Tests', () => {
 
       await service.syncFromRemote();
 
-      expect(googleSheetsService.readHabits).not.toHaveBeenCalled();
+      expect(supabaseDataService.getHabits).not.toHaveBeenCalled();
     });
 
-    it('should read all data from Google Sheets', async () => {
+    it('should read all data from Supabase', async () => {
       // Reset service to online state
       Object.defineProperty(navigator, 'onLine', { value: true });
       if (onlineListener) {
@@ -498,9 +484,9 @@ describe('Sync Service - Integration Tests', () => {
 
       await service.syncFromRemote();
 
-      expect(googleSheetsService.readHabits).toHaveBeenCalled();
-      expect(googleSheetsService.readLogs).toHaveBeenCalled();
-      expect(googleSheetsService.readMetadata).toHaveBeenCalled();
+      expect(supabaseDataService.getHabits).toHaveBeenCalled();
+      expect(supabaseDataService.getLogs).toHaveBeenCalled();
+      expect(supabaseDataService.getMetadata).toHaveBeenCalled();
     });
 
     it('should save resolved data to local storage', async () => {
@@ -514,9 +500,9 @@ describe('Sync Service - Integration Tests', () => {
     it('should handle empty remote data gracefully', async () => {
       vi.mocked(storageService.getHabits).mockResolvedValue([]);
       vi.mocked(storageService.getLogs).mockResolvedValue([]);
-      vi.mocked(googleSheetsService.readHabits).mockResolvedValue([]);
-      vi.mocked(googleSheetsService.readLogs).mockResolvedValue([]);
-      vi.mocked(googleSheetsService.readMetadata).mockResolvedValue(null);
+      vi.mocked(supabaseDataService.getHabits).mockResolvedValue([]);
+      vi.mocked(supabaseDataService.getLogs).mockResolvedValue([]);
+      vi.mocked(supabaseDataService.getMetadata).mockResolvedValue(null);
 
       await service.syncFromRemote();
 
@@ -539,7 +525,7 @@ describe('Sync Service - Integration Tests', () => {
     });
 
     it('should handle sync errors and update status', async () => {
-      vi.mocked(googleSheetsService.readHabits).mockRejectedValue(new Error('Network error'));
+      vi.mocked(supabaseDataService.getHabits).mockRejectedValue(new Error('Network error'));
 
       let errorCaptured: string | null = null;
       service.subscribe((state) => {
@@ -573,7 +559,7 @@ describe('Sync Service - Integration Tests', () => {
       };
 
       vi.mocked(storageService.getHabits).mockResolvedValue([localHabit]);
-      vi.mocked(googleSheetsService.readHabits).mockResolvedValue([remoteHabit]);
+      vi.mocked(supabaseDataService.getHabits).mockResolvedValue([remoteHabit]);
 
       await service.syncFromRemote();
 
@@ -600,7 +586,7 @@ describe('Sync Service - Integration Tests', () => {
       };
 
       vi.mocked(storageService.getHabits).mockResolvedValue([localHabit]);
-      vi.mocked(googleSheetsService.readHabits).mockResolvedValue([remoteHabit]);
+      vi.mocked(supabaseDataService.getHabits).mockResolvedValue([remoteHabit]);
 
       await service.syncFromRemote();
 
@@ -629,7 +615,7 @@ describe('Sync Service - Integration Tests', () => {
       };
 
       vi.mocked(storageService.getHabits).mockResolvedValue([localHabit]);
-      vi.mocked(googleSheetsService.readHabits).mockResolvedValue([remoteHabit]);
+      vi.mocked(supabaseDataService.getHabits).mockResolvedValue([remoteHabit]);
 
       await service.syncFromRemote();
 
@@ -656,7 +642,7 @@ describe('Sync Service - Integration Tests', () => {
       };
 
       vi.mocked(storageService.getHabits).mockResolvedValue([localOnlyHabit]);
-      vi.mocked(googleSheetsService.readHabits).mockResolvedValue([remoteOnlyHabit]);
+      vi.mocked(supabaseDataService.getHabits).mockResolvedValue([remoteOnlyHabit]);
 
       await service.syncFromRemote();
 
@@ -688,7 +674,7 @@ describe('Sync Service - Integration Tests', () => {
       };
 
       vi.mocked(storageService.getLogs).mockResolvedValue([localLog]);
-      vi.mocked(googleSheetsService.readLogs).mockResolvedValue([remoteLog]);
+      vi.mocked(supabaseDataService.getLogs).mockResolvedValue([remoteLog]);
 
       await service.syncFromRemote();
 
@@ -828,7 +814,7 @@ describe('Sync Service - Integration Tests', () => {
       };
 
       vi.mocked(syncQueueService.getRetryableOperations).mockResolvedValue([failingOp]);
-      vi.mocked(googleSheetsService.readHabits).mockRejectedValue(new Error('API error'));
+      vi.mocked(supabaseDataService.createHabit).mockRejectedValue(new Error('API error'));
       vi.mocked(syncQueueService.getQueue).mockResolvedValue([failingOp]);
 
       const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
@@ -840,8 +826,8 @@ describe('Sync Service - Integration Tests', () => {
       // Fast-forward time - retry should NOT happen
       await vi.runAllTimersAsync();
 
-      // readHabits should only be called once (initial attempt, not retry)
-      expect(googleSheetsService.readHabits).toHaveBeenCalledTimes(1);
+      // createHabit should only be called once (initial attempt, not retry)
+      expect(supabaseDataService.createHabit).toHaveBeenCalledTimes(1);
 
       consoleErrorSpy.mockRestore();
     });
@@ -917,7 +903,7 @@ describe('Sync Service - Integration Tests', () => {
 
       await service.syncToRemote();
 
-      expect(googleSheetsService.writeMetadata).toHaveBeenCalledWith(mockMetadata);
+      expect(supabaseDataService.updateMetadata).toHaveBeenCalledWith(mockMetadata);
     });
 
     it('should handle missing metadata gracefully', async () => {

@@ -161,7 +161,10 @@ class SyncService {
       if (metadata) {
         metadata.last_sync = new Date().toISOString();
         await storageService.saveMetadata(metadata);
-        await googleSheetsService.writeMetadata(metadata);
+        await supabaseDataService.updateMetadata({
+          sheet_version: metadata.sheet_version,
+          last_sync: metadata.last_sync,
+        });
       }
 
       await this.updateStatus('success');
@@ -176,7 +179,7 @@ class SyncService {
   }
 
   /**
-   * Sync changes from remote (Google Sheets) to local storage
+   * Sync changes from remote (Supabase) to local storage
    */
   async syncFromRemote(): Promise<void> {
     if (!this.isOnline) {
@@ -187,11 +190,11 @@ class SyncService {
     await this.updateStatus('syncing');
 
     try {
-      // Read data from Google Sheets
+      // Read data from Supabase
       const [habits, logs, metadata] = await Promise.all([
-        googleSheetsService.readHabits(),
-        googleSheetsService.readLogs(),
-        googleSheetsService.readMetadata(),
+        supabaseDataService.getHabits(),
+        supabaseDataService.getLogs(),
+        supabaseDataService.getMetadata(),
       ]);
 
       // Get local data for conflict resolution
@@ -272,31 +275,27 @@ class SyncService {
 
     switch (entityType) {
       case 'habit':
-        if (operationType === 'CREATE' || operationType === 'UPDATE') {
-          const habits = await googleSheetsService.readHabits();
-          const updatedHabits = habits.filter((h: Habit) => h.habit_id !== data.habit_id);
-          updatedHabits.push(data);
-          await googleSheetsService.writeHabits(updatedHabits);
+        if (operationType === 'CREATE') {
+          await supabaseDataService.createHabit(data);
+        } else if (operationType === 'UPDATE') {
+          await supabaseDataService.updateHabit(data);
         } else if (operationType === 'DELETE') {
-          const habits = await googleSheetsService.readHabits();
-          const updatedHabits = habits.map((h: Habit) =>
-            h.habit_id === data.habit_id ? { ...h, status: 'inactive' as const } : h
-          );
-          await googleSheetsService.writeHabits(updatedHabits);
+          await supabaseDataService.deleteHabit(data.habit_id);
         }
         break;
 
       case 'log':
-        if (operationType === 'CREATE' || operationType === 'UPDATE') {
-          const logs = await googleSheetsService.readLogs();
-          const updatedLogs = logs.filter((l: LogEntry) => l.log_id !== data.log_id);
-          updatedLogs.push(data);
-          await googleSheetsService.writeLogs(updatedLogs);
+        if (operationType === 'CREATE') {
+          await supabaseDataService.createLog(data);
+        } else if (operationType === 'UPDATE') {
+          await supabaseDataService.updateLog(data);
+        } else if (operationType === 'DELETE') {
+          await supabaseDataService.deleteLog(data.log_id);
         }
         break;
 
       case 'metadata':
-        await googleSheetsService.writeMetadata(data);
+        await supabaseDataService.updateMetadata(data);
         break;
 
       default:
