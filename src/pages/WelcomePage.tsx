@@ -9,7 +9,7 @@
 
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { initAuth, login, isAuthenticated } from '../services/auth';
+import { initAuth, loginWithEmail, signUpWithEmail, isAuthenticated } from '../services/auth';
 import { parseError, formatErrorMessage, logError } from '../utils/errorHandler';
 import './WelcomePage.css';
 
@@ -18,6 +18,10 @@ export const WelcomePage = (): JSX.Element => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [authInitialized, setAuthInitialized] = useState(false);
+  const [isSignUp, setIsSignUp] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
 
   useEffect(() => {
     // Initialize auth on component mount
@@ -40,25 +44,46 @@ export const WelcomePage = (): JSX.Element => {
     init();
   }, [navigate]);
 
-  const handleLogin = async () => {
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
     setLoading(true);
     setError(null);
 
     try {
-      // Initiate Google OAuth via Supabase
-      // Note: This will redirect to Google's consent screen
-      // After successful auth, user will be redirected back to /daily-log
-      await login();
+      if (isSignUp) {
+        // Sign up with email/password
+        await signUpWithEmail(email, password, name);
+      } else {
+        // Login with email/password
+        await loginWithEmail(email, password);
+      }
 
-      // The login() function redirects to Google OAuth
-      // When user returns, they'll land on /daily-log automatically
-      // No need to manually navigate - Supabase handles the redirect
-    } catch (err) {
-      logError('WelcomePage:login', err);
-      const appError = parseError(err);
-      setError(formatErrorMessage(appError));
+      // Navigate to daily log on successful auth
+      navigate('/daily-log');
+    } catch (err: any) {
+      logError(`WelcomePage:${isSignUp ? 'signup' : 'login'}`, err);
+
+      // Provide user-friendly error messages
+      let errorMsg = err.message || 'Authentication failed';
+      if (errorMsg.includes('Invalid login credentials')) {
+        errorMsg = 'Invalid email or password. Please try again.';
+      } else if (errorMsg.includes('Email not confirmed')) {
+        errorMsg = 'Please check your email and confirm your account before logging in.';
+      } else if (errorMsg.includes('User already registered')) {
+        errorMsg = 'This email is already registered. Please log in instead.';
+      }
+
+      setError(errorMsg);
       setLoading(false);
     }
+  };
+
+  const toggleMode = () => {
+    setIsSignUp(!isSignUp);
+    setError(null);
+    setEmail('');
+    setPassword('');
+    setName('');
   };
 
   return (
@@ -107,25 +132,99 @@ export const WelcomePage = (): JSX.Element => {
           </div>
         </section>
 
-        {/* Call to Action - Task 7.10 */}
+        {/* Call to Action - Email/Password Auth */}
         <section className="welcome-cta">
-          <button
-            onClick={handleLogin}
-            disabled={loading || !authInitialized}
-            className="welcome-button"
-            aria-label="Sign in with Google to start tracking habits"
-          >
-            {loading ? 'Setting up your account...' : 'Log in with Google'}
-          </button>
+          <h2 className="welcome-auth-title">
+            {isSignUp ? 'Create Your Account' : 'Sign In'}
+          </h2>
 
-          {error && (
-            <p className="welcome-error" role="alert">
-              {error}
-            </p>
-          )}
+          <form onSubmit={handleSubmit} className="welcome-form">
+            {isSignUp && (
+              <div className="welcome-form-field">
+                <label htmlFor="name" className="welcome-label">
+                  Name (optional)
+                </label>
+                <input
+                  id="name"
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="welcome-input"
+                  placeholder="Your name"
+                  disabled={loading || !authInitialized}
+                />
+              </div>
+            )}
+
+            <div className="welcome-form-field">
+              <label htmlFor="email" className="welcome-label">
+                Email
+              </label>
+              <input
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="welcome-input"
+                placeholder="your.email@example.com"
+                required
+                disabled={loading || !authInitialized}
+                autoComplete="email"
+              />
+            </div>
+
+            <div className="welcome-form-field">
+              <label htmlFor="password" className="welcome-label">
+                Password
+              </label>
+              <input
+                id="password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="welcome-input"
+                placeholder="••••••••"
+                required
+                minLength={6}
+                disabled={loading || !authInitialized}
+                autoComplete={isSignUp ? 'new-password' : 'current-password'}
+              />
+              {isSignUp && (
+                <p className="welcome-input-hint">
+                  Minimum 6 characters
+                </p>
+              )}
+            </div>
+
+            <button
+              type="submit"
+              disabled={loading || !authInitialized}
+              className="welcome-button"
+              aria-label={isSignUp ? 'Create account and start tracking habits' : 'Sign in to your account'}
+            >
+              {loading ? 'Please wait...' : isSignUp ? 'Create Account' : 'Sign In'}
+            </button>
+
+            {error && (
+              <p className="welcome-error" role="alert">
+                {error}
+              </p>
+            )}
+
+            <button
+              type="button"
+              onClick={toggleMode}
+              className="welcome-toggle-mode"
+              disabled={loading}
+            >
+              {isSignUp
+                ? 'Already have an account? Sign in'
+                : "Don't have an account? Sign up"}
+            </button>
+          </form>
 
           <p className="welcome-privacy-note">
-            Sign in with Google or create an account with email. Your habit data is private and secure.
+            Your habit data is private and secure. We use industry-standard encryption.
           </p>
         </section>
 
@@ -133,7 +232,7 @@ export const WelcomePage = (): JSX.Element => {
         <section className="welcome-benefits">
           <h2 className="welcome-benefits-title">Why Habit Tracker?</h2>
           <ul className="welcome-benefits-list">
-            <li>✓ Quick sign in with Google or email</li>
+            <li>✓ Simple email/password authentication</li>
             <li>✓ Completely free and open source</li>
             <li>✓ Mobile-first design optimized for daily use</li>
             <li>✓ Back-date up to 5 days if you miss a log</li>
