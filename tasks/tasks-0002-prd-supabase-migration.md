@@ -66,18 +66,18 @@ Based on PRD: `0002-prd-supabase-migration.md`
   - [x] 2.6 Test Supabase client initialization in development (npm run dev, check console logs)
 
 - [ ] 3.0 Authentication Migration (Google OAuth via Supabase Auth)
-  - [ ] 3.1 Create new src/services/auth.ts with Supabase Auth implementation
-  - [ ] 3.2 Implement initAuth() - initialize auth and set up state change listener
-  - [ ] 3.3 Implement login() - initiate Google OAuth via supabase.auth.signInWithOAuth()
-  - [ ] 3.4 Implement logout() - sign out via supabase.auth.signOut()
-  - [ ] 3.5 Implement isAuthenticated() - check session via supabase.auth.getSession()
-  - [ ] 3.6 Implement getUserProfile() - extract profile from session.user
-  - [ ] 3.7 Implement getUserId() - return session.user.id
-  - [ ] 3.8 Implement getAccessToken() - return session.access_token
-  - [ ] 3.9 Delete src/utils/tokenManager.ts (no longer needed)
-  - [ ] 3.10 Update src/components/ProtectedRoute.tsx to use Supabase session checks
-  - [ ] 3.11 Update src/components/WelcomePage.tsx to call new login() function
-  - [ ] 3.12 Update src/components/Navigation.tsx to display user profile from getUserProfile()
+  - [x] 3.1 Create new src/services/auth.ts with Supabase Auth implementation
+  - [x] 3.2 Implement initAuth() - initialize auth and set up state change listener
+  - [x] 3.3 Implement login() - initiate Google OAuth via supabase.auth.signInWithOAuth()
+  - [x] 3.4 Implement logout() - sign out via supabase.auth.signOut()
+  - [x] 3.5 Implement isAuthenticated() - check session via supabase.auth.getSession()
+  - [x] 3.6 Implement getUserProfile() - extract profile from session.user
+  - [x] 3.7 Implement getUserId() - return session.user.id
+  - [x] 3.8 Implement getAccessToken() - return session.access_token
+  - [x] 3.9 Delete src/utils/tokenManager.ts (no longer needed)
+  - [x] 3.10 Update src/components/ProtectedRoute.tsx to use Supabase session checks
+  - [x] 3.11 Update src/components/WelcomePage.tsx to call new login() function
+  - [x] 3.12 Update src/components/Navigation.tsx to display user profile from getUserProfile()
   - [ ] 3.13 Test authentication flow (sign in, session persistence, sign out)
 
 - [ ] 4.0 Data Layer Migration (Supabase Data Service)

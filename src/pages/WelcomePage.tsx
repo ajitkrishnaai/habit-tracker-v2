@@ -2,21 +2,15 @@
  * Welcome Page Component
  *
  * Landing page for unauthenticated users.
- * Explains the app and provides Google OAuth login.
- * Tasks 7.6-7.10: Hero section, features, CTA with "All data stored in YOUR Google Drive" emphasis
+ * Explains the app and provides authentication (Google OAuth via Supabase or email/password).
+ * Tasks 7.6-7.10: Hero section, features, CTA
+ * Updated for Supabase migration - data now stored in Supabase database
  */
 
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { initAuth, login, isAuthenticated, getUserId } from '../services/auth';
-import {
-  initGoogleSheetsAPI,
-  createNewSheet,
-  initializeSheetStructure,
-  writeMetadata,
-} from '../services/googleSheets';
+import { initAuth, login, isAuthenticated } from '../services/auth';
 import { parseError, formatErrorMessage, logError } from '../utils/errorHandler';
-import type { Metadata } from '../types/metadata';
 import './WelcomePage.css';
 
 export const WelcomePage = (): JSX.Element => {
@@ -51,39 +45,14 @@ export const WelcomePage = (): JSX.Element => {
     setError(null);
 
     try {
-      // Step 1: Authenticate with Google
+      // Initiate Google OAuth via Supabase
+      // Note: This will redirect to Google's consent screen
+      // After successful auth, user will be redirected back to /daily-log
       await login();
 
-      // Step 2: Initialize Google Sheets API
-      await initGoogleSheetsAPI();
-
-      // Step 3: Create new habit tracker sheet
-      const sheetName = `Habit Tracker - ${new Date().toLocaleDateString()}`;
-      const sheetId = await createNewSheet(sheetName);
-
-      // Step 4: Initialize sheet structure
-      await initializeSheetStructure(sheetId);
-
-      // Step 5: Write initial metadata
-      const userId = getUserId();
-      if (!userId) {
-        throw new Error('Failed to get user ID');
-      }
-
-      const metadata: Metadata = {
-        sheet_version: '1.0',
-        last_sync: new Date().toISOString(),
-        user_id: userId,
-        sheet_id: sheetId,
-      };
-
-      await writeMetadata(sheetId, metadata);
-
-      // Step 6: Store sheet ID in localStorage for future use
-      localStorage.setItem('habitTrackerSheetId', sheetId);
-
-      // Step 7: Navigate to daily log page
-      navigate('/daily-log');
+      // The login() function redirects to Google OAuth
+      // When user returns, they'll land on /daily-log automatically
+      // No need to manually navigate - Supabase handles the redirect
     } catch (err) {
       logError('WelcomePage:login', err);
       const appError = parseError(err);
@@ -117,8 +86,7 @@ export const WelcomePage = (): JSX.Element => {
             <div className="welcome-feature-icon" aria-hidden="true">🔒</div>
             <h2 className="welcome-feature-title">Your Data, Your Control</h2>
             <p className="welcome-feature-description">
-              {/* Task 7.9: Clearly state "All data stored in YOUR Google Drive" */}
-              <strong>All data stored in YOUR Google Drive.</strong> No backend servers, no third-party databases.
+              <strong>Secure cloud storage with Supabase.</strong> Your data is protected with row-level security and encrypted at rest.
             </p>
           </div>
 
@@ -157,7 +125,7 @@ export const WelcomePage = (): JSX.Element => {
           )}
 
           <p className="welcome-privacy-note">
-            We only access files created by this app. Your existing Drive files remain private.
+            Sign in with Google or create an account with email. Your habit data is private and secure.
           </p>
         </section>
 
@@ -165,11 +133,11 @@ export const WelcomePage = (): JSX.Element => {
         <section className="welcome-benefits">
           <h2 className="welcome-benefits-title">Why Habit Tracker?</h2>
           <ul className="welcome-benefits-list">
-            <li>✓ No account creation required - just sign in with Google</li>
+            <li>✓ Quick sign in with Google or email</li>
             <li>✓ Completely free and open source</li>
             <li>✓ Mobile-first design optimized for daily use</li>
             <li>✓ Back-date up to 5 days if you miss a log</li>
-            <li>✓ Export your data anytime - it's just a Google Sheet</li>
+            <li>✓ Secure cloud sync across all your devices</li>
           </ul>
         </section>
       </div>
