@@ -6,11 +6,36 @@ Guidelines for managing task lists in markdown files to track progress on comple
 
 ## Completion Protocol
 
+### Starting a New Parent Task (MANDATORY)
+
+**BEFORE starting any work on a new parent task, you MUST:**
+
+1. **Ensure main is up-to-date:**
+   ```bash
+   git checkout main
+   git pull origin main
+   ```
+
+2. **Create a feature branch (REQUIRED):**
+   ```bash
+   git checkout -b feature/task-X.X-short-description
+   ```
+
+   **Branch naming convention:**
+   - Format: `feature/task-X.X-short-description`
+   - Examples:
+     - `feature/task-5.0-sync-service-integration`
+     - `feature/task-7.0-ui-polish`
+     - `feature/task-8.0-integration-tests`
+
+3. **Never work directly on main** - All parent task work must happen on a feature branch.
+
 ### Sub-task Completion
 
 1. When you finish a **sub-task**, immediately mark it as completed by changing `[ ]` to `[x]`.
 2. Update the task list file after finishing any significant work.
 3. Add newly discovered tasks as they emerge.
+4. Commit your changes regularly to your feature branch as you complete sub-tasks.
 
 ### Parent Task Completion
 
@@ -332,15 +357,20 @@ git branch -d feature/task-7.0-ui-polish
 
 When working with task lists, the AI must:
 
-1. **Before starting work:**
+1. **Before starting work on a new parent task (CRITICAL):**
+   - **ALWAYS create a feature branch first** - Never work directly on main
    - Check which parent task is next
-   - Ensure you're on the correct feature branch
+   - Run `git checkout main && git pull origin main` to ensure main is up-to-date
+   - Create feature branch: `git checkout -b feature/task-X.X-description`
+   - Verify you're on the correct branch: `git branch --show-current`
    - Review which sub-task to implement next
 
 2. **During work:**
+   - **Verify you're on a feature branch** (not main) before making changes
    - Regularly update the task list file after finishing any significant work
    - Mark each finished **sub-task** as `[x]` immediately
    - Add newly discovered tasks to the list
+   - Commit changes to the feature branch regularly as you complete sub-tasks
 
 3. **After completing all subtasks:**
    - Follow the complete PR-based workflow (steps 1-6a above)
@@ -359,6 +389,12 @@ When working with task lists, the AI must:
    - If tests fail, create new sub-tasks to fix failures (don't silently ignore)
    - If CI fails, document the issues and fix them before merging
    - Never mark a task complete if there are blocking issues
+
+7. **Branch discipline (MANDATORY):**
+   - **ALWAYS create a feature branch before starting a new parent task**
+   - Never commit directly to main
+   - If you find yourself on main, stop immediately and create a feature branch
+   - Each parent task gets its own dedicated feature branch
 
 ---
 
@@ -408,12 +444,14 @@ When working with task lists, the AI must:
   ```
 
 ### "Forgot to create feature branch, committed to main"
+- **This should NEVER happen** - Always create feature branch first
 - **Fix:** Create branch from current main, reset main to origin:
   ```bash
   git branch feature/task-X.X  # Preserve your work
   git reset --hard origin/main  # Reset main to remote
   git checkout feature/task-X.X  # Switch to feature branch
   ```
+- **Prevention:** Before starting any parent task, run `git checkout -b feature/task-X.X` as the FIRST step
 
 ### "CI is taking too long"
 - **Check:** Is the test suite slow? (npm test takes >2 minutes)

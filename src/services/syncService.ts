@@ -1,13 +1,13 @@
 /**
  * Sync Service
  *
- * Coordinates synchronization between local storage (IndexedDB) and Google Sheets.
+ * Coordinates synchronization between local storage (IndexedDB) and Supabase.
  * Implements offline-first architecture with conflict resolution and automatic retry.
  */
 
 import { storageService } from './storage';
 import { syncQueueService } from './syncQueue';
-import { googleSheetsService } from './googleSheets';
+import { supabaseDataService } from './supabaseDataService';
 import type { Habit } from '../types/habit';
 import type { LogEntry } from '../types/logEntry';
 
