@@ -67,7 +67,7 @@ Based on PRD: `0003-prd-demo-mode-onboarding.md`
 
 ### Phase 1: Core Infrastructure (3-4 days)
 
-- [ ] **1.0 Create Demo Mode Service**
+- [x] **1.0 Create Demo Mode Service**
   - [x] 1.1 Create `src/services/demoMode.ts` file with TypeScript interfaces
     - Define `DemoMetrics` interface with all required fields (demo_start_date, demo_habits_added, demo_logs_completed, demo_last_visit, demo_progress_visits, demo_conversion_shown)
     - Define constants for localStorage keys: `DEMO_METRICS_KEY = 'habitTracker_demoMetrics'` and `SHOWN_MILESTONES_KEY = 'habitTracker_shownMilestones'`
