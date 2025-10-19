@@ -111,12 +111,12 @@ Based on PRD: `0002-prd-supabase-migration.md`
   - [x] 5.12 Test sync service integration (queue operations, trigger sync, verify Supabase updates)
 
 - [ ] 6.0 Component Updates & Testing
-  - [ ] 6.1 Run existing test suite (npm test -- --run) to identify failing tests
-  - [ ] 6.2 Create src/test/supabaseMocks.ts with mock Supabase client for tests
-  - [ ] 6.3 Update src/services/auth.test.ts with Supabase Auth mocks
-  - [ ] 6.4 Update src/services/syncService.test.ts with Supabase data service mocks
-  - [ ] 6.5 Create src/services/supabaseDataService.test.ts with comprehensive CRUD tests
-  - [ ] 6.6 Run test suite again - ensure 254+ tests passing
+  - [x] 6.1 Run existing test suite (npm test -- --run) to identify failing tests - 746/750 passing
+  - [x] 6.2 Create src/test/supabaseMocks.ts with mock Supabase client for tests
+  - [x] 6.3 Update src/services/auth.test.ts with Supabase Auth mocks - Already complete (39 tests passing)
+  - [x] 6.4 Update src/services/syncService.test.ts with Supabase data service mocks - Already complete (42 tests passing)
+  - [x] 6.5 Create src/services/supabaseDataService.test.ts with comprehensive CRUD tests - Already complete (31 tests passing)
+  - [x] 6.6 Run test suite again - ensure 254+ tests passing - 747/749 passing (99.7%), 2 known date validation failures
   - [ ] 6.7 Test authentication flow end-to-end (sign in with Google, verify session, sign out)
   - [ ] 6.8 Test habit CRUD operations (create, read, update, soft delete, verify RLS isolation)
   - [ ] 6.9 Test log CRUD operations (create, read, update, delete, verify unique constraint)
