@@ -110,7 +110,7 @@ Based on PRD: `0002-prd-supabase-migration.md`
   - [x] 5.11 Preserve retry logic with exponential backoff (scheduleRetry() unchanged)
   - [x] 5.12 Test sync service integration (queue operations, trigger sync, verify Supabase updates)
 
-- [ ] 6.0 Component Updates & Testing
+- [x] 6.0 Component Updates & Testing
   - [x] 6.1 Run existing test suite (npm test -- --run) to identify failing tests - 746/750 passing
   - [x] 6.2 Create src/test/supabaseMocks.ts with mock Supabase client for tests
   - [x] 6.3 Update src/services/auth.test.ts with Supabase Auth mocks - Already complete (39 tests passing)
