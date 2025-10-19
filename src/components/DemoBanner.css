@@ -1,0 +1,128 @@
+/* DemoBanner Component Styles */
+
+.demo-banner {
+  /* Sticky positioning - stays at top during scroll */
+  position: sticky;
+  top: 0;
+  z-index: 100;
+
+  /* Purple/blue gradient background (REQ-12) */
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+
+  /* Spacing */
+  padding: 12px 16px;
+
+  /* White text for contrast */
+  color: white;
+
+  /* Box shadow for depth */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.demo-banner-content {
+  /* Flexbox layout with gap */
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  /* Center content on mobile */
+  justify-content: center;
+  flex-wrap: wrap;
+
+  /* Max width for desktop */
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.demo-banner-icon {
+  /* Icon styling */
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.demo-banner-text {
+  /* Text styling */
+  font-size: 14px;
+  line-height: 1.4;
+  flex: 1 1 auto;
+
+  /* Min width to prevent wrapping on small screens */
+  min-width: 200px;
+}
+
+.demo-banner-button {
+  /* Button styling */
+  background-color: white;
+  color: #667eea;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 8px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+
+  /* Minimum touch target (44x44px for accessibility) */
+  min-height: 44px;
+  min-width: 100px;
+
+  /* Transition for hover effect */
+  transition: all 0.2s ease-in-out;
+
+  /* Prevent text wrapping */
+  white-space: nowrap;
+}
+
+.demo-banner-button:hover {
+  background-color: #f8f9fa;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.demo-banner-button:focus {
+  outline: 2px solid white;
+  outline-offset: 2px;
+}
+
+.demo-banner-button:active {
+  transform: translateY(0);
+}
+
+/* Mobile responsive styles (< 768px) */
+@media (max-width: 767px) {
+  .demo-banner-content {
+    /* Stack vertically on very small screens if needed */
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .demo-banner-text {
+    /* Allow text to take more space */
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .demo-banner-button {
+    /* Full width button on mobile (REQ-14) */
+    flex: 0 0 auto;
+  }
+}
+
+/* Very small screens (< 480px) */
+@media (max-width: 479px) {
+  .demo-banner-content {
+    /* Stack vertically on very small screens */
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .demo-banner-text {
+    /* Center text on mobile */
+    text-align: center;
+  }
+
+  .demo-banner-button {
+    /* Full width button */
+    width: 100%;
+  }
+}
