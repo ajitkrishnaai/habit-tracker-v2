@@ -150,9 +150,12 @@ export async function createHabit(
     const { data, error } = await supabase
       .from('habits')
       .insert({
-        ...habit,
+        habit_id: habit.habit_id,
         user_id: userId,
-      })
+        name: habit.name,
+        category: habit.category,
+        status: habit.status,
+      } as any)
       .select()
       .single();
 
@@ -186,6 +189,7 @@ export async function updateHabit(habit: Habit): Promise<Habit> {
   try {
     const userId = await getCurrentUserId();
 
+    // @ts-expect-error - Supabase types infer 'never' for update, but this is valid
     const { data, error } = await supabase
       .from('habits')
       .update({
@@ -228,9 +232,12 @@ export async function deleteHabit(habitId: string): Promise<Habit> {
   try {
     const userId = await getCurrentUserId();
 
+    // @ts-expect-error - Supabase types infer 'never' for update, but this is valid
     const { data, error } = await supabase
       .from('habits')
-      .update({ status: 'inactive' })
+      .update({
+        status: 'inactive' as const,
+      })
       .eq('habit_id', habitId)
       .eq('user_id', userId)
       .select()
@@ -326,9 +333,13 @@ export async function createLog(
     const { data, error } = await supabase
       .from('logs')
       .insert({
-        ...log,
+        log_id: log.log_id,
+        habit_id: log.habit_id,
         user_id: userId,
-      })
+        date: log.date,
+        status: log.status,
+        notes: log.notes,
+      } as any)
       .select()
       .single();
 
@@ -370,7 +381,8 @@ export async function updateLog(log: Log): Promise<Log> {
   try {
     const userId = await getCurrentUserId();
 
-    const { data, error } = await supabase
+    // @ts-expect-error - Supabase types infer 'never' for update, but this is valid
+    const { data, error} = await supabase
       .from('logs')
       .update({
         status: log.status,
@@ -496,9 +508,10 @@ export async function updateMetadata(
       .from('metadata')
       .upsert(
         {
-          ...metadata,
           user_id: userId,
-        },
+          sheet_version: metadata.sheet_version,
+          last_sync: metadata.last_sync,
+        } as any,
         {
           onConflict: 'user_id', // Primary key
         }

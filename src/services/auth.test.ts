@@ -72,11 +72,12 @@ describe('Supabase Authentication Service', () => {
     user: mockUser,
   };
 
-  const mockAuthError: AuthError = {
+  const mockAuthError = {
     name: 'AuthApiError',
     message: 'Invalid credentials',
     status: 401,
-  };
+    code: 'invalid_credentials',
+  } as unknown as AuthError;
 
   // Store the auth state change callback
   let authStateChangeCallback: ((event: string, session: Session | null) => void) | null = null;
@@ -101,7 +102,13 @@ describe('Supabase Authentication Service', () => {
     vi.mocked(supabase.auth.onAuthStateChange).mockImplementation((callback) => {
       authStateChangeCallback = callback as any;
       return {
-        data: { subscription: { id: 'mock-subscription', unsubscribe: vi.fn() } },
+        data: {
+          subscription: {
+            id: 'mock-subscription',
+            unsubscribe: vi.fn(),
+            callback: vi.fn(),
+          },
+        },
       };
     });
   });
