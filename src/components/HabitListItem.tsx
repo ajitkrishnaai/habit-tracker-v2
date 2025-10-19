@@ -8,6 +8,7 @@
 import { useState } from 'react';
 import { storageService } from '../services/storage';
 import { syncService } from '../services/syncService';
+import { supabaseDataService } from '../services/supabaseDataService';
 import { parseError, formatErrorMessage, logError } from '../utils/errorHandler';
 import type { Habit } from '../types/habit';
 
@@ -35,10 +36,18 @@ export const HabitListItem = ({ habit, onEdit, onDelete }: HabitListItemProps): 
       setDeleting(true);
       setError(null);
 
-      // Mark habit as inactive (soft delete)
+      // Mark habit as inactive (soft delete) in IndexedDB
       await storageService.deleteHabit(habit.habit_id);
 
-      // Trigger sync in background
+      // Also delete in Supabase
+      try {
+        await supabaseDataService.deleteHabit(habit.habit_id);
+      } catch (supabaseError) {
+        // Log error but don't block user - IndexedDB delete succeeded
+        logError('HabitListItem:supabaseDelete', supabaseError);
+      }
+
+      // Trigger sync in background for any queued operations
       syncService.syncToRemote().catch((err) => {
         logError('HabitListItem:backgroundSync', err);
       });

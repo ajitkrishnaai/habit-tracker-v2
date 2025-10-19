@@ -143,9 +143,12 @@ export const signUpWithEmail = async (email: string, password: string, name?: st
 };
 
 /**
- * Initiate Google OAuth login flow
+ * Initiate Google OAuth login flow (OPTIONAL - NOT USED BY DEFAULT)
  * Opens Google's consent screen
- * Note: This requires Google OAuth to be configured in Supabase dashboard
+ *
+ * Note: This requires Google OAuth to be configured in Supabase dashboard.
+ * By default, the app uses email/password authentication (loginWithEmail).
+ * This function is kept for backward compatibility or optional future use.
  */
 export const login = async (): Promise<void> => {
   try {

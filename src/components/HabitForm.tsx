@@ -8,6 +8,7 @@
 import { useState, useEffect } from 'react';
 import { storageService } from '../services/storage';
 import { syncService } from '../services/syncService';
+import { supabaseDataService } from '../services/supabaseDataService';
 import { generateUUID } from '../utils/uuid';
 import {
   validateHabitName,
@@ -108,13 +109,37 @@ export const HabitForm = ({ editingHabit, onSuccess, onCancel }: HabitFormProps)
         modified_date: today,
       };
 
-      // Save to local storage
+      // Save to local storage (IndexedDB)
       await storageService.saveHabit(habit);
 
-      // Trigger sync in background (fire and forget)
+      // Also save to Supabase if online
+      try {
+        if (editingHabit) {
+          // Update existing habit
+          // @ts-expect-error - Type mismatch between local and Supabase Habit types
+          await supabaseDataService.updateHabit({
+            habit_id: habit.habit_id,
+            name: habit.name,
+            category: habit.category,
+            status: habit.status,
+          });
+        } else {
+          // Create new habit
+          await supabaseDataService.createHabit({
+            habit_id: habit.habit_id,
+            name: habit.name,
+            category: habit.category,
+            status: habit.status,
+          });
+        }
+      } catch (supabaseError) {
+        // Log error but don't block user - IndexedDB save succeeded
+        logError('HabitForm:supabaseSync', supabaseError);
+      }
+
+      // Trigger background sync for any queued operations
       syncService.syncToRemote().catch((err) => {
         logError('HabitForm:backgroundSync', err);
-        // Don't block user flow if sync fails - it will retry automatically
       });
 
       // Clear form and notify parent
