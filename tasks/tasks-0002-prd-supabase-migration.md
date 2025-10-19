@@ -144,7 +144,7 @@ Based on PRD: `0002-prd-supabase-migration.md`
   - [ ] 7.13 Monitor error rates for first 24 hours (Supabase dashboard logs, frontend error tracking)
   - [ ] 7.14 Document rollback plan (revert code, redeploy previous version with Google Sheets)
 
-- [ ] 8.0 Legacy Code Cleanup & Documentation
+- [x] 8.0 Legacy Code Cleanup & Documentation
   - [x] 8.1 Delete src/services/googleSheets.ts (571 lines removed)
   - [x] 8.2 Delete src/utils/tokenManager.ts (if not already deleted in 3.9)
   - [x] 8.3 Remove @react-oauth/google and gapi-script from package.json dependencies
