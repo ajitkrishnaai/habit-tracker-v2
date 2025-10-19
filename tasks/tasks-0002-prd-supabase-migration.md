@@ -57,7 +57,7 @@ Based on PRD: `0002-prd-supabase-migration.md`
   - [x] 1.6 Test database schema via Supabase Table Editor (verified tables, RLS, policies, triggers)
   - [x] 1.7 Document Supabase project URL and anon key for environment setup
 
-- [ ] 2.0 Frontend Dependencies & Configuration
+- [x] 2.0 Frontend Dependencies & Configuration
   - [x] 2.1 Install @supabase/supabase-js package (npm install @supabase/supabase-js)
   - [x] 2.2 Create .env.local with VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY
   - [x] 2.3 Update .env.example with new Supabase variables (remove VITE_GOOGLE_CLIENT_ID)
