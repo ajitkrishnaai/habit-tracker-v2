@@ -12,7 +12,7 @@ export interface Habit {
   habit_id: string;           // Unique habit identifier (format: habit_XXXXXXXX)
   user_id: string;            // UUID - links to auth.users
   name: string;               // Habit name (1-100 chars, unique per user case-insensitive)
-  category?: string;          // Optional category (max 50 chars)
+  category?: string | null;   // Optional category (max 50 chars), nullable in database
   status: 'active' | 'inactive'; // Habit status
   created_date: string;       // ISO 8601 timestamp - auto-set on creation
   modified_date: string;      // ISO 8601 timestamp - auto-updated on changes
@@ -27,7 +27,7 @@ export interface Log {
   user_id: string;            // UUID - links to auth.users (denormalized for RLS)
   date: string;               // ISO 8601 date format (YYYY-MM-DD)
   status: 'done' | 'not_done' | 'no_data'; // Log status
-  notes?: string;             // Optional notes (max 5000 chars)
+  notes?: string | null;      // Optional notes (max 5000 chars), nullable in database
   created_date: string;       // ISO 8601 timestamp - auto-set on creation
   modified_date: string;      // ISO 8601 timestamp - auto-updated on changes
 }
@@ -38,7 +38,7 @@ export interface Log {
 export interface Metadata {
   user_id: string;            // UUID - links to auth.users (PRIMARY KEY)
   sheet_version: string;      // App version (default '2.0')
-  last_sync?: string;         // ISO 8601 timestamp - last sync time
+  last_sync?: string | null;  // ISO 8601 timestamp - last sync time, nullable in database
   created_date: string;       // ISO 8601 timestamp - auto-set on creation
   modified_date: string;      // ISO 8601 timestamp - auto-updated on changes
 }

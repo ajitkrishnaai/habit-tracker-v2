@@ -149,13 +149,14 @@ export async function createHabit(
 
     const { data, error } = await supabase
       .from('habits')
-      .insert({
+      // @ts-expect-error - Supabase type inference issue with generic Database type
+      .insert([{
         habit_id: habit.habit_id,
         user_id: userId,
         name: habit.name,
-        category: habit.category || null,
+        category: habit.category ?? null,
         status: habit.status,
-      })
+      }])
       .select()
       .single();
 
@@ -332,14 +333,15 @@ export async function createLog(
 
     const { data, error } = await supabase
       .from('logs')
-      .insert({
+      // @ts-expect-error - Supabase type inference issue with generic Database type
+      .insert([{
         log_id: log.log_id,
         habit_id: log.habit_id,
         user_id: userId,
         date: log.date,
         status: log.status,
-        notes: log.notes || null,
-      })
+        notes: log.notes ?? null,
+      }])
       .select()
       .single();
 
@@ -506,16 +508,14 @@ export async function updateMetadata(
 
     const { data, error } = await supabase
       .from('metadata')
-      .upsert(
-        {
-          user_id: userId,
-          sheet_version: metadata.sheet_version || null,
-          last_sync: metadata.last_sync || null,
-        },
-        {
-          onConflict: 'user_id', // Primary key
-        }
-      )
+      // @ts-expect-error - Supabase type inference issue with generic Database type
+      .upsert([{
+        user_id: userId,
+        sheet_version: metadata.sheet_version,
+        last_sync: metadata.last_sync ?? null,
+      }], {
+        onConflict: 'user_id', // Primary key
+      })
       .select()
       .single();
 
