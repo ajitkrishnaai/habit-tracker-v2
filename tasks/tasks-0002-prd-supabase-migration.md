@@ -58,12 +58,12 @@ Based on PRD: `0002-prd-supabase-migration.md`
   - [x] 1.7 Document Supabase project URL and anon key for environment setup
 
 - [ ] 2.0 Frontend Dependencies & Configuration
-  - [ ] 2.1 Install @supabase/supabase-js package (npm install @supabase/supabase-js)
-  - [ ] 2.2 Create .env.local with VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY
-  - [ ] 2.3 Update .env.example with new Supabase variables (remove VITE_GOOGLE_CLIENT_ID)
-  - [ ] 2.4 Create src/types/database.ts with TypeScript types matching Supabase schema
-  - [ ] 2.5 Create src/lib/supabaseClient.ts with client singleton initialization
-  - [ ] 2.6 Test Supabase client initialization in development (npm run dev, check console logs)
+  - [x] 2.1 Install @supabase/supabase-js package (npm install @supabase/supabase-js)
+  - [x] 2.2 Create .env.local with VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY
+  - [x] 2.3 Update .env.example with new Supabase variables (remove VITE_GOOGLE_CLIENT_ID)
+  - [x] 2.4 Create src/types/database.ts with TypeScript types matching Supabase schema
+  - [x] 2.5 Create src/lib/supabaseClient.ts with client singleton initialization
+  - [x] 2.6 Test Supabase client initialization in development (npm run dev, check console logs)
 
 - [ ] 3.0 Authentication Migration (Google OAuth via Supabase Auth)
   - [ ] 3.1 Create new src/services/auth.ts with Supabase Auth implementation
