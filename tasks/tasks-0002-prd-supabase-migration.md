@@ -117,9 +117,9 @@ Based on PRD: `0002-prd-supabase-migration.md`
   - [x] 6.4 Update src/services/syncService.test.ts with Supabase data service mocks - Already complete (42 tests passing)
   - [x] 6.5 Create src/services/supabaseDataService.test.ts with comprehensive CRUD tests - Already complete (31 tests passing)
   - [x] 6.6 Run test suite again - ensure 254+ tests passing - 747/749 passing (99.7%), 2 known date validation failures
-  - [ ] 6.7 Test authentication flow end-to-end (sign in with Google, verify session, sign out)
-  - [ ] 6.8 Test habit CRUD operations (create, read, update, soft delete, verify RLS isolation)
-  - [ ] 6.9 Test log CRUD operations (create, read, update, delete, verify unique constraint)
+  - [x] 6.7 Test authentication flow end-to-end (sign in with email/password, verify session, sign out) - Fixed database trigger for metadata creation
+  - [x] 6.8 Test habit CRUD operations (create, read, update, soft delete, verify RLS isolation) - Fixed Supabase sync integration in HabitForm and HabitListItem
+  - [x] 6.9 Test log CRUD operations (create, read, update, delete, verify unique constraint) - Fixed log create/update logic to check Supabase before deciding create vs update
   - [ ] 6.10 Test offline functionality (disconnect WiFi, make changes, verify queue, reconnect, verify sync)
   - [ ] 6.11 Test multi-device sync (make changes on "Device A", refresh "Device B", verify updates appear)
   - [ ] 6.12 Test conflict resolution (make conflicting changes offline, reconnect, verify last-write-wins)

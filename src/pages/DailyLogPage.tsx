@@ -16,6 +16,7 @@ import { ToggleSwitch } from '../components/ToggleSwitch';
 import { EmptyState } from '../components/EmptyState';
 import { storageService } from '../services/storage';
 import { syncService } from '../services/syncService';
+import { supabaseDataService } from '../services/supabaseDataService';
 import type { Habit } from '../types/habit';
 import type { LogEntry } from '../types/logEntry';
 import {
@@ -161,8 +162,39 @@ export const DailyLogPage: React.FC = () => {
             notes: notes || undefined,
           };
 
-      // Save to local storage
+      // Save to local storage (IndexedDB)
       await storageService.saveLog(logEntry);
+
+      // Also save to Supabase if online
+      try {
+        // Check if log exists in Supabase by fetching logs for this habit/date
+        const existingLogs = await supabaseDataService.getLogs(logEntry.habit_id, logEntry.date);
+        const logExistsInSupabase = existingLogs.some(l => l.log_id === logEntry.log_id ||
+                                                            (l.habit_id === logEntry.habit_id && l.date === logEntry.date));
+
+        if (logExistsInSupabase) {
+          // Update existing log in Supabase
+          await supabaseDataService.updateLog({
+            log_id: logEntry.log_id,
+            habit_id: logEntry.habit_id,
+            date: logEntry.date,
+            status: logEntry.status,
+            notes: logEntry.notes || null,
+          });
+        } else {
+          // Create new log in Supabase
+          await supabaseDataService.createLog({
+            log_id: logEntry.log_id,
+            habit_id: logEntry.habit_id,
+            date: logEntry.date,
+            status: logEntry.status,
+            notes: logEntry.notes || null,
+          });
+        }
+      } catch (supabaseError) {
+        console.error('Supabase sync error:', supabaseError);
+        // Don't block user - IndexedDB save succeeded
+      }
 
       // Update state with new log entry
       setHabitLogs((prev) =>
@@ -171,7 +203,7 @@ export const DailyLogPage: React.FC = () => {
         )
       );
 
-      // Trigger background sync
+      // Trigger background sync for queued operations
       triggerSync();
     } catch (err) {
       console.error('Error saving log entry:', err);
@@ -228,7 +260,40 @@ export const DailyLogPage: React.FC = () => {
               };
 
           updatedLogs.push(logEntry);
+
+          // Save to IndexedDB
           await storageService.saveLog(logEntry);
+
+          // Also save to Supabase
+          try {
+            // Check if log exists in Supabase
+            const existingLogs = await supabaseDataService.getLogs(logEntry.habit_id, logEntry.date);
+            const logExistsInSupabase = existingLogs.some(l => l.log_id === logEntry.log_id ||
+                                                                (l.habit_id === logEntry.habit_id && l.date === logEntry.date));
+
+            if (logExistsInSupabase) {
+              // Update existing log
+              await supabaseDataService.updateLog({
+                log_id: logEntry.log_id,
+                habit_id: logEntry.habit_id,
+                date: logEntry.date,
+                status: logEntry.status,
+                notes: logEntry.notes || null,
+              });
+            } else {
+              // Create new log
+              await supabaseDataService.createLog({
+                log_id: logEntry.log_id,
+                habit_id: logEntry.habit_id,
+                date: logEntry.date,
+                status: logEntry.status,
+                notes: logEntry.notes || null,
+              });
+            }
+          } catch (supabaseError) {
+            console.error('Supabase sync error for log:', supabaseError);
+            // Don't block user - IndexedDB save succeeded
+          }
         }
       }
 
@@ -243,7 +308,7 @@ export const DailyLogPage: React.FC = () => {
         })
       );
 
-      // Trigger background sync
+      // Trigger background sync for queued operations
       triggerSync();
     } catch (err) {
       console.error('Error saving notes:', err);
