@@ -4,37 +4,45 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a **Habit Tracker Web Application** - a mobile-first Progressive Web App (PWA) that allows users to track daily habits with complete data ownership. All user data is stored in the user's own Google Sheet on Google Drive, not on any backend server.
+**Habit Tracker V2** is a mobile-first Progressive Web App (PWA) for tracking daily habits with complete data ownership. User data is stored in a Supabase PostgreSQL database with Row-Level Security (RLS) ensuring each user can only access their own data.
 
 ### Core Architecture
 
-- **Frontend**: Single Page Application (SPA) with client-side routing
-- **Authentication**: Google OAuth 2.0 with minimal permissions (access only to files created by this app)
-- **Data Storage**: Dual-layer architecture
-  - **Local**: IndexedDB/localStorage for offline-first functionality
-  - **Remote**: Google Sheets API v4 as the persistent data store
-- **Offline-First Design**: Service workers cache assets; sync queue manages offline changes
-- **PWA**: Installable on mobile devices with offline capabilities
+- **Frontend**: React 18.2 SPA with client-side routing (React Router 6.20)
+- **Authentication**: Supabase Auth with Google OAuth provider
+- **Database**: Supabase PostgreSQL with Row-Level Security (RLS)
+- **Offline-First**: IndexedDB for local caching with background sync to Supabase
+- **Build Tool**: Vite 5.0.8 with TypeScript 5.2.2
+- **PWA**: Service workers for offline capability and mobile installation
 
 ### Data Architecture
 
-The application uses a three-entity data model stored in a single Google Sheet:
+**Supabase PostgreSQL Database** (3 tables with RLS policies):
 
-1. **Habits Tab** - User's tracked habits (habit_id, name, category, status, timestamps)
-2. **Logs Tab** - Daily log entries (log_id, habit_id, date, status, notes, timestamp)
-3. **Metadata Tab** - App metadata (sheet_version, last_sync, user_id)
+1. **habits** - User's tracked habits
+   - `habit_id` (TEXT PK), `user_id` (UUID FK), `name` (TEXT 1-100), `category` (TEXT), `status` ('active'|'inactive')
+   - Unique constraint: `(user_id, LOWER(name))` - case-insensitive duplicate prevention
+   - Soft delete: Mark as 'inactive' instead of removing
+
+2. **logs** - Daily log entries
+   - `log_id` (TEXT PK), `habit_id` (TEXT FK), `user_id` (UUID FK), `date` (DATE), `status` ('done'|'not_done'|'no_data'), `notes` (TEXT max 5000)
+   - Unique constraint: `(habit_id, date)` - one log per habit per day
+   - Cascade delete: Logs deleted when parent habit is deleted
+
+3. **metadata** - App metadata per user
+   - `user_id` (UUID PK), `sheet_version` (TEXT), `last_sync` (TIMESTAMPTZ)
+   - Auto-created on user signup via database trigger
 
 **Sync Strategy**:
-- Local-first: All operations write to local storage immediately (optimistic UI)
-- Background sync: Changes are queued and synced to Google Sheets asynchronously
-- Conflict resolution: Last-write-wins based on timestamps
+- Local-first: All reads from IndexedDB; writes go to IndexedDB + background sync to Supabase
+- Conflict resolution: Last-write-wins based on `modified_date` timestamps
 - Auto-retry: Failed syncs retry with exponential backoff (30s, 60s, 120s)
 
 ### Key User Flows
 
-1. **First-Time User**: Welcome page → Google OAuth → Sheet creation → Add habits → Daily logging
+1. **First-Time User**: Welcome page → Google sign-in (Supabase Auth) → Add habits → Daily logging
 2. **Daily Logging**: View today's habits with toggle switches → Mark done/not done → Add optional notes → Auto-sync
-3. **Progress Tracking**: View streaks (current & longest), completion percentages, notes pattern analysis (after 7+ notes)
+3. **Progress Tracking**: View streaks, completion percentages, notes pattern analysis (requires 7+ notes)
 4. **Back-Dating**: Navigate up to 5 days in the past to log missed habits
 
 ### Design Principles
@@ -50,102 +58,23 @@ The application uses a three-entity data model stored in a single Google Sheet:
 Agent rules for AI-assisted development:
 - `create-prd.md` - Process for generating Product Requirements Documents
 - `generate-tasks.md` - Process for breaking PRDs into implementation tasks
-- `process-task-list.md` - Task completion protocol and maintenance rules
+- `process-task-list-optimized.md` - PR-based task completion protocol with CI/CD workflow
 
 ### `/tasks/`
 Project planning and tracking:
 - `0001-prd-habit-tracker.md` - Complete PRD with 46 functional requirements
 - `tasks-0001-prd-habit-tracker.md` - 407 sub-tasks across 9 parent tasks for implementation
 
-## Working with Task Lists
-
-When implementing features, follow the completion protocol from `agents/process-task-list.md`:
-
-### Sub-task Completion
-1. Complete the sub-task implementation
-2. Mark sub-task as `[x]` in the task list markdown file
-3. Continue to next sub-task
-
-### Parent Task Completion (when ALL sub-tasks are [x])
-1. Run the full test suite (exact command TBD based on chosen framework)
-2. Only if all tests pass:
-   - Stage changes: `git add .`
-   - Clean up temporary files/code
-   - Commit with conventional format using multiple `-m` flags:
-     ```bash
-     git commit -m "feat: implement habit management" \
-                -m "- Add ManageHabitsPage component" \
-                -m "- Implement CRUD operations with validation" \
-                -m "- Add tests for duplicate detection" \
-                -m "Completes task 4.0 from PRD 0001"
-     ```
-3. Mark parent task as `[x]`
-4. Stop and wait for user approval before starting next parent task
-
-### Task List Maintenance
-- Update task list after each significant work session
-- Add newly discovered tasks as they emerge
-- Keep "Relevant Files" section accurate with one-line descriptions
-
-## PRD Reference
-
-The PRD (`tasks/0001-prd-habit-tracker.md`) is the source of truth. Key requirements:
-
-### Critical Technical Requirements
-- **OAuth Scopes**: `https://www.googleapis.com/auth/drive.file` and `userinfo.profile` only (most restrictive scope - only files created by this app)
-- **Token Storage**: OAuth tokens in memory only (never localStorage)
-- **Performance**: <3s initial load on 4G; toggles respond immediately with optimistic UI
-- **Offline**: App must function 100% offline with queued sync
-- **Data Validation**:
-  - Habit names: 1-100 chars, unique (case-insensitive)
-  - Notes: max 5000 chars
-  - Dates: ISO 8601 format, max 5 days in past
-
-### Feature-Specific Notes
-
-**Habit Management (Task 4.0)**:
-- Never permanently delete habits - mark as 'inactive' to retain historical data
-- Duplicate checking is case-insensitive
-- Habits sorted by created_date
-
-**Daily Logging (Task 5.0)**:
-- Shared notes field applies to all habits in that session (not per-habit)
-- Visual states: done (toggle on), not_done (toggle off), no_data (default)
-- Must prompt if navigating away with unsaved notes
-
-**Progress & Analytics (Task 6.0)**:
-- Current streak: consecutive "done" days from today backward, resets on "not_done"
-- Longest streak: maximum ever achieved in history
-- Completion %: (done count / total logged days) × 100, excludes "no_data" days
-- Notes analysis: Only shows after 7+ log entries with notes; uses simple NLP + sentiment
-
-**UI/UX (Task 7.0)**:
-- Base font: 16px (prevents iOS zoom on input focus)
-- All touch targets: min 44x44px
-- Top navigation: fixed/sticky with "Daily Log" (default), "Progress", "Manage Habits"
-- Footer must link to Privacy Policy and Terms of Service
-
-## Technology Stack (Implemented)
-
-**Build & Framework**:
-- **Build Tool**: Vite 5.0.8 with PWA plugin
-- **Language**: TypeScript 5.2.2
-- **Framework**: React 18.2 with React Router 6.20
-- **State Management**: React hooks (useState, useEffect) - no external state library
-- **Date Library**: date-fns 2.30.0
-- **NLP/Sentiment**: sentiment 5.0.2 (lightweight sentiment analysis)
-- **Testing**: Vitest 1.0.4 (unit/integration) with happy-dom environment
-
-**Key Dependencies**:
-- `@react-oauth/google` - Google OAuth integration
-- `react-router-dom` - Client-side routing
-- `vite-plugin-pwa` - PWA service worker generation
+### `/supabase/`
+Database schema and migrations:
+- `migrations/001_initial_schema.sql` - Creates tables, indexes, RLS policies, triggers
+- `seed.sql` - Sample data for development/testing
 
 ## Essential Commands
 
 ### Development
 ```bash
-# Start development server (http://localhost:5173)
+# Start dev server on http://localhost:5173
 npm run dev
 
 # Build for production (outputs to /dist)
@@ -160,271 +89,348 @@ npm run lint
 
 ### Testing
 ```bash
-# Run all tests once
-npm test -- --run
-
-# Run tests in watch mode (default)
+# Vitest unit tests (watch mode)
 npm test
+
+# Run unit tests once
+npm test -- --run
 
 # Run specific test file
 npm test -- src/utils/streakCalculator.test.ts
 
-# Run tests with coverage report
+# Run with coverage (requires @vitest/coverage-v8)
 npm run test:coverage
-# Note: Requires @vitest/coverage-v8 to be installed first
 
-# Run tests with UI (if @vitest/ui is installed)
+# Run with Vitest UI
 npm test -- --ui
 ```
 
-### Environment Setup
-Create `.env.local` for local development:
-```env
-VITE_GOOGLE_CLIENT_ID=your_client_id_here.apps.googleusercontent.com
+### E2E Testing (Playwright)
+```bash
+# Run E2E tests (starts dev server automatically)
+npm run test:e2e
+
+# E2E tests with interactive UI
+npm run test:e2e:ui
+
+# E2E tests in headed mode (see browser)
+npm run test:e2e:headed
+
+# Debug E2E tests with Playwright Inspector
+npm run test:e2e:debug
+
+# View E2E test report
+npm run test:e2e:report
 ```
 
-**Note**: OAuth tokens are NEVER stored in localStorage - only in memory via tokenManager
+### Environment Setup
 
-## Code Architecture (Implemented)
+Create `.env.local` with:
+```env
+# Supabase Configuration (get from Supabase dashboard: Settings → API)
+VITE_SUPABASE_URL=https://your-project-ref.supabase.co
+VITE_SUPABASE_ANON_KEY=your-supabase-anon-key-here
+
+# Legacy Google OAuth (will be removed after full migration)
+VITE_GOOGLE_CLIENT_ID=your-google-client-id.apps.googleusercontent.com
+```
+
+**See `SUPABASE_SETUP.md` for complete Supabase project configuration.**
+
+## Technology Stack
+
+**Core**:
+- **Build Tool**: Vite 5.0.8 with `vite-plugin-pwa` for PWA support
+- **Language**: TypeScript 5.2.2
+- **Framework**: React 18.2 with React Router 6.20
+- **Database**: Supabase (PostgreSQL with RLS)
+- **Auth**: Supabase Auth with Google OAuth provider
+
+**Libraries**:
+- `@supabase/supabase-js` 2.75.1 - Supabase client SDK
+- `date-fns` 2.30.0 - Date manipulation
+- `sentiment` 5.0.2 - Lightweight sentiment analysis for notes
+- `react-router-dom` 6.20 - Client-side routing
+
+**Testing**:
+- **Unit/Integration**: Vitest 1.0.4 with happy-dom environment
+- **E2E**: Playwright 1.56.0 (Chrome, Firefox, Safari)
+- **Coverage**: @vitest/coverage-v8
+
+**Development**:
+- ESLint with TypeScript/React plugins
+- Prettier 3.1.1 for code formatting
+- fake-indexeddb for testing IndexedDB operations
+
+## Code Architecture
 
 ### Service Layer (`src/services/`)
-The app uses a layered architecture with three core services:
 
-1. **storageService** (`storage.ts`) - IndexedDB operations
-   - Single source of truth for local data
+**Supabase Services** (primary data layer):
+
+1. **supabaseDataService** (`supabaseDataService.ts`) - CRUD operations for habits, logs, metadata
+   - Type-safe operations using `Database` schema types from `src/types/database.ts`
+   - Automatic `user_id` injection from authenticated session
+   - Enforces RLS policies (users can only access their own data)
+   - Comprehensive error handling with `SupabaseDataError` class
+   - Methods: `getHabits(activeOnly?)`, `createHabit()`, `updateHabit()`, `deleteHabit()`, `getLogs()`, `createLog()`, `updateLog()`, `deleteLog()`, `getMetadata()`, `updateMetadata()`
+
+2. **supabaseClient** (`src/lib/supabaseClient.ts`) - Singleton Supabase client
+   - Configured with `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY`
+   - Auto-refresh tokens, persistent sessions (localStorage)
+   - Helper functions: `getCurrentSession()`, `getCurrentUser()`, `onAuthStateChange()`
+
+**Supporting Services** (offline-first architecture):
+
+3. **storageService** (`storage.ts`) - IndexedDB operations for offline caching
    - Three object stores: `habits`, `logs`, `metadata`
-   - All operations are async, return Promises
-   - Handles initialization, CRUD, and bulk operations
-   - Methods: `initDB()`, `saveHabit()`, `getHabits()`, `saveLogs()`, `getLogs()`, etc.
+   - Methods: `initDB()`, `saveHabit()`, `getHabits()`, `saveLogs()`, `getLogs()`
 
-2. **syncQueueService** (`syncQueue.ts`) - Offline operation queue
+4. **syncQueueService** (`syncQueue.ts`) - Offline operation queue
    - Queues operations when offline: `CREATE_HABIT`, `UPDATE_HABIT`, `CREATE_LOG`, `UPDATE_LOG`
-   - Stores queue in localStorage (not IndexedDB for simplicity)
-   - Deduplicates operations (e.g., multiple updates to same habit collapse into one)
-   - Methods: `queueOperation()`, `getQueue()`, `removeOperation()`, `clearQueue()`
+   - Stores queue in localStorage for simplicity
+   - Deduplicates operations (e.g., multiple updates collapse into one)
 
-3. **syncService** (`syncService.ts`) - Sync coordinator
-   - Orchestrates bi-directional sync between IndexedDB and Google Sheets
-   - Implements retry logic with exponential backoff (30s, 60s, 120s)
-   - Listens to online/offline events
+5. **syncService** (`syncService.ts`) - Sync coordinator
+   - Orchestrates bi-directional sync between IndexedDB and Supabase
+   - Retry logic with exponential backoff (30s, 60s, 120s)
    - Conflict resolution: last-write-wins based on `modified_date` timestamps
-   - Methods: `syncToRemote()`, `syncFromRemote()`, `subscribe()` for state updates
 
-4. **googleSheetsService** (`googleSheets.ts`) - Google Sheets API wrapper
-   - Creates/finds user's habit tracking spreadsheet
-   - Uses batch operations for efficiency
-   - Three tabs: Habits, Logs, Metadata
-   - Methods: `initializeSheet()`, `saveHabits()`, `getHabits()`, `saveLogs()`, `getLogs()`
+**Legacy Services** (being phased out):
+- `googleSheets.ts` - Google Sheets API wrapper (to be removed)
+- `auth.ts` - Google OAuth manager (replaced by Supabase Auth)
 
-5. **authService** (`auth.ts`) - Google OAuth manager
-   - Uses `@react-oauth/google` for OAuth flow
-   - Token storage: in-memory only via `tokenManager.ts`
-   - Scopes: `drive.file` (most restrictive), `userinfo.profile`
-   - Methods: `initAuth()`, `signIn()`, `signOut()`, `getAccessToken()`
+### Data Flow Pattern
 
-### Component Structure (`src/components/`)
-**Reusable UI Components**:
-- `ToggleSwitch.tsx` - Accessible toggle for habit logging (44x44px min, keyboard navigable)
-- `DateNavigator.tsx` - Date picker for navigating up to 5 days in past
+**Write Operations** (optimistic UI):
+1. User action (e.g., toggle habit status)
+2. Immediate UI update (optimistic)
+3. Write to IndexedDB (`storageService`)
+4. Queue operation if offline (`syncQueueService`)
+5. Background sync to Supabase (`supabaseDataService`)
+6. On success: remove from queue; On failure: retry with exponential backoff
+
+**Read Operations**:
+1. Read from IndexedDB (fast, offline-capable)
+2. Background sync from Supabase on: app load, manual refresh, network reconnection
+3. Never block UI waiting for remote data
+
+### Component Architecture
+
+**Pages** (`src/pages/`):
+- `WelcomePage.tsx` - Landing page with Google sign-in (public)
+- `ManageHabitsPage.tsx` - CRUD interface for habits (protected)
+- `DailyLogPage.tsx` - Daily logging with toggles and shared notes field (protected)
+- `ProgressPage.tsx` - Analytics dashboard with streaks, percentages, pattern analysis (protected)
+- `PrivacyPolicyPage.tsx` / `TermsOfServicePage.tsx` - Legal pages (public)
+
+**Reusable Components** (`src/components/`):
+- `ToggleSwitch.tsx` - Accessible toggle (44x44px touch target, keyboard navigable)
 - `HabitForm.tsx` - Add/edit habit form with validation and character counters
-- `HabitListItem.tsx` - Habit card with edit/delete actions
-- `ProgressCard.tsx` - Expandable card showing streaks, percentages, pattern analysis
-- `NotesHistory.tsx` - Chronological display of notes with timestamps
-- `EmptyState.tsx` - Placeholder UI when no data exists (supports custom icons and CTAs)
-- `ProtectedRoute.tsx` - Route guard requiring authentication (wraps content with Layout)
+- `DateNavigator.tsx` - Navigate backward up to 5 days
+- `ProgressCard.tsx` - Expandable card showing streaks and analytics
+- `Navigation.tsx` - Top nav bar (sticky on mobile, active state highlighting)
+- `Footer.tsx` - Footer with Privacy/Terms links
+- `Layout.tsx` - Wrapper for protected routes (includes Navigation + Footer + OfflineIndicator)
+- `SyncIndicator.tsx` - Shows sync status (spinning/success/error with retry)
+- `OfflineIndicator.tsx` - Banner when offline
+- `ErrorMessage.tsx` - Unified error display with retry buttons
+- `ProtectedRoute.tsx` - Route guard requiring Supabase authentication
 
-**Navigation & Layout** (Task 7.0):
-- `Navigation.tsx` - Top navigation bar with active page highlighting, sticky on mobile
-- `Footer.tsx` - Footer with Privacy Policy and Terms links
-- `Layout.tsx` - Wrapper component providing Navigation, Footer, and OfflineIndicator to protected pages
+**Utility Functions** (`src/utils/`):
 
-**Status & Error Indicators** (Task 7.0):
-- `SyncIndicator.tsx` - Shows sync status (spinning, success checkmark, error with retry)
-- `OfflineIndicator.tsx` - Banner that appears when offline, hides when back online
-- `ErrorMessage.tsx` - Unified error display for auth, sync, and validation errors with retry buttons
-
-### Pages (`src/pages/`)
-**Main Views** (all wrapped in ProtectedRoute except Welcome):
-- `WelcomePage.tsx` - Landing page with hero, features, and Google sign-in (Task 7.0: enhanced with external CSS)
-- `ManageHabitsPage.tsx` - CRUD interface for habits
-- `DailyLogPage.tsx` - Daily logging with toggle switches and shared notes
-- `ProgressPage.tsx` - Analytics dashboard with streaks, percentages, pattern analysis
-
-**Legal Pages** (Task 7.0):
-- `PrivacyPolicyPage.tsx` - Privacy policy with GDPR compliance statements
-- `TermsOfServicePage.tsx` - Terms of service with liability and usage rights
-- `LegalPage.css` - Shared styles for legal pages
-
-### Utilities (`src/utils/`)
-**Pure Functions** (all have corresponding `.test.ts` files):
+All utilities are pure functions with corresponding `.test.ts` files:
 - `streakCalculator.ts` - Calculates current and longest streaks from log history
 - `percentageCalculator.ts` - Computes completion percentage (done/total logged days)
-- `notesAnalyzer.ts` - Extracts keywords, sentiment, correlations from notes (requires 7+ entries)
-- `dataValidation.ts` - Validates and sanitizes all user inputs (names, categories, dates, notes)
-- `uuid.ts` - Generates unique IDs with prefixes (`habit_`, `log_`)
+- `notesAnalyzer.ts` - Extracts keywords, sentiment, correlations (requires 7+ entries with notes)
+- `dataValidation.ts` - Validates habit names, categories, dates, notes
 - `dateHelpers.ts` - Date formatting and calculations (uses date-fns)
+- `uuid.ts` - Generates unique IDs with prefixes (`habit_`, `log_`)
 - `errorHandler.ts` - Centralized error handling and logging
-- `tokenManager.ts` - In-memory OAuth token storage (never persisted)
 
 ### Routing (`src/router.tsx`)
-Uses React Router 6 with these routes:
+
+React Router 6 routes:
 - `/` - WelcomePage (public)
 - `/daily-log` - DailyLogPage (protected, default after login)
 - `/progress` - ProgressPage (protected)
 - `/manage-habits` - ManageHabitsPage (protected)
-- `/privacy` - PrivacyPolicyPage (public - Task 7.0)
-- `/terms` - TermsOfServicePage (public - Task 7.0)
+- `/privacy` - PrivacyPolicyPage (public)
+- `/terms` - TermsOfServicePage (public)
 
-**Note**: All protected routes are wrapped with the Layout component (Navigation + Footer + OfflineIndicator)
+All protected routes wrapped with `Layout` component.
 
-### Data Flow Pattern
-**Write Operations** (optimistic UI):
-1. User action (e.g., toggle habit, edit name)
-2. Immediate UI update (optimistic)
-3. Write to IndexedDB (`storageService.saveHabit()`)
-4. Queue operation (`syncQueueService.queueOperation()`)
-5. Background sync to Google Sheets (`syncService.syncToRemote()`)
-6. On success: remove from queue; On failure: retry with backoff
+## Database Schema & Migrations
 
-**Read Operations**:
-1. Always read from IndexedDB (single source of truth)
-2. Never read directly from Google Sheets during normal usage
-3. Sync from remote only on: app load, manual refresh, or after network reconnection
+**Schema Files**:
+- `supabase/migrations/001_initial_schema.sql` - Creates tables, indexes, RLS policies, triggers
+- `supabase/seed.sql` - Sample data for testing
+- `src/types/database.ts` - TypeScript types generated from Supabase schema
 
-### Testing Strategy
-**Test Organization** (see `TESTING_TASKS_1-6.md`):
-- Unit tests colocated: `*.test.ts` next to `*.ts` files
-- Test environment: happy-dom (lightweight DOM simulation)
-- Setup: `src/test/setup.ts` configures fake-indexeddb
-- Coverage target: 85%+ (currently 254/260 tests passing - 97.7%)
-- Test utilities: `testHelpers.ts` provides mock data generators
+**Key Database Features**:
+- **RLS Policies**: All tables enforce `auth.uid() = user_id` for SELECT/INSERT/UPDATE/DELETE
+- **Triggers**:
+  - Auto-update `modified_date` on UPDATE (all tables)
+  - Auto-create metadata row on user signup
+- **Indexes**: Optimized for queries by `user_id`, `date`, `status`, `created_date`
+- **Cascade Deletes**: Logs deleted when parent habit is deleted
+- **Check Constraints**: Validate habit name length (1-100), status values, notes length (max 5000)
 
-## Google Cloud Setup
+## Testing Strategy
 
-Before Task 2.0 (Authentication), you'll need:
+**Test Organization**:
+- **Unit tests**: Colocated `*.test.ts` files next to source files (Vitest + happy-dom)
+- **E2E tests**: `e2e/*.spec.ts` files (Playwright)
+- **Test setup**: `src/test/setup.ts` configures fake-indexeddb
+- **Coverage target**: 85%+ (currently ~97.7% with 254/260 tests passing)
+- **Test utilities**: `src/utils/testHelpers.ts` provides mock data generators
 
-1. Create project at console.cloud.google.com
-2. Enable APIs: Google Sheets API v4, Google Drive API (minimal)
-3. Configure OAuth consent screen with scopes
-4. Create OAuth 2.0 client ID for web application
-5. Add authorized origins and redirect URIs
-6. Set environment variables:
-   - `VITE_GOOGLE_CLIENT_ID` (or equivalent for chosen build tool)
-   - Note: API key not required - app uses OAuth tokens directly
+**E2E Test Projects** (Playwright config in `playwright.config.ts`):
+- **Mobile Chrome** (375x667 viewport) - Primary target
+- **Desktop Chrome** (1280x720) - Desktop layout testing
+- **Mobile Safari** (iPhone 13) - iOS compatibility
+- **Firefox** (1280x720) - Cross-browser testing
 
-## Deployment Target
+**Known Test Failures** (6 tests, non-blocking):
+- 4 HabitForm validation display tests (timing issues with React state updates)
+- 2 date validation edge case tests (timezone handling bugs)
+- See `TEST_REPORT_TASKS_1-6.md` for detailed analysis
 
-**Google Cloud Platform** (Task 9.0):
-- Option A: Cloud Run (containerized, recommended for flexibility)
-- Option B: App Engine (simpler for static SPA)
-- Must update OAuth authorized origins with production URL
-- Requires HTTPS (provided automatically by both options)
+## Working with Task Lists
 
-## Testing Requirements & Status
+Follow the PR-based completion protocol from `agents/process-task-list-optimized.md`:
 
-**Current Test Status**: 254/260 passing (97.7%)
-- **6 known failures**: 4 HabitForm validation tests (timing issues), 2 date validation tests (timezone bugs)
-- See `TEST_REPORT_TASKS_1-6.md` for detailed failure analysis
+### Sub-task Completion
+1. Complete sub-task implementation
+2. Mark as `[x]` in task list markdown file
+3. Continue to next sub-task
 
-**Unit Tests** (85% coverage target):
-- ✅ All services: auth, storage, syncQueue (23+23 tests)
-- ✅ All utilities: streakCalculator (21), percentageCalculator (14), notesAnalyzer (14), dataValidation (47), uuid (32), dateHelpers (21)
-- ✅ Key components: ToggleSwitch (12), HabitForm (12/16 passing), DateNavigator (10), HabitListItem (9)
+### Parent Task Completion (when ALL sub-tasks are [x])
 
-**Integration Tests** (TODO - Task 8.0):
-- Full auth flow including sheet creation
-- Habit CRUD with Google Sheets sync
-- Daily logging with notes
-- Offline → online sync with conflict resolution
+1. **Run tests**: `npm test -- --run`
+2. **Create feature branch**: `git checkout -b feature/task-X.X-description`
+3. **Stage and commit** (only if tests pass):
+   ```bash
+   git add .
+   git commit -m "feat: implement habit management" \
+              -m "- Add ManageHabitsPage component" \
+              -m "- Implement CRUD operations" \
+              -m "Completes task 4.0 from PRD 0001"
+   ```
+4. **Push branch**: `git push origin feature/task-X.X-description`
+5. **Create PR**: `gh pr create --title "..." --body "..."`
+6. **Wait for CI checks** to pass
+7. **Merge PR**: `gh pr merge --squash --delete-branch`
+8. **Update local main**: `git checkout main && git pull origin main`
+9. **Mark parent task** as `[x]` in task list
+10. **Stop and wait** for user approval before next parent task
 
-**E2E Tests** (TODO - Task 8.0, critical paths):
-- First-time user flow
-- Daily logging flow
-- Progress view with pattern analysis
-- Back-dating (navigate 5 days, log, return to today)
-- Offline sync (go offline, make changes, go online, verify sync)
+**See `agents/process-task-list-optimized.md` for complete workflow details.**
 
-**Accessibility Tests** (TODO - Task 7.0):
-- Lighthouse audit (target WCAG 2.1 AA)
-- Keyboard-only navigation
-- Screen reader compatibility (VoiceOver or NVDA)
+## PRD Reference
 
-**Running Tests**:
-```bash
-# All tests (watch mode)
-npm test
+The PRD (`tasks/0001-prd-habit-tracker.md`) is the source of truth. Key requirements:
 
-# Single run
-npm test -- --run
+### Critical Technical Requirements
 
-# Specific file
-npm test -- src/utils/streakCalculator.test.ts
+**Data Validation**:
+- Habit names: 1-100 chars, unique per user (case-insensitive)
+- Notes: max 5000 chars
+- Dates: ISO 8601 format, max 5 days in past
+- Categories: optional, max 50 chars
 
-# With coverage (requires @vitest/coverage-v8)
-npm run test:coverage
-```
+**Soft Delete**:
+- Never permanently delete habits - mark as 'inactive' to retain historical data
+- Inactive habits don't show in daily logging but appear in progress analytics
+
+**Performance**:
+- <3s initial load on 4G
+- Toggle switches respond immediately (optimistic UI)
+- Progress view loads within 2 seconds
+
+**Offline Support**:
+- App must function 100% offline with queued sync
+- Retry failed syncs with exponential backoff (30s, 60s, 120s)
+
+**Design Requirements**:
+- Mobile-first (320px+ screens)
+- Min 44x44px touch targets
+- 16px base font (prevents iOS zoom on input focus)
+- 768px breakpoint for desktop layout (max 800px centered)
+- WCAG 2.1 AA compliance
+
+### Feature-Specific Notes
+
+**Habit Management**:
+- Duplicate checking is case-insensitive (enforced by database unique index)
+- Habits sorted by `created_date`
+
+**Daily Logging**:
+- Shared notes field applies to all habits in that session (not per-habit)
+- Visual states: done (toggle on), not_done (toggle off), no_data (default)
+- Must prompt if navigating away with unsaved notes
+
+**Progress & Analytics**:
+- Current streak: consecutive "done" days from today backward, resets on "not_done"
+- Longest streak: maximum ever achieved in history
+- Completion %: (done count / total logged days) × 100, excludes "no_data" days
+- Notes analysis: Only shows after 7+ log entries with notes; uses simple NLP + sentiment
+
+**UI/UX**:
+- Top navigation: fixed/sticky with "Daily Log" (default), "Progress", "Manage Habits"
+- Footer must link to Privacy Policy and Terms of Service
+
+## Current Implementation Status
+
+**Completed Tasks** (as of latest commit):
+- ✅ **Task 1.0**: Supabase Infrastructure Setup (database schema, migrations, RLS policies)
+- ✅ **Task 2.0**: Supabase Frontend Dependencies (client initialization, environment config)
+- ✅ **Task 3.0**: Authentication Migration (Supabase Auth with Google OAuth)
+- ✅ **Task 4.0**: Data Service Implementation (supabaseDataService with CRUD operations)
+
+**In Progress**:
+- 🔄 **Task 5.0**: Frontend Migration to Supabase (update components to use new data service)
+
+**Not Started**:
+- ⏳ **Task 6.0**: Offline Sync Migration (update syncService for Supabase)
+- ⏳ **Task 7.0**: UI/UX & Responsive Design (accessibility testing, polish)
+- ⏳ **Task 8.0**: Testing & Quality Assurance (integration tests, E2E tests)
+- ⏳ **Task 9.0**: Deployment & Documentation (deploy to production, user guide)
+
+## Migration Notes
+
+**Supabase Migration Status**:
+- ✅ **Backend**: Complete (Auth + Database + Data Service)
+- 🔄 **Frontend**: In Progress (components still using legacy Google Sheets services)
+- 📋 **Next Steps**: Update all page components to use `supabaseDataService` instead of `googleSheetsService`
+
+**Legacy Code to Remove** (after frontend migration):
+- `src/services/googleSheets.ts` - Google Sheets API wrapper
+- `src/services/auth.ts` - Google OAuth manager
+- `VITE_GOOGLE_CLIENT_ID` environment variable
+- Google Sheets sync logic in `syncService.ts`
+
+**Migration Testing**:
+- Verify Supabase Auth works with Google OAuth provider
+- Test RLS policies prevent cross-user data access
+- Validate IndexedDB → Supabase sync with conflict resolution
+- Ensure offline queue works with Supabase backend
+
+## Important Constraints
+
+- **No Custom Backend Server**: Pure client-side app; Supabase handles all backend logic via RLS
+- **No Real-time Multi-device Sync**: Out of scope (data in Supabase but no realtime subscriptions)
+- **No Push Notifications**: No reminders or notification system
+- **Single Log Per Day**: Each habit can only be logged once per day (done/not done)
+- **RLS Enforced**: All database operations automatically enforce `user_id = auth.uid()`
 
 ## Open Questions from PRD
 
 Before implementing certain features, consider these unresolved questions (PRD Section 15):
 
-1. **Notes Analysis**: Third-party NLP library vs. in-house keyword extraction?
-2. **Streak Logic**: Should back-dating a missed habit affect current streak?
-3. **Performance**: With 1000+ logs, should progress screen use pagination?
-4. **Category Management**: Free-form input or suggested categories?
+1. **Notes Analysis**: Third-party NLP library vs. in-house keyword extraction? (Currently using `sentiment` package)
+2. **Streak Logic**: Should back-dating a missed habit affect current streak? (Currently: no, streaks calculated from real-time logging)
+3. **Performance**: With 1000+ logs, should progress screen use pagination? (Currently: loads all data, no pagination)
+4. **Category Management**: Free-form input or suggested categories? (Currently: free-form text input)
 
-If you encounter these during implementation, document the decision in git commit messages.
-
-## Important Constraints
-
-- **No Backend Server**: This is a pure client-side app; all data in user's Google Drive
-- **No Real-time Multi-device Sync**: Out of scope (data in Google Sheets, but app doesn't poll)
-- **No Push Notifications**: No reminders or notifications system
-- **Single Log Per Day**: Each habit can only be logged once per day (done/not done)
-
-## Current Implementation Status
-
-**Completed Tasks** (as of latest commit):
-- ✅ **Task 1.0**: Project Setup & Configuration (Vite, TypeScript, React, PWA)
-- ✅ **Task 2.0**: Authentication & Google Integration (OAuth 2.0, token management)
-- ✅ **Task 3.0**: Data Layer & Offline Storage (IndexedDB, sync queue, conflict resolution)
-- ✅ **Task 4.0**: Core Features - Habit Management (CRUD, validation, soft delete)
-- ✅ **Task 5.0**: Core Features - Daily Logging Interface (toggles, date navigation, shared notes)
-- ✅ **Task 6.0**: Core Features - Progress & Analytics (streaks, percentages, sentiment analysis)
-- ✅ **Task 7.0** (43/57 subtasks): UI/UX & Responsive Design
-  - ✅ Navigation component with sticky positioning and active states
-  - ✅ Footer with Privacy and Terms links
-  - ✅ Enhanced WelcomePage with hero, features, and CTA
-  - ✅ PrivacyPolicyPage with GDPR compliance
-  - ✅ TermsOfServicePage with legal content
-  - ✅ SyncIndicator, OfflineIndicator, ErrorMessage components
-  - ✅ Layout component wrapping protected routes
-  - ✅ Mobile-first responsive CSS with 768px breakpoint
-  - ✅ 44x44px touch targets, 16px base font, focus styles
-  - ⏳ Remaining: accessibility testing, responsive design testing, loading states
-
-**In Progress**:
-- 🔄 **Task 7.0**: UI/UX & Responsive Design (testing and polish remaining)
-
-**Not Started**:
-- ⏳ **Task 8.0**: Testing & Quality Assurance (integration tests, E2E tests)
-- ⏳ **Task 9.0**: Deployment & Documentation (GCP deployment, user guide)
-
-**Known Issues**:
-1. 6 failing tests (4 validation display tests, 2 date validation edge cases) - non-blocking
-2. Accessibility testing pending (keyboard navigation, screen reader, contrast ratios)
-3. Coverage reporting requires `@vitest/coverage-v8` installation
-
-**Testing the App Locally**:
-1. Start dev server: `npm run dev`
-2. Open http://localhost:5173
-3. Mock auth bypass (no OAuth setup needed):
-   ```javascript
-   localStorage.setItem('habitTracker_mockAuth', 'true');
-   window.location.href = '/daily-log';
-   ```
-4. Test habit management at `/manage-habits`
-5. Test daily logging at `/daily-log`
-6. Test progress analytics at `/progress`
-
-**Comprehensive Testing Guide**: See `TESTING_TASKS_1-6.md` for full manual testing procedures
+Document decisions in git commit messages when implementing.
