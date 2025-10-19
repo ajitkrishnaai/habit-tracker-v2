@@ -134,7 +134,7 @@ Based on PRD: `0003-prd-demo-mode-onboarding.md`
 ### Phase 2: UI Components (3-4 days)
 
 - [ ] **2.0 Create Demo Mode UI Components**
-  - [ ] 2.1 Create DemoBanner component
+  - [x] 2.1 Create DemoBanner component
     - Create `src/components/DemoBanner.tsx` with functional component
     - Import `useNavigate` from react-router-dom
     - Display banner with: icon (📍), text ("You're trying Habit Tracker. Sign in to sync across devices."), and "Sign In" button
@@ -149,7 +149,7 @@ Based on PRD: `0003-prd-demo-mode-onboarding.md`
       - Button: 44px min-height, white background, purple text, rounded corners
     - **Acceptance:** Banner appears at top, sticky on scroll, navigates to welcome page, meets WCAG AA contrast (PRD REQ-10 to REQ-12)
 
-  - [ ] 2.2 Create ConversionModal component
+  - [x] 2.2 Create ConversionModal component
     - Create `src/components/ConversionModal.tsx` with functional component
     - Accept props: `trigger: 'habits_threshold' | 'first_log' | 'progress_page'`, `onClose: () => void`
     - Implement `getTitleAndMessage()` function to return title and message based on trigger type:
@@ -172,7 +172,7 @@ Based on PRD: `0003-prd-demo-mode-onboarding.md`
       - Mobile responsive: reduce padding, stack buttons vertically
     - **Acceptance:** Modal shows correct messaging per trigger, dismissible three ways (X, overlay, secondary button), accessible (PRD REQ-20 to REQ-27)
 
-  - [ ] 2.3 Create LockedProgressPreview component
+  - [x] 2.3 Create LockedProgressPreview component
     - Create `src/components/LockedProgressPreview.tsx` with functional component
     - Import `useNavigate` from react-router-dom
     - Render wrapper div with relative positioning
@@ -193,7 +193,7 @@ Based on PRD: `0003-prd-demo-mode-onboarding.md`
       - Mobile responsive: reduce min-height to 300px, reduce padding
     - **Acceptance:** Shows blurred chart preview with centered unlock message, button navigates to welcome page (PRD REQ-35 to REQ-38)
 
-  - [ ] 2.4 Create Toast component
+  - [x] 2.4 Create Toast component
     - Create `src/components/Toast.tsx` with functional component
     - Accept props: `message: string`, `icon?: string` (default '🎉'), `duration?: number` (default 4000), `onClose: () => void`
     - Use `useEffect` to set up auto-dismiss timer: `setTimeout(onClose, duration)`
@@ -210,7 +210,7 @@ Based on PRD: `0003-prd-demo-mode-onboarding.md`
       - Mobile responsive: adjust bottom position
     - **Acceptance:** Toast appears, shows message with icon, auto-dismisses after 4 seconds (PRD REQ-32 to REQ-34)
 
-  - [ ] 2.5 Create MigrationToast component
+  - [x] 2.5 Create MigrationToast component
     - Create `src/components/MigrationToast.tsx` with functional component
     - Use `useState` for visibility, `useEffect` for 6-second auto-dismiss timer
     - Return null if not visible (after timer or manual dismiss)
@@ -226,7 +226,7 @@ Based on PRD: `0003-prd-demo-mode-onboarding.md`
       - Mobile responsive: full width, left/right 16px
     - **Acceptance:** Toast appears after migration, shows success message, auto-dismisses after 6 seconds or manual close (PRD REQ-50)
 
-  - [ ] 2.6 Create ExpiryWarning component
+  - [x] 2.6 Create ExpiryWarning component
     - Create `src/components/ExpiryWarning.tsx` with functional component
     - Import `demoModeService` and `useNavigate`
     - Calculate `daysInDemo = demoModeService.getDaysInDemo()` and `daysLeft = 7 - daysInDemo`
@@ -242,7 +242,7 @@ Based on PRD: `0003-prd-demo-mode-onboarding.md`
       - Mobile responsive: full-width button, center text
     - **Acceptance:** Warning appears on day 5 (2 days left), updates daily, shows correct day count (PRD REQ-42 to REQ-43)
 
-  - [ ] 2.7 Verify accessibility compliance
+  - [x] 2.7 Verify accessibility compliance
     - Test all components with keyboard navigation (Tab, Enter, Escape)
     - Verify ARIA labels are announced by screen reader (test with browser dev tools)
     - Verify color contrast meets WCAG 2.1 AA (minimum 4.5:1 ratio)
@@ -250,7 +250,7 @@ Based on PRD: `0003-prd-demo-mode-onboarding.md`
     - Test modal focus trap (focus should stay within modal when open)
     - **Acceptance:** All components meet WCAG 2.1 AA standards (PRD AC-25)
 
-  - [ ] 2.8 Verify mobile responsiveness
+  - [x] 2.8 Verify mobile responsiveness
     - Test all components at 320px, 375px, 414px, 768px, and 1024px widths
     - Verify all buttons meet 44x44px minimum touch target size
     - Verify text is readable without zooming (minimum 14px font size)
