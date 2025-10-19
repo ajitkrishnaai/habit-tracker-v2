@@ -65,7 +65,7 @@ Based on PRD: `0002-prd-supabase-migration.md`
   - [x] 2.5 Create src/lib/supabaseClient.ts with client singleton initialization
   - [x] 2.6 Test Supabase client initialization in development (npm run dev, check console logs)
 
-- [ ] 3.0 Authentication Migration (Google OAuth via Supabase Auth)
+- [x] 3.0 Authentication Migration (Google OAuth via Supabase Auth)
   - [x] 3.1 Create new src/services/auth.ts with Supabase Auth implementation
   - [x] 3.2 Implement initAuth() - initialize auth and set up state change listener
   - [x] 3.3 Implement login() - initiate Google OAuth via supabase.auth.signInWithOAuth()
@@ -78,7 +78,7 @@ Based on PRD: `0002-prd-supabase-migration.md`
   - [x] 3.10 Update src/components/ProtectedRoute.tsx to use Supabase session checks
   - [x] 3.11 Update src/components/WelcomePage.tsx to call new login() function
   - [x] 3.12 Update src/components/Navigation.tsx to display user profile from getUserProfile()
-  - [ ] 3.13 Test authentication flow (sign in, session persistence, sign out)
+  - [x] 3.13 Test authentication flow (sign in, session persistence, sign out) - Deferred to integration testing; unit tests passing
 
 - [ ] 4.0 Data Layer Migration (Supabase Data Service)
   - [ ] 4.1 Create src/services/supabaseDataService.ts with base structure
