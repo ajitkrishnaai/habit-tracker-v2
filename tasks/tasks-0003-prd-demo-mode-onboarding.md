@@ -465,8 +465,8 @@ Based on PRD: `0003-prd-demo-mode-onboarding.md`
 
 ### Phase 4: Route & Auth Integration (2-3 days)
 
-- [ ] **4.0 Integrate Demo Mode with Authentication & Routing**
-  - [ ] 4.1 Update ProtectedRoute - Allow demo mode access
+- [x] **4.0 Integrate Demo Mode with Authentication & Routing**
+  - [x] 4.1 Update ProtectedRoute - Allow demo mode access
     - Open `src/components/ProtectedRoute.tsx`
     - Add import: `import { demoModeService } from '../services/demoMode';`
     - After the authentication check (around line where `authenticated` is set), add demo mode check:
@@ -489,7 +489,7 @@ Based on PRD: `0003-prd-demo-mode-onboarding.md`
       ```
     - **Acceptance:** Demo users can access protected routes, expired demo users are redirected and data is cleared (PRD REQ-58 to REQ-60, AC-20 to AC-21)
 
-  - [ ] 4.2 Update Layout - Add demo banners
+  - [x] 4.2 Update Layout - Add demo banners
     - Open `src/components/Layout.tsx`
     - Add imports:
       - `import { DemoBanner } from './DemoBanner';`
@@ -514,7 +514,7 @@ Based on PRD: `0003-prd-demo-mode-onboarding.md`
       ```
     - **Acceptance:** In demo mode, both banners appear at top of all protected routes, stacked correctly (PRD REQ-61 to REQ-62, AC-2, AC-17)
 
-  - [ ] 4.3 Update auth service - Trigger migration on signup/login
+  - [x] 4.3 Update auth service - Trigger migration on signup/login
     - Open `src/services/auth.ts`
     - Add import at top: `import { demoModeService } from './demoMode';`
     - In `loginWithEmail` function (after line 102, after successful authentication):
@@ -556,7 +556,7 @@ Based on PRD: `0003-prd-demo-mode-onboarding.md`
       ```
     - **Acceptance:** After demo user signs up or logs in, demo data is migrated to authenticated account, migration success flag is set (PRD REQ-44 to REQ-51, AC-11 to AC-13)
 
-  - [ ] 4.4 Test complete demo-to-authenticated flow
+  - [x] 4.4 Test complete demo-to-authenticated flow
     - Manually test the full flow:
       1. Click "Try Without Signing In" → should navigate to /daily-log
       2. Add 1 habit → should see "Great start!" toast
@@ -570,7 +570,7 @@ Based on PRD: `0003-prd-demo-mode-onboarding.md`
       10. Demo banner should be gone (user is authenticated)
     - **Acceptance:** Complete flow works end-to-end, data migrates successfully, UI updates correctly (AC-1 to AC-16)
 
-  - [ ] 4.5 Test error handling and edge cases
+  - [x] 4.5 Test error handling and edge cases
     - Test migration failure scenario:
       1. Start demo mode, add habits
       2. Disconnect network (browser dev tools)
