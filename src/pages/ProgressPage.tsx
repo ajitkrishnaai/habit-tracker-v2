@@ -48,7 +48,6 @@ export const ProgressPage: React.FC = () => {
     }
 
     loadHabitsAndLogs();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isDemo]);
 
   const loadHabitsAndLogs = async () => {
