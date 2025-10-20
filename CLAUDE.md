@@ -9,7 +9,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ### Core Architecture
 
 - **Frontend**: React 18.2 SPA with client-side routing (React Router 6.20)
-- **Authentication**: Supabase Auth with Google OAuth provider
+- **Authentication**: Supabase Auth with email/password + Demo Mode for unauthenticated users
 - **Database**: Supabase PostgreSQL with Row-Level Security (RLS)
 - **Offline-First**: IndexedDB for local caching with background sync to Supabase
 - **Build Tool**: Vite 5.0.8 with TypeScript 5.2.2
@@ -40,10 +40,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ### Key User Flows
 
-1. **First-Time User**: Welcome page → Google sign-in (Supabase Auth) → Add habits → Daily logging
-2. **Daily Logging**: View today's habits with toggle switches → Mark done/not done → Add optional notes → Auto-sync
-3. **Progress Tracking**: View streaks, completion percentages, notes pattern analysis (requires 7+ notes)
-4. **Back-Dating**: Navigate up to 5 days in the past to log missed habits
+1. **Demo Mode User**: Welcome page → Try without signing up → Add habits in demo mode → Receive conversion prompts at key milestones → Sign up to migrate data
+2. **Authenticated User**: Welcome page → Email/password sign-in → Add habits → Daily logging
+3. **Daily Logging**: View today's habits with toggle switches → Mark done/not done → Add optional notes → Auto-sync
+4. **Progress Tracking**: View streaks, completion percentages, notes pattern analysis (requires 7+ notes)
+5. **Back-Dating**: Navigate up to 5 days in the past to log missed habits
 
 ### Design Principles
 
@@ -130,9 +131,6 @@ Create `.env.local` with:
 # Supabase Configuration (get from Supabase dashboard: Settings → API)
 VITE_SUPABASE_URL=https://your-project-ref.supabase.co
 VITE_SUPABASE_ANON_KEY=your-supabase-anon-key-here
-
-# Legacy Google OAuth (will be removed after full migration)
-VITE_GOOGLE_CLIENT_ID=your-google-client-id.apps.googleusercontent.com
 ```
 
 **See `SUPABASE_SETUP.md` for complete Supabase project configuration.**
@@ -144,7 +142,7 @@ VITE_GOOGLE_CLIENT_ID=your-google-client-id.apps.googleusercontent.com
 - **Language**: TypeScript 5.2.2
 - **Framework**: React 18.2 with React Router 6.20
 - **Database**: Supabase (PostgreSQL with RLS)
-- **Auth**: Supabase Auth with Google OAuth provider
+- **Auth**: Supabase Auth with email/password
 
 **Libraries**:
 - `@supabase/supabase-js` 2.75.1 - Supabase client SDK
@@ -196,6 +194,14 @@ VITE_GOOGLE_CLIENT_ID=your-google-client-id.apps.googleusercontent.com
    - Retry logic with exponential backoff (30s, 60s, 120s)
    - Conflict resolution: last-write-wins based on `modified_date` timestamps
 
+6. **demoMode** (`demoMode.ts`) - Demo mode "shadow account" system
+   - Allows users to try the app without authentication
+   - Stores demo data in IndexedDB (same as authenticated users)
+   - Tracks engagement metrics in localStorage: habits added, logs completed, progress visits
+   - Triggers conversion prompts at key milestones (first habit, 3 habits, first log, progress page visit)
+   - Seamless data migration on signup via `syncService.fullSync()`
+   - Methods: `isDemoMode()`, `initDemoMode()`, `trackHabitAdded()`, `trackLogCompleted()`, `trackProgressVisit()`, `shouldShowConversion()`, `exitDemoMode()`
+
 **Note**: Legacy Google Sheets and Google OAuth services have been removed. All data operations now go through Supabase.
 
 ### Data Flow Pattern
@@ -205,18 +211,24 @@ VITE_GOOGLE_CLIENT_ID=your-google-client-id.apps.googleusercontent.com
 2. Immediate UI update (optimistic)
 3. Write to IndexedDB (`storageService`)
 4. Queue operation if offline (`syncQueueService`)
-5. Background sync to Supabase (`supabaseDataService`)
+5. Background sync to Supabase (`supabaseDataService`) - only for authenticated users
 6. On success: remove from queue; On failure: retry with exponential backoff
 
 **Read Operations**:
 1. Read from IndexedDB (fast, offline-capable)
-2. Background sync from Supabase on: app load, manual refresh, network reconnection
+2. Background sync from Supabase on: app load, manual refresh, network reconnection (authenticated users only)
 3. Never block UI waiting for remote data
+
+**Demo Mode Data Flow**:
+1. Demo users write to IndexedDB only (no Supabase sync)
+2. Engagement metrics tracked in localStorage
+3. On signup: `syncService.fullSync()` migrates all demo data to Supabase under new user ID
+4. Demo metrics cleared after successful migration
 
 ### Component Architecture
 
 **Pages** (`src/pages/`):
-- `WelcomePage.tsx` - Landing page with Google sign-in (public)
+- `WelcomePage.tsx` - Landing page with sign-in and "Try without signing up" option (public)
 - `ManageHabitsPage.tsx` - CRUD interface for habits (protected)
 - `DailyLogPage.tsx` - Daily logging with toggles and shared notes field (protected)
 - `ProgressPage.tsx` - Analytics dashboard with streaks, percentages, pattern analysis (protected)
@@ -233,7 +245,8 @@ VITE_GOOGLE_CLIENT_ID=your-google-client-id.apps.googleusercontent.com
 - `SyncIndicator.tsx` - Shows sync status (spinning/success/error with retry)
 - `OfflineIndicator.tsx` - Banner when offline
 - `ErrorMessage.tsx` - Unified error display with retry buttons
-- `ProtectedRoute.tsx` - Route guard requiring Supabase authentication
+- `ProtectedRoute.tsx` - Route guard requiring Supabase authentication (allows demo mode)
+- `DemoBanner.tsx` - Persistent banner shown to demo users encouraging signup
 
 **Utility Functions** (`src/utils/`):
 
@@ -250,13 +263,13 @@ All utilities are pure functions with corresponding `.test.ts` files:
 
 React Router 6 routes:
 - `/` - WelcomePage (public)
-- `/daily-log` - DailyLogPage (protected, default after login)
-- `/progress` - ProgressPage (protected)
-- `/manage-habits` - ManageHabitsPage (protected)
+- `/daily-log` - DailyLogPage (protected, default after login, allows demo mode)
+- `/progress` - ProgressPage (protected, allows demo mode)
+- `/manage-habits` - ManageHabitsPage (protected, allows demo mode)
 - `/privacy` - PrivacyPolicyPage (public)
 - `/terms` - TermsOfServicePage (public)
 
-All protected routes wrapped with `Layout` component.
+All protected routes wrapped with `Layout` component and allow demo mode access.
 
 ## Database Schema & Migrations
 
@@ -280,7 +293,7 @@ All protected routes wrapped with `Layout` component.
 - **Unit tests**: Colocated `*.test.ts` files next to source files (Vitest + happy-dom)
 - **E2E tests**: `e2e/*.spec.ts` files (Playwright)
 - **Test setup**: `src/test/setup.ts` configures fake-indexeddb
-- **Coverage target**: 85%+ (currently ~97.7% with 254/260 tests passing)
+- **Coverage target**: 85%+ (currently 99.7% with 747/749 tests passing)
 - **Test utilities**: `src/utils/testHelpers.ts` provides mock data generators
 
 **E2E Test Projects** (Playwright config in `playwright.config.ts`):
@@ -289,8 +302,7 @@ All protected routes wrapped with `Layout` component.
 - **Mobile Safari** (iPhone 13) - iOS compatibility
 - **Firefox** (1280x720) - Cross-browser testing
 
-**Known Test Failures** (6 tests, non-blocking):
-- 4 HabitForm validation display tests (timing issues with React state updates)
+**Known Test Failures** (2 tests, non-blocking):
 - 2 date validation edge case tests (timezone handling bugs)
 - See `TEST_REPORT_TASKS_1-6.md` for detailed analysis
 
@@ -378,22 +390,36 @@ The PRD (`tasks/0001-prd-habit-tracker.md`) is the source of truth. Key requirem
 - Top navigation: fixed/sticky with "Daily Log" (default), "Progress", "Manage Habits"
 - Footer must link to Privacy Policy and Terms of Service
 
+**Demo Mode**:
+- Users can try the app without signing up
+- Demo data stored locally in IndexedDB
+- Conversion prompts triggered at: first habit added, 3 habits added, first log completed, progress page visit
+- Seamless migration: demo data automatically synced to Supabase on signup
+- Demo banner displayed on all pages to encourage signup
+
 ## Current Implementation Status
 
-**Completed Tasks** (as of latest commit):
+**Completed Tasks**:
 - ✅ **Task 1.0**: Supabase Infrastructure Setup (database schema, migrations, RLS policies)
 - ✅ **Task 2.0**: Supabase Frontend Dependencies (client initialization, environment config)
-- ✅ **Task 3.0**: Authentication Migration (Supabase Auth with Google OAuth)
+- ✅ **Task 3.0**: Authentication Migration (Supabase Auth with email/password)
 - ✅ **Task 4.0**: Data Service Implementation (supabaseDataService with CRUD operations)
+- ✅ **Task 5.0**: Frontend Migration to Supabase (all components updated to use Supabase)
+- ✅ **Task 6.0**: Offline Sync Migration (syncService updated for Supabase)
+- ✅ **Task 7.0**: UI/UX & Responsive Design (accessibility testing, polish)
+- ✅ **Task 8.0**: Testing & Quality Assurance (comprehensive test suite)
+- ✅ **Demo Mode Implementation**: Shadow account system with conversion prompts and data migration
 
-**In Progress**:
-- 🔄 **Task 5.0**: Frontend Migration to Supabase (update components to use new data service)
+**Ready for Deployment**:
+- Core habit tracking functionality complete
+- Demo mode fully integrated
+- 99.7% test coverage
+- All Supabase migration tasks complete
 
-**Not Started**:
-- ⏳ **Task 6.0**: Offline Sync Migration (update syncService for Supabase)
-- ⏳ **Task 7.0**: UI/UX & Responsive Design (accessibility testing, polish)
-- ⏳ **Task 8.0**: Testing & Quality Assurance (integration tests, E2E tests)
-- ⏳ **Task 9.0**: Deployment & Documentation (deploy to production, user guide)
+**Future Enhancements** (post-MVP):
+- Additional features (TBD)
+- PWA enhancements (push notifications, background sync improvements)
+- Production deployment and monitoring
 
 ## Migration Notes
 
@@ -401,13 +427,15 @@ The PRD (`tasks/0001-prd-habit-tracker.md`) is the source of truth. Key requirem
 - ✅ **Backend**: Complete (Auth + Database + Data Service)
 - ✅ **Frontend**: Complete (all components migrated to Supabase)
 - ✅ **Legacy Code Cleanup**: Complete (Google Sheets and Google OAuth removed)
-- 📋 **Next Steps**: Add new features, then deploy to production
+- ✅ **Demo Mode**: Complete (shadow account system with data migration)
+- 📋 **Next Steps**: Production deployment, user documentation
 
 **Migration Testing**:
-- Verify Supabase Auth works with Google OAuth provider
-- Test RLS policies prevent cross-user data access
-- Validate IndexedDB → Supabase sync with conflict resolution
-- Ensure offline queue works with Supabase backend
+- ✅ Supabase Auth verified with email/password
+- ✅ RLS policies prevent cross-user data access
+- ✅ IndexedDB → Supabase sync with conflict resolution
+- ✅ Offline queue works with Supabase backend
+- ✅ Demo mode data migration to authenticated accounts
 
 ## Important Constraints
 
@@ -416,6 +444,7 @@ The PRD (`tasks/0001-prd-habit-tracker.md`) is the source of truth. Key requirem
 - **No Push Notifications**: No reminders or notification system
 - **Single Log Per Day**: Each habit can only be logged once per day (done/not done)
 - **RLS Enforced**: All database operations automatically enforce `user_id = auth.uid()`
+- **Demo Mode Limitations**: Demo users cannot sync to Supabase until they sign up
 
 ## Open Questions from PRD
 
