@@ -3,6 +3,7 @@
  *
  * Manages authentication using Supabase Auth with email/password.
  * Handles login, logout, session management, and authentication state.
+ * Task 4.3: Added demo data migration on signup/login
  *
  * Migration Note: This replaces the previous Google OAuth implementation.
  * Supabase handles all token management, refresh, and session persistence automatically.
@@ -10,6 +11,7 @@
 
 import { supabase } from '../lib/supabaseClient';
 import type { User, Session } from '@supabase/supabase-js';
+import { demoModeService } from './demoMode';
 
 /**
  * User profile interface matching the old auth.ts API
@@ -84,6 +86,7 @@ export const onAuthChange = (callback: (authenticated: boolean) => void): (() =>
  * Initiate email/password login
  * @param email User's email address
  * @param password User's password
+ * Task 4.3: Added demo data migration after successful login
  */
 export const loginWithEmail = async (email: string, password: string): Promise<void> => {
   try {
@@ -101,6 +104,23 @@ export const loginWithEmail = async (email: string, password: string): Promise<v
     currentUser = data.user;
 
     console.log('[Auth] Login successful:', currentUser?.email);
+
+    // Check for demo data and migrate if exists (REQ-44 to REQ-51)
+    const demoMetrics = demoModeService.getDemoMetrics();
+    if (demoMetrics) {
+      console.log('[Auth] Demo data detected - migrating to authenticated account');
+      try {
+        await demoModeService.migrateDemoData();
+        console.log('[Auth] Demo data migration complete');
+
+        // Store flag to show migration success toast
+        sessionStorage.setItem('demo_migration_success', 'true');
+      } catch (migrationError) {
+        console.error('[Auth] Demo data migration failed:', migrationError);
+        // Don't block login on migration failure
+        // User can manually sync later
+      }
+    }
   } catch (error) {
     console.error('[Auth] Failed to complete login:', error);
     throw error;
@@ -112,6 +132,7 @@ export const loginWithEmail = async (email: string, password: string): Promise<v
  * @param email User's email address
  * @param password User's password
  * @param name User's display name (optional)
+ * Task 4.3: Added demo data migration after successful signup
  */
 export const signUpWithEmail = async (email: string, password: string, name?: string): Promise<void> => {
   try {
@@ -136,6 +157,22 @@ export const signUpWithEmail = async (email: string, password: string, name?: st
     currentUser = data.user;
 
     console.log('[Auth] Sign up successful:', currentUser?.email);
+
+    // Check for demo data and migrate if exists (REQ-44 to REQ-51)
+    const demoMetrics = demoModeService.getDemoMetrics();
+    if (demoMetrics) {
+      console.log('[Auth] Demo data detected - migrating to new account');
+      try {
+        await demoModeService.migrateDemoData();
+        console.log('[Auth] Demo data migration complete');
+
+        // Store flag to show migration success toast
+        sessionStorage.setItem('demo_migration_success', 'true');
+      } catch (migrationError) {
+        console.error('[Auth] Demo data migration failed:', migrationError);
+        // Don't block signup on migration failure
+      }
+    }
   } catch (error) {
     console.error('[Auth] Failed to complete sign up:', error);
     throw error;
