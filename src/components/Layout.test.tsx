@@ -22,6 +22,22 @@ vi.mock('./OfflineIndicator', () => ({
   default: () => <div data-testid="mock-offline-indicator">OfflineIndicator</div>,
 }));
 
+vi.mock('./DemoBanner', () => ({
+  DemoBanner: () => <div data-testid="mock-demo-banner">DemoBanner</div>,
+}));
+
+vi.mock('./ExpiryWarning', () => ({
+  ExpiryWarning: () => <div data-testid="mock-expiry-warning">ExpiryWarning</div>,
+}));
+
+// Mock demoModeService
+vi.mock('../services/demoMode', () => ({
+  demoModeService: {
+    isDemoMode: () => false, // Default to not in demo mode
+    getDemoMetrics: () => null,
+  },
+}));
+
 describe('Layout', () => {
   describe('Basic Rendering', () => {
     it('should render layout wrapper with correct class', () => {
