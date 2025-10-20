@@ -17,6 +17,10 @@ import { EmptyState } from '../components/EmptyState';
 import { storageService } from '../services/storage';
 import { syncService } from '../services/syncService';
 import { supabaseDataService } from '../services/supabaseDataService';
+import { demoModeService } from '../services/demoMode';
+import { ConversionModal } from '../components/ConversionModal';
+import { Toast } from '../components/Toast';
+import { MigrationToast } from '../components/MigrationToast';
 import type { Habit } from '../types/habit';
 import type { LogEntry } from '../types/logEntry';
 import {
@@ -43,6 +47,13 @@ export const DailyLogPage: React.FC = () => {
   const [syncing, setSyncing] = useState<boolean>(false);
   const [hasUnsavedNotes, setHasUnsavedNotes] = useState<boolean>(false);
 
+  // Demo mode state (Task 3.5 - REQ-16, REQ-30)
+  const [showConversionModal, setShowConversionModal] = useState(false);
+  const [conversionTrigger, setConversionTrigger] = useState<'habits_threshold' | 'first_log' | 'progress_page'>('first_log');
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
+  const [showMigrationToast, setShowMigrationToast] = useState(false);
+
   const initialNotesRef = useRef<string>('');
 
   // Load habits and logs for the selected date
@@ -54,6 +65,15 @@ export const DailyLogPage: React.FC = () => {
   useEffect(() => {
     setHasUnsavedNotes(notes !== initialNotesRef.current);
   }, [notes]);
+
+  // Check for migration success toast (Task 3.5 - REQ-50)
+  useEffect(() => {
+    const migrationSuccess = sessionStorage.getItem('demo_migration_success');
+    if (migrationSuccess) {
+      setShowMigrationToast(true);
+      sessionStorage.removeItem('demo_migration_success');
+    }
+  }, []);
 
   /**
    * Load habits and their log entries for the given date
@@ -316,6 +336,26 @@ export const DailyLogPage: React.FC = () => {
 
       // Trigger background sync for queued operations
       triggerSync();
+
+      // Demo mode tracking (Task 3.5 - REQ-16, REQ-30)
+      if (demoModeService.isDemoMode()) {
+        demoModeService.trackLogCompleted();
+
+        // Check for milestone toast
+        const milestoneMsg = demoModeService.getMilestoneMessage();
+        if (milestoneMsg) {
+          setToastMessage(milestoneMsg);
+          setShowToast(true);
+        }
+
+        // Check for conversion trigger
+        const trigger = demoModeService.shouldShowConversionModal();
+        if (trigger) {
+          setShowConversionModal(true);
+          setConversionTrigger(trigger as 'habits_threshold' | 'first_log' | 'progress_page');
+          demoModeService.markConversionShown();
+        }
+      }
     } catch (err) {
       console.error('Error saving notes:', err);
       setError('Failed to save notes. Please try again.');
@@ -438,6 +478,21 @@ export const DailyLogPage: React.FC = () => {
           </button>
         )}
       </div>
+
+      {/* Demo Mode Modals and Toasts (Task 3.5) */}
+      {showConversionModal && (
+        <ConversionModal
+          trigger={conversionTrigger}
+          onClose={() => setShowConversionModal(false)}
+        />
+      )}
+      {showToast && (
+        <Toast
+          message={toastMessage}
+          onClose={() => setShowToast(false)}
+        />
+      )}
+      {showMigrationToast && <MigrationToast />}
     </div>
   );
 };
