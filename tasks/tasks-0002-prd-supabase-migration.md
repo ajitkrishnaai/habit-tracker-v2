@@ -110,7 +110,7 @@ Based on PRD: `0002-prd-supabase-migration.md`
   - [x] 5.11 Preserve retry logic with exponential backoff (scheduleRetry() unchanged)
   - [x] 5.12 Test sync service integration (queue operations, trigger sync, verify Supabase updates)
 
-- [ ] 6.0 Component Updates & Testing
+- [x] 6.0 Component Updates & Testing
   - [x] 6.1 Run existing test suite (npm test -- --run) to identify failing tests - 746/750 passing
   - [x] 6.2 Create src/test/supabaseMocks.ts with mock Supabase client for tests
   - [x] 6.3 Update src/services/auth.test.ts with Supabase Auth mocks - Already complete (39 tests passing)
@@ -144,21 +144,21 @@ Based on PRD: `0002-prd-supabase-migration.md`
   - [ ] 7.13 Monitor error rates for first 24 hours (Supabase dashboard logs, frontend error tracking)
   - [ ] 7.14 Document rollback plan (revert code, redeploy previous version with Google Sheets)
 
-- [ ] 8.0 Legacy Code Cleanup & Documentation
-  - [ ] 8.1 Delete src/services/googleSheets.ts (571 lines removed)
-  - [ ] 8.2 Delete src/utils/tokenManager.ts (if not already deleted in 3.9)
-  - [ ] 8.3 Remove @react-oauth/google and gapi-script from package.json dependencies
-  - [ ] 8.4 Remove VITE_GOOGLE_CLIENT_ID from .env.example
-  - [ ] 8.5 Update CLAUDE.md - replace Google Sheets architecture with Supabase
-  - [ ] 8.6 Update CLAUDE.md - document new authentication flow (Supabase Auth)
-  - [ ] 8.7 Update CLAUDE.md - update service layer documentation
-  - [ ] 8.8 Update CLAUDE.md - update data flow diagrams
-  - [ ] 8.9 Update README.md - add Supabase setup instructions (project creation, schema setup, OAuth config)
-  - [ ] 8.10 Update README.md - update environment variables section
-  - [ ] 8.11 Create SUPABASE_SETUP.md - detailed guide for setting up Supabase project
-  - [ ] 8.12 Create MIGRATION_LOG.md - document migration decisions and lessons learned
-  - [ ] 8.13 Update package.json scripts (ensure test commands work with new setup)
-  - [ ] 8.14 Run final test suite (npm test -- --run) - ensure 100% pass rate
-  - [ ] 8.15 Run linter (npm run lint) - ensure no errors
-  - [ ] 8.16 Git commit with conventional format: "feat: migrate from Google Sheets to Supabase"
+- [x] 8.0 Legacy Code Cleanup & Documentation
+  - [x] 8.1 Delete src/services/googleSheets.ts (571 lines removed)
+  - [x] 8.2 Delete src/utils/tokenManager.ts (if not already deleted in 3.9)
+  - [x] 8.3 Remove @react-oauth/google and gapi-script from package.json dependencies
+  - [x] 8.4 Remove VITE_GOOGLE_CLIENT_ID from .env.example
+  - [x] 8.5 Update CLAUDE.md - replace Google Sheets architecture with Supabase
+  - [x] 8.6 Update CLAUDE.md - document new authentication flow (Supabase Auth)
+  - [x] 8.7 Update CLAUDE.md - update service layer documentation
+  - [x] 8.8 Update CLAUDE.md - update data flow diagrams
+  - [x] 8.9 Update README.md - add Supabase setup instructions (project creation, schema setup, OAuth config)
+  - [x] 8.10 Update README.md - update environment variables section
+  - [x] 8.11 Create SUPABASE_SETUP.md - detailed guide for setting up Supabase project
+  - [x] 8.12 Create MIGRATION_LOG.md - document migration decisions and lessons learned
+  - [x] 8.13 Update package.json scripts (ensure test commands work with new setup)
+  - [x] 8.14 Run final test suite (npm test -- --run) - 708/708 tests passing (100%)
+  - [x] 8.15 Run linter (npm run lint) - no errors
+  - [x] 8.16 Git commit with conventional format: "feat: complete Supabase migration and cleanup"
 

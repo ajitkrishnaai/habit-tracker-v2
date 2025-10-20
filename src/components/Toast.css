@@ -1,0 +1,92 @@
+/* Toast Component Styles */
+
+.toast {
+  /* Fixed positioning at bottom-center */
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+
+  /* Styling */
+  background-color: rgba(0, 0, 0, 0.9);
+  color: white;
+  padding: 16px 24px;
+  border-radius: 8px;
+
+  /* Flexbox layout */
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  /* Max width */
+  max-width: 90%;
+
+  /* Box shadow for depth */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+
+  /* Slide-up and fade-in animation */
+  animation: slideUpFadeIn 0.3s ease-out;
+}
+
+@keyframes slideUpFadeIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 20px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+.toast-icon {
+  /* Icon styling */
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.toast-message {
+  /* Message styling */
+  font-size: 14px;
+  line-height: 1.4;
+  font-weight: 500;
+}
+
+/* Mobile responsive styles (< 768px) */
+@media (max-width: 767px) {
+  .toast {
+    /* Position above mobile navigation bar (REQ-34) */
+    bottom: 80px;
+
+    /* Slightly smaller padding */
+    padding: 14px 20px;
+  }
+
+  .toast-message {
+    /* Smaller font on mobile */
+    font-size: 13px;
+  }
+}
+
+/* Very small screens (< 400px) */
+@media (max-width: 399px) {
+  .toast {
+    /* Even more space above nav bar */
+    bottom: 88px;
+
+    /* Reduce padding */
+    padding: 12px 16px;
+    max-width: 95%;
+  }
+
+  .toast-icon {
+    /* Smaller icon */
+    font-size: 18px;
+  }
+
+  .toast-message {
+    /* Smaller text */
+    font-size: 12px;
+  }
+}

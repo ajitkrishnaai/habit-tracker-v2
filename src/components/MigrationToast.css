@@ -1,0 +1,172 @@
+/* MigrationToast Component Styles */
+
+.migration-toast {
+  /* Fixed positioning at bottom-right */
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 1000;
+
+  /* Max width */
+  max-width: 400px;
+
+  /* Slide-in from right animation */
+  animation: slideInRight 0.4s ease-out;
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.migration-toast-content {
+  /* Green gradient background (REQ-50) */
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+
+  /* Spacing */
+  padding: 20px 24px;
+  border-radius: 12px;
+
+  /* Flexbox layout */
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+
+  /* Box shadow for depth */
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+.migration-toast-icon {
+  /* Icon container */
+  flex-shrink: 0;
+}
+
+.migration-toast-checkmark {
+  /* Checkmark in circular background */
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.migration-toast-text {
+  /* Text content container */
+  flex: 1;
+  min-width: 0;
+}
+
+.migration-toast-title {
+  /* Title styling */
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  line-height: 1.3;
+}
+
+.migration-toast-message {
+  /* Message styling */
+  font-size: 14px;
+  line-height: 1.5;
+  opacity: 0.95;
+}
+
+.migration-toast-close {
+  /* Close button */
+  background: none;
+  border: none;
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  opacity: 0.8;
+  transition: opacity 0.2s ease;
+
+  /* Ensure minimum touch target */
+  min-height: 44px;
+  min-width: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.migration-toast-close:hover {
+  opacity: 1;
+}
+
+.migration-toast-close:focus {
+  outline: 2px solid white;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Mobile responsive styles (< 768px) */
+@media (max-width: 767px) {
+  .migration-toast {
+    /* Position above mobile navigation bar */
+    bottom: 80px;
+
+    /* Full width with margins on mobile */
+    left: 16px;
+    right: 16px;
+    max-width: none;
+  }
+
+  .migration-toast-content {
+    /* Slightly smaller padding */
+    padding: 16px 20px;
+  }
+
+  .migration-toast-title {
+    /* Smaller title */
+    font-size: 16px;
+  }
+
+  .migration-toast-message {
+    /* Smaller message */
+    font-size: 13px;
+  }
+
+  .migration-toast-checkmark {
+    /* Smaller checkmark */
+    width: 36px;
+    height: 36px;
+    font-size: 20px;
+  }
+}
+
+/* Very small screens (< 400px) */
+@media (max-width: 399px) {
+  .migration-toast {
+    /* More space above nav bar */
+    bottom: 88px;
+    left: 12px;
+    right: 12px;
+  }
+
+  .migration-toast-content {
+    padding: 14px 16px;
+    gap: 12px;
+  }
+
+  .migration-toast-title {
+    font-size: 15px;
+  }
+
+  .migration-toast-message {
+    font-size: 12px;
+  }
+}
