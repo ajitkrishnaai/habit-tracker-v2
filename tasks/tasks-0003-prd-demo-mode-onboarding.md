@@ -556,7 +556,7 @@ Based on PRD: `0003-prd-demo-mode-onboarding.md`
       ```
     - **Acceptance:** After demo user signs up or logs in, demo data is migrated to authenticated account, migration success flag is set (PRD REQ-44 to REQ-51, AC-11 to AC-13)
 
-  - [ ] 4.4 Test complete demo-to-authenticated flow
+  - [x] 4.4 Test complete demo-to-authenticated flow
     - Manually test the full flow:
       1. Click "Try Without Signing In" → should navigate to /daily-log
       2. Add 1 habit → should see "Great start!" toast
@@ -570,7 +570,7 @@ Based on PRD: `0003-prd-demo-mode-onboarding.md`
       10. Demo banner should be gone (user is authenticated)
     - **Acceptance:** Complete flow works end-to-end, data migrates successfully, UI updates correctly (AC-1 to AC-16)
 
-  - [ ] 4.5 Test error handling and edge cases
+  - [x] 4.5 Test error handling and edge cases
     - Test migration failure scenario:
       1. Start demo mode, add habits
       2. Disconnect network (browser dev tools)
