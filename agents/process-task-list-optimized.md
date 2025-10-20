@@ -120,17 +120,24 @@ EOF
 - Testing notes
 - Reference to task number and PRD
 
-#### 5. Wait for CI Checks
+#### 5. Monitor CI Checks
 
 GitHub Actions will automatically run:
 - ESLint checks
 - TypeScript compilation
 - Full test suite (Vitest)
+- Playwright E2E tests (may take 5-15 minutes)
 
-**Monitor CI status:**
+**AI Instructions:**
+After creating the PR, display the PR URL and inform the user that CI checks are running. **STOP and wait for user confirmation** before proceeding to merge.
+
+**User can check CI status with:**
 ```bash
-gh pr checks
+gh pr checks           # View current check status
+gh pr view --web       # Open PR in browser to see details
 ```
+
+**Wait for user to confirm:** "CI checks have passed" or "CI checks failed"
 
 #### 6a. If CI Passes ✅
 
@@ -244,16 +251,21 @@ git push origin feature/task-X.X-description
 # 4. Create PR
 gh pr create --title "..." --body "..."
 
-# 5. Wait for CI, merge if passes
+# 5. Display PR info and STOP - wait for user confirmation
+gh pr view --json url -q .url
+# User checks CI status with: gh pr checks
+# User confirms: "CI passed" → continue to step 6
+
+# 6. Merge PR (after user confirms CI passed)
 gh pr merge --squash --delete-branch
 
-# 6. Update local main
+# 7. Update local main
 git checkout main
 git pull origin main
 git branch -d feature/task-X.X-description
 
-# 7. Mark parent task [x] in task list
-# 8. Stop and wait for user approval
+# 8. Mark parent task [x] in task list
+# 9. Stop and wait for user approval
 ```
 
 ---
@@ -326,12 +338,18 @@ Completes Task 7.0 from PRD 0001
 EOF
 )"
 
-# Step 5: Monitor CI checks
-gh pr checks
-# Wait for GitHub Actions to complete...
-# ✅ All checks passed!
+# Step 5: Display PR info and wait for user confirmation
+gh pr view --json url,number -q '"PR #\(.number) created: \(.url)"'
+# Output: PR #42 created: https://github.com/user/repo/pull/42
+#
+# AI now stops and informs user:
+# "✅ PR #42 created. CI checks are running (E2E tests may take 5-15 minutes)."
+# "Please check GitHub for CI status and confirm when checks pass."
+#
+# [User checks CI status, confirms when ready]
+# User: "CI passed, ready to merge"
 
-# Step 6: Merge PR
+# Step 6: Merge PR (after user confirms CI passed)
 gh pr merge --squash --delete-branch
 # Merged successfully, remote branch deleted
 
@@ -374,8 +392,10 @@ When working with task lists, the AI must:
 
 3. **After completing all subtasks:**
    - Follow the complete PR-based workflow (steps 1-6a above)
+   - After creating PR, **STOP and inform user** that CI is running
+   - Display PR URL and wait for user to confirm CI status
    - Do NOT mark parent task as complete until PR is merged
-   - If CI fails, fix issues before marking parent complete
+   - If user reports CI failure, fix issues before marking parent complete
 
 4. **Maintenance:**
    - Keep "Relevant Files" section accurate and up to date
