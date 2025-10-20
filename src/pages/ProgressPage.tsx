@@ -11,8 +11,11 @@ import './ProgressPage.css';
 import { Habit } from '../types/habit';
 import { LogEntry } from '../types/logEntry';
 import { storageService } from '../services/storage';
+import { demoModeService } from '../services/demoMode';
 import { ProgressCard } from '../components/ProgressCard';
 import { EmptyState } from '../components/EmptyState';
+import { LockedProgressPreview } from '../components/LockedProgressPreview';
+import { ConversionModal } from '../components/ConversionModal';
 import LoadingSpinner from '../components/LoadingSpinner';
 
 interface HabitWithLogs {
@@ -25,9 +28,27 @@ export const ProgressPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Demo mode state (Task 3.6 - REQ-17, REQ-35, AC-8)
+  const isDemo = demoModeService.isDemoMode();
+  const [showConversionModal, setShowConversionModal] = useState(false);
+  const [conversionTrigger, setConversionTrigger] = useState<'habits_threshold' | 'first_log' | 'progress_page'>('progress_page');
+
   useEffect(() => {
+    // Demo mode tracking (Task 3.6 - REQ-17)
+    if (isDemo) {
+      demoModeService.trackProgressVisit();
+
+      // Check for conversion trigger
+      const trigger = demoModeService.shouldShowConversionModal();
+      if (trigger) {
+        setShowConversionModal(true);
+        setConversionTrigger(trigger as 'habits_threshold' | 'first_log' | 'progress_page');
+        demoModeService.markConversionShown();
+      }
+    }
+
     loadHabitsAndLogs();
-  }, []);
+  }, [isDemo]);
 
   const loadHabitsAndLogs = async () => {
     try {
@@ -63,6 +84,24 @@ export const ProgressPage: React.FC = () => {
           <h1>Progress</h1>
         </div>
         <LoadingSpinner text="Loading your progress..." />
+      </div>
+    );
+  }
+
+  // Demo mode locked preview (Task 3.6 - REQ-35 to REQ-38, AC-8)
+  if (isDemo && !isLoading) {
+    return (
+      <div className="progress-page">
+        <div className="page-header">
+          <h1>Progress</h1>
+        </div>
+        <LockedProgressPreview />
+        {showConversionModal && (
+          <ConversionModal
+            trigger={conversionTrigger}
+            onClose={() => setShowConversionModal(false)}
+          />
+        )}
       </div>
     );
   }

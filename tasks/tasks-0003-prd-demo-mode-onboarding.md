@@ -260,8 +260,8 @@ Based on PRD: `0003-prd-demo-mode-onboarding.md`
 
 ### Phase 3: Page Integration (3-4 days)
 
-- [ ] **3.0 Update Existing Pages for Demo Mode**
-  - [ ] 3.1 Update WelcomePage - Add progressive journey section
+- [x] **3.0 Update Existing Pages for Demo Mode**
+  - [x] 3.1 Update WelcomePage - Add progressive journey section
     - Open `src/pages/WelcomePage.tsx`
     - Update hero section (around lines 94-99) with new progressive messaging:
       - Title: "Track habits. Build streaks. Own your data."
@@ -275,7 +275,7 @@ Based on PRD: `0003-prd-demo-mode-onboarding.md`
         - Step 3: number circle (3), title "This Month: Discover Patterns", description "AI analyzes your notes to show what helps you succeed."
     - **Acceptance:** Journey section renders with 3 steps, matches PRD REQ-53 to REQ-54
 
-  - [ ] 3.2 Update WelcomePage - Add demo button and restructure CTAs
+  - [x] 3.2 Update WelcomePage - Add demo button and restructure CTAs
     - Import `demoModeService` from '../services/demoMode'
     - Add handler function `handleTryDemo`:
       - Call `demoModeService.initializeDemoMode()`
@@ -294,7 +294,7 @@ Based on PRD: `0003-prd-demo-mode-onboarding.md`
       - Add privacy note at bottom: "Your habit data is private and secure. We use industry-standard encryption."
     - **Acceptance:** Demo button is primary CTA, email form is collapsible, clicking demo button initializes demo mode and navigates (PRD REQ-55 to REQ-57)
 
-  - [ ] 3.3 Update WelcomePage CSS
+  - [x] 3.3 Update WelcomePage CSS
     - Open `src/pages/WelcomePage.css`
     - Add styles for journey section:
       - `.welcome-journey`: 48px top/bottom margin, 16px horizontal padding
@@ -318,7 +318,7 @@ Based on PRD: `0003-prd-demo-mode-onboarding.md`
       - `.welcome-journey-steps`: single column grid
     - **Acceptance:** Journey section is visually appealing, demo button is prominent, form collapses correctly (PRD AC-23 to AC-24)
 
-  - [ ] 3.4 Update ManageHabitsPage - Add demo tracking and modals
+  - [x] 3.4 Update ManageHabitsPage - Add demo tracking and modals
     - Open `src/pages/ManageHabitsPage.tsx`
     - Add imports:
       - `import { demoModeService } from '../services/demoMode';`
@@ -365,7 +365,7 @@ Based on PRD: `0003-prd-demo-mode-onboarding.md`
       ```
     - **Acceptance:** After adding habits in demo mode, milestone toasts appear (1st and 3rd habit), conversion modal appears after 3rd habit (PRD REQ-15, REQ-28, REQ-29)
 
-  - [ ] 3.5 Update DailyLogPage - Add demo tracking and modals
+  - [x] 3.5 Update DailyLogPage - Add demo tracking and modals
     - Open `src/pages/DailyLogPage.tsx`
     - Add imports (same as ManageHabitsPage):
       - `import { demoModeService } from '../services/demoMode';`
@@ -414,7 +414,7 @@ Based on PRD: `0003-prd-demo-mode-onboarding.md`
     - Import MigrationToast component
     - **Acceptance:** After logging in demo mode, milestone toast appears (1st log), conversion modal appears, migration toast appears after signup (PRD REQ-16, REQ-30, REQ-50)
 
-  - [ ] 3.6 Update ProgressPage - Add locked preview and tracking
+  - [x] 3.6 Update ProgressPage - Add locked preview and tracking
     - Open `src/pages/ProgressPage.tsx`
     - Add imports:
       - `import { demoModeService } from '../services/demoMode';`

@@ -11,6 +11,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { initAuth, loginWithEmail, signUpWithEmail, isAuthenticated } from '../services/auth';
 import { parseError, formatErrorMessage, logError } from '../utils/errorHandler';
+import { demoModeService } from '../services/demoMode';
 import './WelcomePage.css';
 
 export const WelcomePage = (): JSX.Element => {
@@ -87,16 +88,53 @@ export const WelcomePage = (): JSX.Element => {
     setName('');
   };
 
+  const handleTryDemo = () => {
+    // Initialize demo mode (REQ-2, REQ-3)
+    demoModeService.initializeDemoMode();
+    // Navigate to daily log (REQ-3)
+    navigate('/daily-log');
+  };
+
   return (
     <div className="welcome-page">
       <div className="welcome-container">
-        {/* Hero Section - Tasks 7.7-7.9 */}
+        {/* Hero Section - Updated for Demo Mode Onboarding (REQ-53) */}
         <header className="welcome-hero">
-          <h1 className="welcome-title">Track Your Habits, Simply</h1>
+          <h1 className="welcome-title">Track habits. Build streaks. Own your data.</h1>
           <p className="welcome-subtitle">
-            A minimal habit tracker that puts you in control of your data
+            Start today. See progress in a week. Discover patterns in a month.
           </p>
         </header>
+
+        {/* How It Works Section - Demo Mode Progressive Journey (REQ-54) */}
+        <section className="welcome-journey">
+          <h2 className="welcome-section-title">How It Works</h2>
+          <div className="welcome-journey-steps">
+            <div className="welcome-step">
+              <div className="welcome-step-number">1</div>
+              <h3 className="welcome-step-title">Today: Add Your Habits</h3>
+              <p className="welcome-step-description">
+                Simple toggles to mark done or not done. Works offline.
+              </p>
+            </div>
+
+            <div className="welcome-step">
+              <div className="welcome-step-number">2</div>
+              <h3 className="welcome-step-title">This Week: See Your Streaks</h3>
+              <p className="welcome-step-description">
+                Track consistency over 7+ days. Build momentum.
+              </p>
+            </div>
+
+            <div className="welcome-step">
+              <div className="welcome-step-number">3</div>
+              <h3 className="welcome-step-title">This Month: Discover Patterns</h3>
+              <p className="welcome-step-description">
+                AI analyzes your notes to show what helps you succeed.
+              </p>
+            </div>
+          </div>
+        </section>
 
         {/* Key Features - Task 7.7 */}
         <section className="welcome-features">
@@ -133,13 +171,29 @@ export const WelcomePage = (): JSX.Element => {
           </div>
         </section>
 
-        {/* Call to Action - Email/Password Auth */}
+        {/* Call to Action - Demo Mode Primary (REQ-55 to REQ-57) */}
         <section className="welcome-cta">
-          <h2 className="welcome-auth-title">
-            {isSignUp ? 'Create Your Account' : 'Sign In'}
-          </h2>
+          <h2 className="welcome-auth-title">Get Started</h2>
 
-          <form onSubmit={handleSubmit} className="welcome-form">
+          {/* Primary CTA - Demo Button (REQ-55) */}
+          <button
+            type="button"
+            onClick={handleTryDemo}
+            disabled={loading || !authInitialized}
+            className="welcome-button welcome-button-demo"
+            aria-label="Try the app without signing up"
+          >
+            Try Without Signing In
+          </button>
+
+          {/* Divider (REQ-57) */}
+          <p className="welcome-cta-divider">or</p>
+
+          {/* Collapsible Email Form (REQ-56) */}
+          <details className="welcome-auth-details">
+            <summary className="welcome-auth-summary">Sign In with Email</summary>
+
+            <form onSubmit={handleSubmit} className="welcome-form">
             {isSignUp && (
               <div className="welcome-form-field">
                 <label htmlFor="name" className="welcome-label">
@@ -223,6 +277,7 @@ export const WelcomePage = (): JSX.Element => {
                 : "Don't have an account? Sign up"}
             </button>
           </form>
+          </details>
 
           <p className="welcome-privacy-note">
             Your habit data is private and secure. We use industry-standard encryption.

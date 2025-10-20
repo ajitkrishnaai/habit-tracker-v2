@@ -8,6 +8,9 @@
 import { useState, useEffect } from 'react';
 import { storageService } from '../services/storage';
 import { parseError, formatErrorMessage, logError } from '../utils/errorHandler';
+import { demoModeService } from '../services/demoMode';
+import { ConversionModal } from '../components/ConversionModal';
+import { Toast } from '../components/Toast';
 import { HabitForm } from '../components/HabitForm';
 import { HabitListItem } from '../components/HabitListItem';
 import { EmptyState } from '../components/EmptyState';
@@ -18,6 +21,12 @@ export const ManageHabitsPage = (): JSX.Element => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [editingHabit, setEditingHabit] = useState<Habit | null>(null);
+
+  // Demo mode state (Task 3.4 - REQ-15, REQ-28, REQ-29)
+  const [showConversionModal, setShowConversionModal] = useState(false);
+  const [conversionTrigger, setConversionTrigger] = useState<'habits_threshold' | 'first_log' | 'progress_page'>('habits_threshold');
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
 
   // Load habits on component mount
   useEffect(() => {
@@ -49,6 +58,26 @@ export const ManageHabitsPage = (): JSX.Element => {
     loadHabits();
     // Clear editing state
     setEditingHabit(null);
+
+    // Demo mode tracking (Task 3.4 - REQ-15, REQ-28, REQ-29)
+    if (demoModeService.isDemoMode()) {
+      demoModeService.trackHabitAdded();
+
+      // Check for milestone toast
+      const milestoneMsg = demoModeService.getMilestoneMessage();
+      if (milestoneMsg) {
+        setToastMessage(milestoneMsg);
+        setShowToast(true);
+      }
+
+      // Check for conversion trigger
+      const trigger = demoModeService.shouldShowConversionModal();
+      if (trigger) {
+        setShowConversionModal(true);
+        setConversionTrigger(trigger as 'habits_threshold' | 'first_log' | 'progress_page');
+        demoModeService.markConversionShown();
+      }
+    }
   };
 
   const handleHabitDeleted = () => {
@@ -183,6 +212,20 @@ export const ManageHabitsPage = (): JSX.Element => {
             </div>
           )}
         </div>
+
+        {/* Demo Mode Modals and Toasts (Task 3.4) */}
+        {showConversionModal && (
+          <ConversionModal
+            trigger={conversionTrigger}
+            onClose={() => setShowConversionModal(false)}
+          />
+        )}
+        {showToast && (
+          <Toast
+            message={toastMessage}
+            onClose={() => setShowToast(false)}
+          />
+        )}
       </div>
     </div>
   );

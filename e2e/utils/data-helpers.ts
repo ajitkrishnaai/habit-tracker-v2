@@ -1,18 +1,63 @@
 import { Page } from '@playwright/test';
+import { getCurrentUserId } from './supabase-helpers';
 
 /**
- * E2E Test Helper: Data Management
+ * E2E Test Helper: Data Management (Supabase Edition)
  *
  * Provides utilities for seeding test data and cleaning up after tests.
- * Uses IndexedDB directly for faster test setup.
+ * Now handles both IndexedDB (offline cache) AND Supabase (source of truth).
+ *
+ * MIGRATION NOTE: Updated to clear Supabase data in addition to IndexedDB.
  */
 
 /**
- * Clear all IndexedDB data for a fresh test start
+ * Clear all data for a fresh test start
+ * Clears both IndexedDB (local cache) and Supabase (remote database)
+ *
+ * NOTE: This only clears data for the currently authenticated user.
+ * RLS policies prevent deleting other users' data.
  */
 export async function clearAllData(page: Page) {
+  // First, try to clear Supabase data for the current user
+  try {
+    const userId = await getCurrentUserId(page);
+
+    if (userId) {
+      // User is authenticated - clear their Supabase data
+      await page.evaluate(async () => {
+        const { createClient } = await import('@supabase/supabase-js');
+        const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+        const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+        const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+          auth: {
+            persistSession: true,
+            autoRefreshToken: true,
+          },
+        });
+
+        // Get current user
+        const { data: { session } } = await supabase.auth.getSession();
+        const currentUserId = session?.user?.id;
+
+        if (currentUserId) {
+          // Delete habits (cascade will delete logs)
+          await supabase.from('habits').delete().eq('user_id', currentUserId);
+
+          // Delete metadata
+          await supabase.from('metadata').delete().eq('user_id', currentUserId);
+
+          console.log('[E2E Test] Cleared Supabase data for user:', currentUserId);
+        }
+      });
+    }
+  } catch (error) {
+    // If Supabase clearing fails, log but continue (might not be authenticated yet)
+    console.log('[E2E Test] Could not clear Supabase data (user might not be authenticated)');
+  }
+
+  // Clear IndexedDB
   await page.evaluate(async () => {
-    // Clear IndexedDB
     const dbs = await window.indexedDB.databases();
     for (const db of dbs) {
       if (db.name) {
@@ -25,8 +70,8 @@ export async function clearAllData(page: Page) {
     sessionStorage.clear();
   });
 
-  // Wait a bit for IndexedDB deletion to complete
-  await page.waitForTimeout(100);
+  // Wait for operations to complete
+  await page.waitForTimeout(200);
 }
 
 /**
