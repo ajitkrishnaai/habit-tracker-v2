@@ -2,8 +2,8 @@ import React from 'react';
 import Navigation from './Navigation';
 import Footer from './Footer';
 import OfflineIndicator from './OfflineIndicator';
-import DemoBanner from './DemoBanner';
-import ExpiryWarning from './ExpiryWarning';
+import { DemoBanner } from './DemoBanner';
+import { ExpiryWarning } from './ExpiryWarning';
 import { demoModeService } from '../services/demoMode';
 import './Layout.css';
 
