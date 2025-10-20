@@ -1,4 +1,14 @@
 import { defineConfig, devices } from '@playwright/test';
+import * as dotenv from 'dotenv';
+import * as path from 'path';
+import { fileURLToPath } from 'url';
+
+// Get the directory name in ES module
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Load environment variables from .env.local
+dotenv.config({ path: path.resolve(__dirname, '.env.local') });
 
 /**
  * Playwright Configuration for Habit Tracker E2E Tests
@@ -9,6 +19,7 @@ import { defineConfig, devices } from '@playwright/test';
  * - Uses mobile viewport for mobile-first testing
  * - Captures screenshots/videos on test failure
  * - Supports parallel test execution
+ * - Loads environment variables from .env.local
  */
 export default defineConfig({
   // Test directory
