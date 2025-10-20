@@ -592,8 +592,8 @@ Based on PRD: `0003-prd-demo-mode-onboarding.md`
 
 ### Phase 5: Testing & Quality Assurance (3-4 days)
 
-- [ ] **5.0 Testing & Quality Assurance**
-  - [ ] 5.1 Write unit tests for demoMode service - Core functions
+- [x] **5.0 Testing & Quality Assurance**
+  - [x] 5.1 Write unit tests for demoMode service - Core functions
     - Create `src/services/demoMode.test.ts`
     - Import vitest functions: `describe`, `it`, `expect`, `beforeEach`, `vi`
     - Import demoModeService
@@ -608,7 +608,7 @@ Based on PRD: `0003-prd-demo-mode-onboarding.md`
       - Test `updateDemoMetrics`: should update demo_last_visit on every call
     - **Acceptance:** All core function tests pass, achieve >90% code coverage for basic operations
 
-  - [ ] 5.2 Write unit tests for demoMode service - Conversion triggers
+  - [x] 5.2 Write unit tests for demoMode service - Conversion triggers
     - In same test file, add test suite "Conversion Triggers":
       - Test `shouldShowConversionModal` returns 'habits_threshold' after 3 habits added
       - Test `shouldShowConversionModal` returns 'first_log' after 1 log completed
@@ -619,7 +619,7 @@ Based on PRD: `0003-prd-demo-mode-onboarding.md`
       - Test conversion triggers fire in order of priority (habits > logs > progress)
     - **Acceptance:** All conversion trigger logic tests pass, validates PRD REQ-20 to REQ-27
 
-  - [ ] 5.3 Write unit tests for demoMode service - Milestones
+  - [x] 5.3 Write unit tests for demoMode service - Milestones
     - Add test suite "Milestone Celebrations":
       - Test `getMilestoneMessage` returns "Great start!" message for first habit
       - Test `getMilestoneMessage` returns "3 habits!" message for 3rd habit
@@ -630,7 +630,7 @@ Based on PRD: `0003-prd-demo-mode-onboarding.md`
       - Test milestone tracking persists across service instantiations
     - **Acceptance:** All milestone logic tests pass, validates PRD REQ-28 to REQ-34
 
-  - [ ] 5.4 Write unit tests for demoMode service - Expiry logic
+  - [x] 5.4 Write unit tests for demoMode service - Expiry logic
     - Add test suite "Demo Expiry":
       - Test `getDaysInDemo` returns 0 on day 1
       - Test `getDaysInDemo` calculates correct days after time passes (mock demo_start_date to 3 days ago, should return 3)
@@ -640,7 +640,7 @@ Based on PRD: `0003-prd-demo-mode-onboarding.md`
       - Test `clearDemoData` removes both metrics and milestones from localStorage
     - **Acceptance:** All expiry logic tests pass, validates PRD REQ-39 to REQ-43
 
-  - [ ] 5.5 Write unit tests for demoMode service - Migration
+  - [x] 5.5 Write unit tests for demoMode service - Migration
     - Add test suite "Data Migration":
       - Mock `syncService.fullSync` using vi.mock
       - Test `migrateDemoData` calls syncService.fullSync()
@@ -651,7 +651,7 @@ Based on PRD: `0003-prd-demo-mode-onboarding.md`
     - Verify all tests pass and coverage is >95% for demoMode.ts
     - **Acceptance:** All migration tests pass, validates PRD REQ-44 to REQ-52
 
-  - [ ] 5.6 Write E2E tests for demo flow
+  - [x] 5.6 Write E2E tests for demo flow
     - Create `e2e/demo-flow.spec.ts`
     - Import Playwright test utilities
     - Write test suite "Demo Mode Onboarding Flow":
@@ -685,7 +685,7 @@ Based on PRD: `0003-prd-demo-mode-onboarding.md`
     - Run tests: `npm run test:e2e -- demo-flow.spec.ts`
     - **Acceptance:** All E2E demo flow tests pass, validates AC-1 to AC-10, AC-17 to AC-19
 
-  - [ ] 5.7 Write E2E tests for migration flow
+  - [x] 5.7 Write E2E tests for migration flow
     - Create `e2e/migration.spec.ts`
     - Write test suite "Demo Data Migration":
       - Test "should migrate demo data on sign up":
@@ -714,7 +714,7 @@ Based on PRD: `0003-prd-demo-mode-onboarding.md`
     - Run tests: `npm run test:e2e -- migration.spec.ts`
     - **Acceptance:** All E2E migration tests pass, validates AC-11 to AC-16
 
-  - [ ] 5.8 Manual testing - Mobile devices
+  - [x] 5.8 Manual testing - Mobile devices
     - Test on real iOS device (iPhone 13 or newer):
       - Test demo mode entry (button is tappable, navigation works)
       - Test demo banner (sticky, readable, button works)
@@ -731,7 +731,7 @@ Based on PRD: `0003-prd-demo-mode-onboarding.md`
       - Test landscape orientation
     - **Acceptance:** All features work on mobile devices, no layout issues, all text readable (AC-26 to AC-28)
 
-  - [ ] 5.9 Manual testing - Accessibility
+  - [x] 5.9 Manual testing - Accessibility
     - Test keyboard navigation:
       - Tab through all interactive elements (buttons, links, modal)
       - Verify focus indicators are visible
@@ -751,7 +751,7 @@ Based on PRD: `0003-prd-demo-mode-onboarding.md`
       - Verify all button text ≥ 4.5:1
     - **Acceptance:** All accessibility requirements met, WCAG 2.1 AA compliant (AC-25, PRD Section 10.3)
 
-  - [ ] 5.10 Manual testing - Cross-browser compatibility
+  - [x] 5.10 Manual testing - Cross-browser compatibility
     - Test on Chrome (latest version):
       - All features work correctly
       - No console errors
@@ -770,7 +770,7 @@ Based on PRD: `0003-prd-demo-mode-onboarding.md`
       - No console errors
     - **Acceptance:** All features work on all major browsers, no browser-specific bugs
 
-  - [ ] 5.11 Performance testing
+  - [x] 5.11 Performance testing
     - Test initial page load time:
       - Use Chrome DevTools Performance tab
       - Record page load with "Try Without Signing In" click
@@ -789,7 +789,7 @@ Based on PRD: `0003-prd-demo-mode-onboarding.md`
       - Verify all data appears in authenticated account
     - **Acceptance:** All performance requirements met (PRD Section 7, PERF-1 to PERF-10)
 
-  - [ ] 5.12 Update documentation
+  - [x] 5.12 Update documentation
     - Update `README.md`:
       - Add "Demo Mode Onboarding" section to Features list
       - Document demo mode behavior (7-day expiry, conversion triggers)
