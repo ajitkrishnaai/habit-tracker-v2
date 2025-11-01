@@ -28,8 +28,8 @@ Based on PRD: `0005-prd-amara-day-pages-polish.md`
 - `src/components/LoadingScreen.test.tsx` - **NEW** - Tests for loading screen
 - `src/components/Skeleton.tsx` - **NEW** - Skeleton loading component with shimmer
 - `src/components/Skeleton.test.tsx` - **NEW** - Tests for skeleton component
-- `src/components/EmptyState.tsx` - **UPDATE** - Professional illustration integration
-- `src/components/EmptyState.test.tsx` - **UPDATE** - Tests for updated empty states
+- `src/components/EmptyState.tsx` - **UPDATE** - Lucide icon integration for empty states
+- `src/components/EmptyState.test.tsx` - **UPDATE** - Tests for icon-based empty states
 - `src/components/Toast.tsx` - **UPDATE** - Enhanced warm styling (may already exist)
 - `src/components/Toast.test.tsx` - **UPDATE** - Tests for toast component
 - `src/components/ToastContext.tsx` - **NEW** - Global toast management context
@@ -44,12 +44,6 @@ Based on PRD: `0005-prd-amara-day-pages-polish.md`
 - `src/utils/confetti.ts` - **NEW** - Canvas-based confetti animation utility
 - `src/utils/confetti.test.ts` - **NEW** - Tests for confetti utility
 - `src/styles/animations.css` - **NEW** - Keyframe animations (checkmarks, streaks, ripples, pulses)
-
-### Public Assets
-
-- `public/illustrations/empty-habits.svg` - **NEW** - Professional sunrise illustration for empty habits
-- `public/illustrations/empty-progress.svg` - **NEW** - Professional illustration for empty progress
-- `public/illustrations/empty-logs.svg` - **NEW** - Professional illustration for empty daily log
 
 ### Testing
 
@@ -356,42 +350,30 @@ Based on PRD: `0005-prd-amara-day-pages-polish.md`
       - Test renders with default variant
       - Test custom width/height applied
       - Test circle variant has full border-radius
-  - [ ] 2.3 Commission professional empty state illustrations
-    - **Action**: Hire illustrator from Dribbble, Fiverr, Upwork, or 99designs
-    - Provide brief:
-      - **Style**: Hand-drawn, organic, warm
-      - **Colors**: Terracotta (#D4745E), Sunset Orange (#E89C5A), Sage Green (#8B9A7E)
-      - **Theme**: Sunrise, growth, mindfulness
-      - **Deliverables**:
-        1. Empty habits: Sunrise over horizon with small plant sprouting (200x200px @ 2x resolution)
-        2. Empty progress: Sun rising with path leading forward
-        3. Empty daily log: Sunrise with calendar/journal motif
-      - **Format**: SVG (preferred) or optimized PNG (< 50KB each)
-      - **License**: Commercial use, unlimited distribution
-    - **Timeline**: 1-2 weeks turnaround
-    - **Budget**: $50-$200 total for 3 illustrations
-    - **Placeholder**: While waiting, use emoji placeholders (🌅, 🌱, 📅)
-  - [ ] 2.4 Update EmptyState component with professional illustrations
+  - [ ] 2.3 Update EmptyState component with Lucide icons
     - Update `src/components/EmptyState.tsx`:
-      - Accept `illustration` prop (string path or React component)
-      - Render illustration at 200px width: `<img src={illustration} alt="" width={200} height={200} />`
-      - If illustration fails to load, show emoji fallback
-      - Apply warm styling to title and message (already defined, ensure using design system colors)
+      - Accept `iconName` prop (string) to specify which Lucide icon to render
+      - Import icons from `lucide-react`: `import { Sunrise, TrendingUp, Calendar } from 'lucide-react'`
+      - Map icon name string to corresponding Lucide component
+      - Render specified icon at 200px size with terracotta color (#D4745E)
+      - Add circular gradient background behind icon: `background: radial-gradient(circle, #F5F1EB, transparent)`
+      - Apply soft drop shadow: `filter: drop-shadow(0 4px 12px rgba(212, 116, 94, 0.15))`
+      - If icon fails to load, show emoji fallback (🌅, 📈, 📅)
+      - Apply warm styling to title and message (already defined)
       - Style CTA button with `.btn-primary` class
       - Center-align content with generous spacing
     - Update `src/components/EmptyState.test.tsx`:
-      - Test renders with illustration
-      - Test renders fallback if illustration missing
+      - Test renders with specified Lucide icon name
+      - Test renders fallback emoji if icon fails
       - Test CTA button calls onClick handler
-  - [ ] 2.5 Apply empty states to pages with professional illustrations
+  - [ ] 2.4 Apply icon-based empty states to pages
     - Update `src/pages/DailyLogPage.tsx`:
-      - When no habits: `<EmptyState illustration="/illustrations/empty-habits.svg" title="No habits yet" message="Add your first habit to get started!" actionText="Add Habit" actionLink="/manage-habits" />`
+      - When no habits: `<EmptyState iconName="Calendar" title="No habits yet" message="Add your first habit to get started!" actionText="Add Habit" actionLink="/manage-habits" />`
     - Update `src/pages/ProgressPage.tsx`:
-      - When no progress: `<EmptyState illustration="/illustrations/empty-progress.svg" title="No progress yet" message="Start tracking habits to see your progress bloom." actionText="Add Your First Habit" actionLink="/manage-habits" />`
+      - When no progress: `<EmptyState iconName="TrendingUp" title="No progress yet" message="Start tracking habits to see your progress bloom." actionText="Add Your First Habit" actionLink="/manage-habits" />`
     - Update `src/pages/ManageHabitsPage.tsx`:
-      - When no habits: `<EmptyState illustration="/illustrations/empty-habits.svg" title="Your habit garden awaits" message="Plant your first habit!" actionText="Add Habit" onClick={openHabitForm} />`
-    - Note: Use emoji placeholders (🌅) until professional illustrations delivered
-  - [ ] 2.6 Create confetti animation utility
+      - When no habits: `<EmptyState iconName="Sunrise" title="Your habit garden awaits" message="Plant your first habit!" actionText="Add Habit" onClick={openHabitForm} />`
+  - [ ] 2.5 Create confetti animation utility
     - Create `src/utils/confetti.ts`:
       - Implement canvas-based confetti particle system
       - Function: `triggerConfetti(canvasElement: HTMLCanvasElement, options?: ConfettiOptions)`
@@ -406,7 +388,7 @@ Based on PRD: `0005-prd-amara-day-pages-polish.md`
       - Test confetti function creates canvas context
       - Test particles rendered with warm colors
       - Test animation completes and cleans up (mock requestAnimationFrame)
-  - [ ] 2.7 Integrate confetti on first habit creation
+  - [ ] 2.6 Integrate confetti on first habit creation
     - Update `src/pages/ManageHabitsPage.tsx` or habit creation logic:
       - Check localStorage flag: `amaday_confetti_shown`
       - If false and habit created successfully:
@@ -699,8 +681,8 @@ Based on PRD: `0005-prd-amara-day-pages-polish.md`
 ## Notes
 
 - **Prerequisites**: PRD #1 (0002) must be completed and validated before starting PRD #2
-- **Illustration timeline**: Commission illustrations at start of Phase 3 (1-2 week turnaround)
-- **Placeholder strategy**: Use emoji placeholders until professional illustrations delivered
+- **Icon library**: Lucide Icons already installed in PRD #1, no additional dependencies
+- **Icon fallbacks**: Use emoji placeholders if icons fail to load
 - **Visual regression**: Baseline screenshots committed to git, tests run on CI for PRs
 - **Metrics tracking**: Baseline collected before launch, post-launch monitoring for 2-4 weeks
 - **Animation performance**: Confetti must run at 30+ FPS, use `requestAnimationFrame`
@@ -710,6 +692,6 @@ Based on PRD: `0005-prd-amara-day-pages-polish.md`
 
 ---
 
-**Estimated Total Effort:** 7-11 hours
+**Estimated Total Effort:** 6.5-10 hours
 **Completion Criteria:** All acceptance criteria in PRD #0005 met, metrics showing improvement, stakeholder approval
 **Success Metrics:** +15-20% conversion rate, +10% session duration, Performance 90+, Accessibility 95+

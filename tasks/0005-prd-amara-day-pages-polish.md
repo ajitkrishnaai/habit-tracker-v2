@@ -16,7 +16,7 @@ This PRD covers the **second phase** of the Amara.day redesign, applying the des
 
 **Problem:** With the design foundation established (branding, colors, typography, core components), we need to apply this warm aesthetic across all pages and add polish that makes the app feel premium and delightful.
 
-**Solution:** Redesign all four main pages (Welcome, Daily Log, Progress, Manage Habits) with the Amara.day design system, add micro-interactions and animations for delight, and implement empty states with professional illustrations.
+**Solution:** Redesign all four main pages (Welcome, Daily Log, Progress, Manage Habits) with the Amara.day design system, add micro-interactions and animations for delight, and implement icon-based empty states using the Lucide Icons library.
 
 **Prerequisites:**
 - PRD #1 must be completed: Branding assets exist, design system defined, core components redesigned
@@ -59,7 +59,7 @@ This PRD covers the **second phase** of the Amara.day redesign, applying the des
 
 ### US-5: New User with No Data
 **As a** new user with no habits or logs yet,
-**I want** to see encouraging empty states with beautiful illustrations,
+**I want** to see encouraging empty states with meaningful icons,
 **So that** I feel welcomed and know exactly what to do next.
 
 ---
@@ -71,11 +71,11 @@ This PRD covers the **second phase** of the Amara.day redesign, applying the des
 #### 4.1.1 Welcome Page Redesign
 
 **FR-1**: Update `src/pages/WelcomePage.tsx` and `WelcomePage.css` with hero section
-- **FR-1.1**: Display large Amara.day branding: sunrise icon (80px) + wordmark with gradient
+- **FR-1.1**: Display large Amara.day text logo (48px font size) centered
 - **FR-1.2**: Add tagline in large text: "Mindful habits. Lasting change."
 - **FR-1.3**: Add subtitle in italic: "Your daily ritual. Built to last."
 - **FR-1.4**: Apply gradient background: `linear-gradient(180deg, #FAF8F5 0%, #F5F1EB 100%)`
-- **FR-1.5**: Add gentle pulse animation to sunrise icon (scale 1 → 1.05 → 1 over 3 seconds)
+- **FR-1.5**: Optional: Add gentle fade-in animation to logo on page load
 - **FR-1.6**: Center-align hero content with generous padding (`var(--space-3xl)`)
 
 **FR-2**: Update "How It Works" section
@@ -175,8 +175,8 @@ This PRD covers the **second phase** of the Amara.day redesign, applying the des
 #### 4.2.1 Loading States
 
 **FR-17**: Create `src/components/LoadingScreen.tsx` component
-- **FR-17.1**: Display Amara.day logo (sunrise icon 80px + wordmark)
-- **FR-17.2**: Add gentle pulse animation to icon
+- **FR-17.1**: Display Amara.day text logo (48px size)
+- **FR-17.2**: Add gentle fade pulse animation to logo (opacity 0.7 → 1 → 0.7)
 - **FR-17.3**: Display loading message: "Building your day..."
 - **FR-17.4**: Apply warm background gradient
 - **FR-17.5**: Center content vertically and horizontally
@@ -189,23 +189,27 @@ This PRD covers the **second phase** of the Amara.day redesign, applying the des
 
 #### 4.2.2 Empty States
 
-**FR-19**: Create professional empty state illustration
-- **FR-19.1**: Commission hand-drawn sunrise illustration (warm terracotta/sunset colors, organic style)
-- **FR-19.2**: Illustration dimensions: 200x200px @ 2x resolution (400x400px actual)
-- **FR-19.3**: Export as SVG (preferred) or optimized PNG
-- **FR-19.4**: Ensure illustration matches Amara.day warm aesthetic
+**FR-19**: Implement icon-based empty states using Lucide Icons
+- **FR-19.1**: Select appropriate Lucide icons for each empty state:
+  - Empty habits: `Sunrise` or `Sprout` icon
+  - Empty progress: `TrendingUp` or `Activity` icon
+  - Empty logs: `Calendar` or `BookOpen` icon
+- **FR-19.2**: Render icons at 200px size in warm terracotta color (#D4745E)
+- **FR-19.3**: Add subtle CSS effects: circular gradient background, soft drop shadow
+- **FR-19.4**: Icons are imported from `lucide-react` package (already added in PRD #1)
 
 **FR-20**: Update `src/components/EmptyState.tsx` component
-- **FR-20.1**: Display illustration at 200px width
-- **FR-20.2**: Add title in display font (e.g., "No habits yet")
-- **FR-20.3**: Add encouraging message in warm gray (e.g., "Start tracking habits to see your progress bloom")
-- **FR-20.4**: Style CTA button with primary button styles
-- **FR-20.5**: Center-align content with generous spacing
+- **FR-20.1**: Accept `iconName` prop (string) to specify which Lucide icon to render
+- **FR-20.2**: Render specified icon at 200px with terracotta coloring and circular background
+- **FR-20.3**: Add title in display font (e.g., "No habits yet")
+- **FR-20.4**: Add encouraging message in warm gray (e.g., "Start tracking habits to see your progress bloom")
+- **FR-20.5**: Style CTA button with primary button styles
+- **FR-20.6**: Center-align content with generous spacing
 
 **FR-21**: Apply empty states to pages
-- **FR-21.1**: Daily Log: "No habits yet. Add your first habit to get started!"
-- **FR-21.2**: Progress: "No progress yet. Start tracking habits to see your progress bloom."
-- **FR-21.3**: Manage Habits: "Your habit garden awaits. Plant your first habit!"
+- **FR-21.1**: Daily Log: Icon `Calendar`, "No habits yet. Add your first habit to get started!"
+- **FR-21.2**: Progress: Icon `TrendingUp`, "No progress yet. Start tracking habits to see your progress bloom."
+- **FR-21.3**: Manage Habits: Icon `Sunrise`, "Your habit garden awaits. Plant your first habit!"
 
 #### 4.2.3 Success Animations
 
@@ -312,12 +316,6 @@ This PRD covers the **second phase** of the Amara.day redesign, applying the des
 - Store baselines in version control (git LFS optional for large images)
 - Run visual tests only on CI for specific PRs (not every commit to save time)
 
-### 6.4 Professional Illustration
-
-- Hire illustrator from platforms: Dribbble, Fiverr, Upwork, 99designs
-- Provide brand guidelines: Warm earthy colors, organic hand-drawn style, sunrise theme
-- Budget: $50-$200 for 3-5 empty state illustrations (range depends on complexity)
-
 ---
 
 ## 7. Performance Requirements
@@ -334,7 +332,7 @@ This PRD covers the **second phase** of the Amara.day redesign, applying the des
 
 **PR-6**: Total CSS bundle size increase from PRD #1 must be < 15KB gzipped
 
-**PR-7**: Empty state illustrations must be optimized (SVG < 10KB or PNG < 50KB)
+**PR-7**: Lucide icons are minimal (~1-2KB each), negligible performance impact
 
 ---
 
@@ -342,7 +340,7 @@ This PRD covers the **second phase** of the Amara.day redesign, applying the des
 
 **SC-1**: No new security risks introduced (UI-only changes)
 
-**SC-2**: Commissioned illustrations must have proper licensing for commercial use
+**SC-2**: Lucide Icons library uses ISC license (open source, commercial use permitted)
 
 **SC-3**: Canvas-based confetti must not execute untrusted code (use inline implementation only)
 
@@ -382,16 +380,6 @@ This PRD covers the **second phase** of the Amara.day redesign, applying the des
 - **Page transitions**: 300ms slow
 - **Celebrations** (confetti, streak): 2-3 seconds (one-time, not repetitive)
 
-### 10.3 Professional Illustration Brief
-
-**Style**: Hand-drawn, organic, warm
-**Colors**: Terracotta (#D4745E), Sunset Orange (#E89C5A), Sage Green (#8B9A7E)
-**Theme**: Sunrise, growth, mindfulness
-**Scenes**:
-1. Empty habits: Single sunrise over horizon with small plant sprouting
-2. Empty progress: Sun rising with path leading forward
-3. Empty logs: Sunrise with calendar/journal motif
-
 ---
 
 ## 11. User Experience Flow
@@ -400,7 +388,7 @@ This PRD covers the **second phase** of the Amara.day redesign, applying the des
 
 1. User lands on **Welcome page** → Sees beautiful hero with Amara.day branding and warm gradient
 2. Clicks "Try Without Signing Up" → Enters app with DemoBanner visible
-3. Navigates to Manage Habits → Sees empty state with sunrise illustration: "Your habit garden awaits"
+3. Navigates to Manage Habits → Sees empty state with Sunrise icon: "Your habit garden awaits"
 4. Clicks "Add Your First Habit" → FAB opens modal with warm styling
 5. Creates first habit → **Confetti animation** + ConversionModal: "Great start! Sign up to save your progress."
 6. Dismisses modal → Continues exploring
@@ -411,7 +399,7 @@ This PRD covers the **second phase** of the Amara.day redesign, applying the des
 
 ### 11.2 Empty State to Content Journey
 
-1. New user sees empty state on Daily Log → Sunrise illustration with "No habits yet"
+1. New user sees empty state on Daily Log → Calendar icon with "No habits yet"
 2. Clicks "Add Your First Habit" → Modal opens
 3. Creates habit → Empty state disappears, habit card appears with warm styling
 4. User logs habit → Toggle animates smoothly, checkmark appears
@@ -430,7 +418,7 @@ This PRD covers the **second phase** of the Amara.day redesign, applying the des
 
 ### 12.2 Illustration Loading Errors
 
-**EH-3**: If empty state illustration fails to load, display text-only empty state with emoji fallback (e.g., 🌅)
+**EH-3**: If empty state icon fails to load, display text-only empty state with emoji fallback (e.g., 🌅)
 
 **EH-4**: Use `<img>` `onerror` handler to show fallback SVG icon if PNG fails
 
@@ -504,7 +492,7 @@ This PRD covers the **second phase** of the Amara.day redesign, applying the des
 
 **AC-10**: Skeleton screens use warm gradient shimmer animation
 
-**AC-11**: Empty states display professional sunrise illustration (200px) with encouraging copy and CTA button
+**AC-11**: Empty states display appropriate Lucide icon (200px) with encouraging copy and CTA button
 
 **AC-12**: Confetti animation triggers on first habit creation with warm-colored particles
 
@@ -564,9 +552,7 @@ This PRD covers the **second phase** of the Amara.day redesign, applying the des
 
 **OQ-3**: For streak milestone animations, should flames be static SVG icons or CSS-animated (flickering effect)?
 
-**OQ-4**: Should empty state illustrations be commissioned as a set (consistent style) or individually?
-
-**OQ-5**: Should we add a subtle sound effect for confetti (with user preference to disable)?
+**OQ-4**: Should we add a subtle sound effect for confetti (with user preference to disable)?
 
 **OQ-6**: For visual regression tests, should we test every page or just key pages (Welcome, Daily Log)?
 
@@ -581,8 +567,7 @@ This PRD covers the **second phase** of the Amara.day redesign, applying the des
 1. **Ensure PRD #1 is complete**: Verify all design foundation (colors, typography, core components) is implemented
 2. **Review baseline metrics**: Note current conversion rate, session duration, performance scores
 3. **Start with Phase 3**: Redesign pages one-by-one, test each before moving to next
-4. **Commission illustrations early**: Hire illustrator at start of Phase 3 so assets ready for Phase 4
-5. **Build Phase 4 incrementally**: Add polish features (loading, empty states, animations) as pages are completed
+4. **Build Phase 4 incrementally**: Add polish features (loading, empty states, animations) as pages are completed
 
 ### 16.2 Testing Strategy
 
@@ -596,7 +581,7 @@ This PRD covers the **second phase** of the Amara.day redesign, applying the des
 - **Don't over-animate**: Too many animations can feel chaotic, use sparingly for delight
 - **Don't forget reduced motion**: Wrap all decorative animations in `@media (prefers-reduced-motion: no-preference)`
 - **Don't skip confetti flag**: Without localStorage check, confetti will trigger on every habit creation (annoying)
-- **Don't block on illustrations**: Use placeholder SVGs/emojis if professional illustrations delayed
+- **Icon fallbacks**: Ensure emoji fallbacks exist for icon loading failures
 
 ### 16.4 File Organization
 
@@ -620,10 +605,6 @@ src/
 ├── utils/
 │   ├── confetti.ts (new - canvas confetti implementation)
 public/
-├── illustrations/
-│   ├── empty-habits.svg (new - commissioned)
-│   ├── empty-progress.svg (new - commissioned)
-│   ├── empty-logs.svg (new - commissioned)
 e2e/
 ├── visual-regression.spec.ts (new)
 ├── screenshots/
@@ -635,10 +616,9 @@ VISUAL_TESTING.md (new)
 
 ## 17. Dependencies
 
-**No new npm packages required** (pure CSS + vanilla JS approach)
+**No new npm packages required** (Lucide Icons already added in PRD #1)
 
 **External dependencies:**
-- Professional illustrator (budget: $50-$200 for 3-5 illustrations)
 - Google Fonts woff2 files (already self-hosted in PRD #1)
 
 ---
@@ -648,23 +628,20 @@ VISUAL_TESTING.md (new)
 ### Risk 1: Animation Performance on Low-End Devices
 **Mitigation**: Test on throttled CPU (Chrome DevTools), simplify animations if FPS drops below 30
 
-### Risk 2: Commissioned Illustrations Delayed
-**Mitigation**: Use placeholder SVG icons/emojis until professional assets ready, don't block launch
-
-### Risk 3: Confetti Performance Impact
+### Risk 2: Confetti Performance Impact
 **Mitigation**: Use `requestAnimationFrame`, limit particle count to 20-30, auto-cleanup after 3 seconds
 
-### Risk 4: Visual Regression Tests Too Sensitive
+### Risk 3: Visual Regression Tests Too Sensitive
 **Mitigation**: Set pixel difference threshold (0.2% tolerance), use consistent test environment (Docker or CI)
 
-### Risk 5: Conversion Rate Doesn't Improve
+### Risk 4: Conversion Rate Doesn't Improve
 **Mitigation**: Track intermediate metrics (CTA clicks, time on Welcome page), A/B test copy/design if needed
 
 ---
 
 ## 19. Timeline and Effort Estimate
 
-**Total Estimated Effort**: 7-11 hours
+**Total Estimated Effort**: 6.5-10 hours
 
 ### Phase 3: Page Redesigns (4-5 hours)
 - Welcome Page: 1 hour
@@ -672,9 +649,9 @@ VISUAL_TESTING.md (new)
 - Progress Page: 1.5 hours
 - Manage Habits Page (with FAB): 1.5 hours
 
-### Phase 4: Polish & Delight (2-3 hours)
+### Phase 4: Polish & Delight (1.5-2.5 hours)
 - Loading states: 0.5 hours
-- Empty states (with placeholders): 0.5 hours
+- Empty states (with Lucide icons): 0.25 hours
 - Success animations (confetti, streaks, checkmarks): 1.5 hours
 - Toast notifications: 0.5 hours
 - Footer redesign: 0.25 hours
@@ -689,10 +666,6 @@ VISUAL_TESTING.md (new)
 - Accessibility testing: 0.25 hours
 - Performance testing: 0.25 hours
 - Bug fixes and refinements: 0.25 hours
-
-### Professional Illustrations (External)
-- Timeline: 1-2 weeks turnaround (commission at start of Phase 3)
-- Cost: $50-$200 total
 
 ---
 
@@ -762,5 +735,4 @@ VISUAL_TESTING.md (new)
 **Next Steps**:
 1. Complete PRD #1
 2. Validate foundation ("Does this feel like Amara.day?")
-3. Commission professional illustrations
-4. Begin PRD #2 implementation
+3. Begin PRD #2 implementation

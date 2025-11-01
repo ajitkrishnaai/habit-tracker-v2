@@ -12,9 +12,9 @@ Based on PRD: `0004-prd-amara-day-foundation.md`
 
 ### Source Code - Branding Components
 
-- `src/components/branding/AmaraDayIcon.tsx` - **NEW** - Sunrise logo SVG icon component
-- `src/components/branding/AmaraDayLogo.tsx` - **NEW** - Complete logo with icon + wordmark
-- `src/components/branding/index.ts` - **NEW** - Barrel export for branding components
+- `src/components/branding/AmaraDayLogo.tsx` - **NEW** - Text-based logo component
+- `src/components/branding/index.ts` - **NEW** - Barrel export for branding
+- `src/components/Icon.tsx` - **NEW** - Lucide Icons wrapper component
 
 ### Source Code - Design System
 
@@ -86,47 +86,48 @@ Based on PRD: `0004-prd-amara-day-foundation.md`
 
 ## Tasks
 
-- [ ] **1.0 Phase 0: Branding Assets** (2-3 hours)
-  - [ ] 1.1 Create `src/components/branding/AmaraDayIcon.tsx` component
-    - Implement inline SVG with semi-circle sun + 3-5 organic rays
-    - Use `<linearGradient>` for terracotta (#D4745E) to sunset (#E89C5A) gradient
-    - Add `size` prop (number, default 32) to control width/height
-    - Add `variant` prop: `"full-color"` (default), `"monochrome"`
-    - Monochrome variant: Use currentColor for fill
-    - Ensure viewBox="0 0 64 64" for consistent scaling
-    - Add `className` prop for additional styling
-    - Optimize SVG paths (remove unnecessary decimals, use relative commands)
-  - [ ] 1.2 Create `src/components/branding/AmaraDayLogo.tsx` component
-    - Import and render `<AmaraDayIcon size={32} />` (or size from props)
-    - Add text: "Amara" in `font-family: 'DM Sans'`, `font-weight: 700`
-    - Add text: ".day" in `font-family: 'DM Sans'`, `font-weight: 500`
-    - Apply colors: Amara (terracotta #D4745E), .day (warm gray #7A7166)
-    - Add `layout` prop: `"horizontal"` (default, icon left of text), `"vertical"` (icon above text)
-    - Add `size` prop to scale entire logo (affects icon and text sizes)
-    - Center-align vertical layout, flex layout for horizontal
+- [ ] **1.0 Phase 0: Branding Assets** (1-1.5 hours)
+  - [ ] 1.1 Create `src/components/branding/AmaraDayLogo.tsx` component (text-based)
+    - Create text-based logo (no custom SVG icon)
+    - Render "Amara" in `font-family: 'DM Sans'`, `font-weight: 700`, `color: #D4745E` (terracotta)
+    - Render ".day" in `font-family: 'DM Sans'`, `font-weight: 500`, `color: #7A7166` (warm gray)
+    - Add `size` prop (number, default 32) to scale font size dynamically
+    - Add `variant` prop: `"full-color"` (default), `"monochrome"` (uses currentColor)
+    - Add `layout` prop: `"horizontal"` (default), `"vertical"` (stacked)
+    - Optional: Add CSS `text-shadow` or `background-clip: text` gradient for depth
     - Add `className` prop for wrapper div
-  - [ ] 1.3 Create barrel export `src/components/branding/index.ts`
-    - Export `AmaraDayIcon` and `AmaraDayLogo`
-  - [ ] 1.4 Download self-hosted fonts
+  - [ ] 1.2 Install Lucide Icons library
+    - Run: `npm install lucide-react`
+    - Verify installation in `package.json`
+  - [ ] 1.3 Create `src/components/Icon.tsx` wrapper component
+    - Import icons from `lucide-react`: `import { Sunrise, TrendingUp, Calendar, CheckCircle, AlertCircle, Info } from 'lucide-react'`
+    - Accept `name` prop (string) to select icon dynamically
+    - Accept `size` prop (number, default 24) for consistent sizing
+    - Accept `color` prop (string, default 'currentColor')
+    - Accept `className` prop for additional styling
+    - Map icon names to Lucide components
+  - [ ] 1.4 Create barrel export `src/components/branding/index.ts`
+    - Export `AmaraDayLogo` only (no AmaraDayIcon)
+  - [ ] 1.5 Download self-hosted fonts
     - Visit Google Fonts: https://fonts.google.com/
     - Download DM Sans: weights 400, 500, 700 (woff2 format)
     - Download Inter: weights 400, 500, 600 (woff2 format)
     - Place files in `public/fonts/` directory
     - Use naming convention: `{font-name}-v{version}-latin-{weight}.woff2`
-  - [ ] 1.5 Generate favicon assets from AmaraDayIcon
-    - Create 32x32px PNG from icon SVG (export at 2x: 64px, scale down)
-    - Convert to `favicon.ico` using online tool or ImageMagick
-    - Save `favicon.svg` (copy AmaraDayIcon SVG, ensure 64x64 viewBox)
-    - Generate `apple-touch-icon.png` (180x180px): Export icon at high resolution
-    - Generate `icon-192.png` (192x192px) for PWA manifest
-    - Generate `icon-512.png` (512x512px) for PWA manifest
-    - Optimize PNG files (use TinyPNG or similar)
-  - [ ] 1.6 Create social sharing image `og-image.png`
-    - Design 1200x630px image with Amara.day logo centered
-    - Include tagline: "Mindful habits. Lasting change."
-    - Use warm gradient background (#FAF8F5 to #F5F1EB)
-    - Export as optimized PNG (< 300KB for fast sharing)
-  - [ ] 1.7 Update `index.html` meta tags
+  - [ ] 1.6 Generate simple favicon assets (using online tool)
+    - Visit favicon.io or RealFaviconGenerator.net
+    - Create simple favicon: Letter "A" in terracotta (#D4745E) on transparent background
+    - Generate and download: `favicon.ico` (32x32px), `favicon.svg`, `apple-touch-icon.png` (180x180px)
+    - For PWA icons: Terracotta background (#D4745E) with white "A" letter
+    - Generate: `icon-192.png` (192x192px), `icon-512.png` (512x512px)
+    - Download and place all files in `public/` directory
+  - [ ] 1.7 Create social sharing image `og-image.png`
+    - Use online tool (Canva, Figma, or similar) to create 1200x630px image
+    - Warm gradient background (#FAF8F5 to #F5F1EB)
+    - Center "Amara.day" text in DM Sans Bold (terracotta color)
+    - Add tagline: "Mindful habits. Lasting change." below in smaller text
+    - Export as optimized PNG (< 300KB) and place in `public/`
+  - [ ] 1.8 Update `index.html` meta tags
     - Change `<title>` to "Amara.day - Mindful habits. Lasting change."
     - Add `<meta name="description" content="Track your daily habits with warmth and intention. Amara.day helps you build sustainable routines that last." />`
     - Add `<meta name="theme-color" content="#D4745E" />`
@@ -574,6 +575,6 @@ Based on PRD: `0004-prd-amara-day-foundation.md`
 
 ---
 
-**Estimated Total Effort:** 7-10 hours
-**Completion Criteria:** All acceptance criteria in PRD #0002 met, stakeholder validation passed
+**Estimated Total Effort:** 6-8 hours
+**Completion Criteria:** All acceptance criteria in PRD #0004 met, stakeholder validation passed
 **Next Steps:** After completion and validation, proceed to PRD #0005 (Pages & Polish)

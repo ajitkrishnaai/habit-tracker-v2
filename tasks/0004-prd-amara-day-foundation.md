@@ -68,28 +68,29 @@ This PRD covers the foundational redesign of Habit Tracker V2 to **Amara.day**, 
 
 ### 4.1 Branding Assets (Phase 0)
 
-**FR-1**: Create an organic flowing sunrise SVG icon as the Amara.day logo
-- **FR-1.1**: Icon must be a semi-circle sun rising from horizon with 3-5 organic (non-geometric) rays
-- **FR-1.2**: Use warm gradient: Terracotta (#D4745E) to Sunset Orange (#E89C5A)
-- **FR-1.3**: Icon must scale cleanly from 16px (favicon) to 512px (PWA icon)
-- **FR-1.4**: Implement as React component `AmaraDayIcon.tsx` with `size` prop
+**FR-1**: Create text-based Amara.day logo component
+- **FR-1.1**: Display "Amara" in DM Sans Bold + ".day" in DM Sans Medium
+- **FR-1.2**: Apply terracotta color (#D4745E) to "Amara", warm gray (#7A7166) to ".day"
+- **FR-1.3**: Implement as React component `AmaraDayLogo.tsx` with `size` prop (scales font size)
+- **FR-1.4**: Support horizontal and vertical layout variants
 - **FR-1.5**: Support `variant` prop: `"full-color"`, `"monochrome"`
+- **FR-1.6**: Optional: Add CSS text gradient or drop shadow for depth
 
-**FR-2**: Create Amara.day wordmark component
-- **FR-2.1**: Display "Amara" in DM Sans Bold + ".day" in DM Sans Medium
-- **FR-2.2**: Apply terracotta color (#D4745E) to "Amara", warm gray (#7A7166) to ".day" in light mode
-- **FR-2.3**: Implement as React component `AmaraDayLogo.tsx` with sunrise icon + wordmark
-- **FR-2.4**: Support horizontal and vertical layout variants
+**FR-2**: Integrate Lucide Icons library
+- **FR-2.1**: Install `lucide-react` package: `npm install lucide-react`
+- **FR-2.2**: Create icon wrapper component `src/components/Icon.tsx` for consistent sizing and coloring
+- **FR-2.3**: Document icon usage patterns in design system
+- **FR-2.4**: Select primary icons: `Sunrise`, `TrendingUp`, `Calendar`, `CheckCircle`, `AlertCircle`, `Info`
 
-**FR-3**: Generate favicon assets
-- **FR-3.1**: Export `favicon.ico` (32x32px)
-- **FR-3.2**: Export `favicon.svg` (scalable vector)
-- **FR-3.3**: Export `apple-touch-icon.png` (180x180px)
+**FR-3**: Generate simple favicon assets
+- **FR-3.1**: Create simple SVG favicon with letter "A" in terracotta (#D4745E) on transparent background
+- **FR-3.2**: Export `favicon.ico` (32x32px) and `favicon.svg` using online tool (e.g., favicon.io)
+- **FR-3.3**: Export `apple-touch-icon.png` (180x180px) - terracotta background with white "A"
 
-**FR-4**: Generate PWA icons
-- **FR-4.1**: Export `icon-192.png` (192x192px for PWA manifest)
-- **FR-4.2**: Export `icon-512.png` (512x512px for PWA manifest)
-- **FR-4.3**: Export `og-image.png` (1200x630px for social sharing)
+**FR-4**: Generate simple PWA icons
+- **FR-4.1**: Export `icon-192.png` (192x192px) - terracotta background with white "A"
+- **FR-4.2**: Export `icon-512.png` (512x512px) - terracotta background with white "A"
+- **FR-4.3**: Export `og-image.png` (1200x630px) - warm gradient background with "Amara.day" text centered
 
 **FR-5**: Update `index.html` meta tags
 - **FR-5.1**: Set `<title>` to "Amara.day - Mindful habits. Lasting change."
@@ -584,9 +585,12 @@ public/
 
 ## 17. Dependencies
 
-- No new npm packages required (pure CSS approach)
-- Existing dependencies remain unchanged
-- Font files downloaded externally (Google Fonts woff2 files)
+**New npm packages:**
+- `lucide-react`: ^0.263.1 (icon library, ISC license - open source, commercial use OK)
+
+**External dependencies:**
+- Google Fonts woff2 files for DM Sans and Inter (self-hosted)
+- Online favicon generator (e.g., favicon.io or RealFaviconGenerator.net) for simple letter-based icons
 
 ---
 
@@ -611,13 +615,13 @@ public/
 
 ## 19. Timeline and Effort Estimate
 
-**Total Estimated Effort**: 7-10 hours
+**Total Estimated Effort**: 6-8 hours
 
-### Phase 0: Branding Foundation (2-3 hours)
-- Create sunrise logo SVG: 1 hour
-- Generate favicon/PWA icons: 0.5 hours
-- Update meta tags and manifest: 0.5 hours
-- Create logo React components: 1 hour
+### Phase 0: Branding Foundation (1-1.5 hours)
+- Create text-based logo component: 0.5 hours
+- Install and configure Lucide Icons: 0.25 hours
+- Generate simple favicon/PWA icons (online tool): 0.25 hours
+- Update meta tags and manifest: 0.25 hours
 
 ### Phase 1: Design System Foundation (2-3 hours)
 - Define color palette CSS variables: 0.5 hours
