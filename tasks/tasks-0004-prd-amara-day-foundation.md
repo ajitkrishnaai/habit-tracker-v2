@@ -1,6 +1,6 @@
 # Task List: Amara.day Foundation & Core Components
 
-Based on PRD: `0002-prd-amara-day-foundation.md`
+Based on PRD: `0004-prd-amara-day-foundation.md`
 
 **Status:** Ready for Implementation
 **Estimated Effort:** 7-10 hours

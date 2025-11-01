@@ -1,4 +1,4 @@
-# PRD #0002: Amara.day Foundation & Core Components
+# PRD #0004: Amara.day Foundation & Core Components
 
 **Project:** Habit Tracker V2 → Amara.day Redesign
 **Phase:** PRD #1 - Foundation & Core Components (Phases 0-2)
@@ -658,4 +658,4 @@ public/
 **Approval Required**: Stakeholder sign-off on aesthetic after Phase 2 completion
 **Related Documents**:
 - `plans for later/amara-day-redesign-plan.md` (design specification)
-- `tasks/0003-prd-amara-day-pages-polish.md` (PRD #2 - to be implemented after this)
+- `tasks/0005-prd-amara-day-pages-polish.md` (PRD #2 - to be implemented after this)

@@ -1,11 +1,11 @@
 # Task List: Amara.day Pages, Polish & Dark Mode
 
-Based on PRD: `0003-prd-amara-day-pages-polish.md`
+Based on PRD: `0005-prd-amara-day-pages-polish.md`
 
 **Status:** Pending PRD #1 Completion
 **Estimated Effort:** 9-13 hours
 **Timeline:** Week 3-4
-**Prerequisites:** PRD #0002 (Foundation & Core Components) must be completed and validated
+**Prerequisites:** PRD #0004 (Foundation & Core Components) must be completed and validated
 
 ---
 

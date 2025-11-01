@@ -1,4 +1,4 @@
-# PRD #0003: Amara.day Pages, Polish & Dark Mode
+# PRD #0005: Amara.day Pages, Polish & Dark Mode
 
 **Project:** Habit Tracker V2 → Amara.day Redesign
 **Phase:** PRD #2 - Pages, Polish & Dark Mode (Phases 3-5)
@@ -6,7 +6,7 @@
 **Status:** Pending PRD #1 Completion
 **Estimated Effort:** 9-13 hours
 **Timeline:** Week 3-4
-**Prerequisites:** PRD #0002 (Foundation & Core Components) must be completed and validated
+**Prerequisites:** PRD #0004 (Foundation & Core Components) must be completed and validated
 
 ---
 
@@ -892,7 +892,7 @@ VISUAL_TESTING.md (new)
 
 ## 22. Related Documents
 
-- **PRD #0002**: Amara.day Foundation & Core Components (prerequisite)
+- **PRD #0004**: Amara.day Foundation & Core Components (prerequisite)
 - **Design Plan**: `plans for later/amara-day-redesign-plan.md` (design specification)
 - **Original PRD**: `tasks/0001-prd-habit-tracker.md` (feature requirements)
 - **Project Instructions**: `CLAUDE.md` (codebase overview)
@@ -902,7 +902,7 @@ VISUAL_TESTING.md (new)
 ## 23. Approval and Sign-Off
 
 **Prerequisites for Starting PRD #2 Implementation:**
-- ✅ PRD #1 (0002) completed and merged to main
+- ✅ PRD #1 (0004) completed and merged to main
 - ✅ Validation checkpoint passed: "This feels like Amara.day"
 - ✅ Baseline metrics collected: Conversion rate, session duration, performance scores
 - ✅ Stakeholder approval to proceed with full redesign rollout
