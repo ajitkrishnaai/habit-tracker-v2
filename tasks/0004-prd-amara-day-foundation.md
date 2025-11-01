@@ -20,7 +20,7 @@ This PRD covers the foundational redesign of Habit Tracker V2 to **Amara.day**, 
 **Why Split Into Two PRDs?**
 - PRD #1 creates the design language and validates the aesthetic before full rollout
 - Allows checkpoint: "Does this feel like Amara.day?"
-- PRD #2 will apply the foundation to all pages and add polish/dark mode
+- PRD #2 will apply the foundation to all pages and add polish
 
 ---
 
@@ -73,7 +73,7 @@ This PRD covers the foundational redesign of Habit Tracker V2 to **Amara.day**, 
 - **FR-1.2**: Use warm gradient: Terracotta (#D4745E) to Sunset Orange (#E89C5A)
 - **FR-1.3**: Icon must scale cleanly from 16px (favicon) to 512px (PWA icon)
 - **FR-1.4**: Implement as React component `AmaraDayIcon.tsx` with `size` prop
-- **FR-1.5**: Support `variant` prop: `"full-color"`, `"dark-mode"`, `"monochrome"`
+- **FR-1.5**: Support `variant` prop: `"full-color"`, `"monochrome"`
 
 **FR-2**: Create Amara.day wordmark component
 - **FR-2.1**: Display "Amara" in DM Sans Bold + ".day" in DM Sans Medium
@@ -109,13 +109,12 @@ This PRD covers the foundational redesign of Habit Tracker V2 to **Amara.day**, 
 ### 4.2 Design System Foundation (Phase 1)
 
 **FR-7**: Create `src/styles/colors.css` with CSS custom properties
-- **FR-7.1**: Define light mode primary colors: `--color-primary` (#D4745E), `--color-primary-hover` (#B86F50), `--color-primary-light` (#E89676), `--color-primary-dark` (#A85D47)
-- **FR-7.2**: Define light mode success/accent colors: `--color-success` (#8B9A7E), `--color-sunset` (#E89C5A), `--color-clay` (#B86F50), `--color-dusty-rose` (#C89F94), `--color-olive` (#9CAA7C)
-- **FR-7.3**: Define light mode backgrounds: `--color-background` (#FAF8F5), `--color-surface` (#F5F1EB), `--color-surface-hover` (#EBE5DC)
-- **FR-7.4**: Define light mode borders: `--color-border` (#D4CFC5), `--color-border-light` (#E8E3D9)
-- **FR-7.5**: Define light mode text: `--color-text-primary` (#3A3631), `--color-text-secondary` (#7A7166), `--color-text-tertiary` (#9D9389)
-- **FR-7.6**: Define light mode error/warning: `--color-error` (#C85A4F), `--color-warning` (#D4915A)
-- **FR-7.7**: Define dark mode palette under `[data-theme="dark"]` selector (implementation in PRD #2, structure only in PRD #1)
+- **FR-7.1**: Define primary colors: `--color-primary` (#D4745E), `--color-primary-hover` (#B86F50), `--color-primary-light` (#E89676), `--color-primary-dark` (#A85D47)
+- **FR-7.2**: Define success/accent colors: `--color-success` (#8B9A7E), `--color-sunset` (#E89C5A), `--color-clay` (#B86F50), `--color-dusty-rose` (#C89F94), `--color-olive` (#9CAA7C)
+- **FR-7.3**: Define backgrounds: `--color-background` (#FAF8F5), `--color-surface` (#F5F1EB), `--color-surface-hover` (#EBE5DC)
+- **FR-7.4**: Define borders: `--color-border` (#D4CFC5), `--color-border-light` (#E8E3D9)
+- **FR-7.5**: Define text colors: `--color-text-primary` (#3A3631), `--color-text-secondary` (#7A7166), `--color-text-tertiary` (#9D9389)
+- **FR-7.6**: Define error/warning colors: `--color-error` (#C85A4F), `--color-warning` (#D4915A)
 
 **FR-8**: Verify WCAG AA contrast compliance
 - **FR-8.1**: Ensure primary text (#3A3631) on background (#FAF8F5) meets 4.5:1 contrast ratio
@@ -258,7 +257,7 @@ This PRD covers the foundational redesign of Habit Tracker V2 to **Amara.day**, 
 
 - Maintain existing keyboard navigation support
 - Ensure all interactive elements have `:focus-visible` styles
-- Use `aria-label` for icon-only buttons (e.g., dark mode toggle in PRD #2)
+- Use `aria-label` for icon-only buttons where needed
 - Maintain semantic HTML structure
 - Test with keyboard navigation and automated tools (axe-core)
 
@@ -297,8 +296,6 @@ This PRD covers the foundational redesign of Habit Tracker V2 to **Amara.day**, 
 **DR-1**: No new database schema changes required
 
 **DR-2**: Demo mode conversion tracking uses existing `localStorage` metrics (no changes)
-
-**DR-3**: Theme preference storage (for PRD #2 dark mode) will use system preference only (no user data storage per FR-6 decision)
 
 ---
 
@@ -650,7 +647,7 @@ public/
 1. **Validation Checkpoint**: Review with stakeholders - "Does this feel like Amara.day?"
 2. **Gather Feedback**: Collect feedback on color palette, typography, spacing
 3. **Adjust if Needed**: Make minor refinements to design system based on feedback
-4. **Proceed to PRD #2**: Apply foundation to all pages, add polish, implement dark mode
+4. **Proceed to PRD #2**: Apply foundation to all pages and add polish
 
 ---
 

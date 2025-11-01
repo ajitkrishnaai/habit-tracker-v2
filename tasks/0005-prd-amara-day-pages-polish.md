@@ -1,10 +1,10 @@
-# PRD #0005: Amara.day Pages, Polish & Dark Mode
+# PRD #0005: Amara.day Pages & Polish
 
 **Project:** Habit Tracker V2 → Amara.day Redesign
-**Phase:** PRD #2 - Pages, Polish & Dark Mode (Phases 3-5)
+**Phase:** PRD #2 - Pages & Polish (Phases 3-4)
 **Created:** 2025-10-19
 **Status:** Pending PRD #1 Completion
-**Estimated Effort:** 9-13 hours
+**Estimated Effort:** 7-11 hours
 **Timeline:** Week 3-4
 **Prerequisites:** PRD #0004 (Foundation & Core Components) must be completed and validated
 
@@ -12,11 +12,11 @@
 
 ## 1. Introduction/Overview
 
-This PRD covers the **second phase** of the Amara.day redesign, applying the design foundation from PRD #1 to all application pages, adding delightful interactions, and implementing dark mode support.
+This PRD covers the **second phase** of the Amara.day redesign, applying the design foundation from PRD #1 to all application pages and adding delightful interactions.
 
 **Problem:** With the design foundation established (branding, colors, typography, core components), we need to apply this warm aesthetic across all pages and add polish that makes the app feel premium and delightful.
 
-**Solution:** Redesign all four main pages (Welcome, Daily Log, Progress, Manage Habits) with the Amara.day design system, add micro-interactions and animations for delight, implement empty states with professional illustrations, and create a comprehensive dark mode experience.
+**Solution:** Redesign all four main pages (Welcome, Daily Log, Progress, Manage Habits) with the Amara.day design system, add micro-interactions and animations for delight, and implement empty states with professional illustrations.
 
 **Prerequisites:**
 - PRD #1 must be completed: Branding assets exist, design system defined, core components redesigned
@@ -29,10 +29,9 @@ This PRD covers the **second phase** of the Amara.day redesign, applying the des
 
 1. **Apply Design Foundation**: Redesign all pages (Welcome, Daily Log, Progress, Manage Habits) using Amara.day design system
 2. **Add Delightful Interactions**: Implement micro-animations, loading states, empty states, success feedback
-3. **Implement Dark Mode**: Create comprehensive dark theme with smooth toggle experience
-4. **Improve Conversion**: Enhance demo mode experience with warm, inviting UI to increase signup rate by 15-20%
-5. **Maintain Performance**: Keep Lighthouse Performance 90+, Accessibility 95+
-6. **Establish Visual Testing**: Set up Playwright screenshot comparison for future regression prevention
+3. **Improve Conversion**: Enhance demo mode experience with warm, inviting UI to increase signup rate by 15-20%
+4. **Maintain Performance**: Keep Lighthouse Performance 90+, Accessibility 95+
+5. **Establish Visual Testing**: Set up Playwright screenshot comparison for future regression prevention
 
 ---
 
@@ -58,12 +57,7 @@ This PRD covers the **second phase** of the Amara.day redesign, applying the des
 **I want** adding new habits to feel smooth with a floating action button and success animation,
 **So that** organizing my habits feels effortless and satisfying.
 
-### US-5: Dark Mode Preference User
-**As a** user who prefers dark themes for nighttime use,
-**I want** a warm dark mode that's easy on my eyes,
-**So that** I can use the app comfortably in low-light environments.
-
-### US-6: New User with No Data
+### US-5: New User with No Data
 **As a** new user with no habits or logs yet,
 **I want** to see encouraging empty states with beautiful illustrations,
 **So that** I feel welcomed and know exactly what to do next.
@@ -262,87 +256,21 @@ This PRD covers the **second phase** of the Amara.day redesign, applying the des
 - **FR-28.4**: Apply warm gray text color (`--color-text-tertiary`)
 - **FR-28.5**: Add subtle top border (`1px solid var(--color-border)`)
 
-### 4.3 Dark Mode Implementation (Phase 5)
+### 4.3 Visual Regression Testing (Phase 4)
 
-#### 4.3.1 Dark Mode Color System
+**FR-29**: Set up Playwright screenshot comparison
+- **FR-29.1**: Create `e2e/visual-regression.spec.ts` test file
+- **FR-29.2**: Capture baseline screenshots for all pages
+- **FR-29.3**: Store screenshots in `e2e/screenshots/baseline/` directory
+- **FR-29.4**: Configure Playwright to compare screenshots on test runs
+- **FR-29.5**: Set pixel difference threshold (e.g., 0.2% tolerance for minor anti-aliasing differences)
 
-**FR-29**: Update `src/styles/colors.css` with dark mode palette
-- **FR-29.1**: Define `[data-theme="dark"]` color overrides:
-  - Primary: `--color-primary: #E89676` (lighter terracotta for visibility)
-  - Success: `--color-success: #A8B89A` (muted sage)
-  - Background: `--color-background: #1E1B17` (deep warm charcoal)
-  - Surface: `--color-surface: #2C2822` (warm brown)
-  - Border: `--color-border: #4A4640` (warm dark gray)
-  - Text Primary: `--color-text-primary: #F5F1EB` (warm off-white)
-  - Text Secondary: `--color-text-secondary: #B8AFA3`
-- **FR-29.2**: Update shadows for dark mode (lighter, softer):
-  - `--shadow-sm: 0 2px 8px rgba(0,0,0,0.3)`
-  - `--shadow-md: 0 4px 16px rgba(0,0,0,0.4)`
-  - `--shadow-lg: 0 8px 32px rgba(0,0,0,0.5)`
-
-**FR-30**: Verify WCAG AA contrast in dark mode
-- **FR-30.1**: Test primary text (#F5F1EB) on background (#1E1B17) - must meet 4.5:1
-- **FR-30.2**: Test interactive elements (buttons, links) for sufficient contrast
-- **FR-30.3**: Document any failing combinations and provide alternatives
-
-#### 4.3.2 Dark Mode Toggle
-
-**FR-31**: Create `src/components/DarkModeToggle.tsx` component
-- **FR-31.1**: Display sun icon (light mode) or moon icon (dark mode)
-- **FR-31.2**: Implement toggle button with smooth icon transition (fade out/in or rotate)
-- **FR-31.3**: On click, toggle `data-theme` attribute on `<html>` element
-- **FR-31.4**: Respect system preference on initial load: `window.matchMedia('(prefers-color-scheme: dark)')`
-- **FR-31.5**: Do NOT store preference in localStorage (per user decision: system preference only)
-- **FR-31.6**: Add `aria-label`: "Switch to dark mode" / "Switch to light mode"
-- **FR-31.7**: Style toggle with warm colors (icon color matches theme)
-
-**FR-32**: Add dark mode toggle to Navigation
-- **FR-32.1**: Position toggle in top-right of Navigation (mobile and desktop)
-- **FR-32.2**: Ensure toggle has 44x44px touch target
-- **FR-32.3**: Apply smooth hover state (slight scale or glow)
-
-#### 4.3.3 Dark Mode Application
-
-**FR-33**: Apply dark mode to all components
-- **FR-33.1**: Test all components from PRD #1 in dark mode (Navigation, ToggleSwitch, Buttons, Inputs, Cards)
-- **FR-33.2**: Adjust logo variant: Use warm off-white (#F5F1EB) wordmark in dark mode
-- **FR-33.3**: Ensure borders are visible in dark mode (use lighter warm grays)
-- **FR-33.4**: Verify shadows are visible (may need to increase opacity)
-
-**FR-34**: Apply dark mode to all pages
-- **FR-34.1**: Test Welcome page hero gradient in dark mode (adjust to dark warm tones)
-- **FR-34.2**: Test Daily Log habit cards, ensure readability and visual hierarchy
-- **FR-34.3**: Test Progress page charts, ensure colors remain distinguishable
-- **FR-34.4**: Test Manage Habits page FAB, ensure shadow visible on dark background
-
-**FR-35**: Add smooth theme transition
-- **FR-35.1**: Apply 300ms ease-in-out transition to `background-color`, `border-color`, `color` (already implemented in PRD #1 FR-11.1)
-- **FR-35.2**: Ensure no jarring flashes during theme toggle
-- **FR-35.3**: Test transition on all pages and components
-
-#### 4.3.4 Dark Mode Testing
-
-**FR-36**: Create E2E tests for dark mode
-- **FR-36.1**: Add Playwright test: "should toggle dark mode when dark mode toggle is clicked"
-- **FR-36.2**: Add Playwright test: "should respect system preference on initial load"
-- **FR-36.3**: Add Playwright test: "all pages render correctly in dark mode"
-- **FR-36.4**: Capture screenshots in dark mode for visual regression testing
-
-### 4.4 Visual Regression Testing (Phase 5)
-
-**FR-37**: Set up Playwright screenshot comparison
-- **FR-37.1**: Create `e2e/visual-regression.spec.ts` test file
-- **FR-37.2**: Capture baseline screenshots for all pages in light and dark mode
-- **FR-37.3**: Store screenshots in `e2e/screenshots/baseline/` directory
-- **FR-37.4**: Configure Playwright to compare screenshots on test runs
-- **FR-37.5**: Set pixel difference threshold (e.g., 0.2% tolerance for minor anti-aliasing differences)
-
-**FR-38**: Document visual regression testing workflow
-- **FR-38.1**: Create `VISUAL_TESTING.md` with instructions for:
+**FR-30**: Document visual regression testing workflow
+- **FR-30.1**: Create `VISUAL_TESTING.md` with instructions for:
   - Running visual tests: `npm run test:e2e:visual`
   - Updating baselines when design changes intentionally
   - Reviewing diff images when tests fail
-- **FR-38.2**: Add npm script: `"test:e2e:visual": "playwright test e2e/visual-regression.spec.ts"`
+- **FR-30.2**: Add npm script: `"test:e2e:visual": "playwright test e2e/visual-regression.spec.ts"`
 
 ---
 
@@ -350,19 +278,17 @@ This PRD covers the **second phase** of the Amara.day redesign, applying the des
 
 **NG-1**: Advanced animation libraries (Framer Motion, React Spring) - using pure CSS only
 
-**NG-2**: Real-time multi-device dark mode sync - system preference only, no user storage
+**NG-2**: Custom theme builder or user-customizable color palettes
 
-**NG-3**: Custom theme builder or user-customizable color palettes
+**NG-3**: Seasonal palette variations (e.g., winter theme, spring theme)
 
-**NG-4**: Seasonal palette variations (e.g., winter theme, spring theme)
+**NG-4**: Sound effects for success states
 
-**NG-5**: Sound effects for success states
+**NG-5**: Animated onboarding tour (may be added post-launch)
 
-**NG-6**: Animated onboarding tour (may be added post-launch)
+**NG-6**: Export progress as shareable images (future enhancement)
 
-**NG-7**: Export progress as shareable images (future enhancement)
-
-**NG-8**: Push notifications or reminder system
+**NG-7**: Push notifications or reminder system
 
 ---
 
@@ -374,25 +300,19 @@ This PRD covers the **second phase** of the Amara.day redesign, applying the des
 - **Canvas-based confetti** runs on separate thread, won't block main UI thread
 - **Debounce rapid toggles** to prevent animation performance issues
 
-### 6.2 Dark Mode System Preference Detection
-
-- Use `window.matchMedia('(prefers-color-scheme: dark)')` on initial load
-- Listen for system preference changes: `matchMedia.addEventListener('change', ...)`
-- Apply `data-theme="dark"` or `data-theme="light"` to `<html>` element
-
-### 6.3 Toast Management
+### 6.2 Toast Management
 
 - Use React Context + custom hook pattern for global toast state
 - Implement toast queue with max 3 visible toasts (auto-dismiss oldest if queue exceeds)
 - Use `setTimeout` for auto-dismiss, clear timeout on manual close
 
-### 6.4 Visual Regression Testing
+### 6.3 Visual Regression Testing
 
 - Playwright's `toHaveScreenshot()` API for screenshot comparison
 - Store baselines in version control (git LFS optional for large images)
 - Run visual tests only on CI for specific PRs (not every commit to save time)
 
-### 6.5 Professional Illustration
+### 6.4 Professional Illustration
 
 - Hire illustrator from platforms: Dribbble, Fiverr, Upwork, 99designs
 - Provide brand guidelines: Warm earthy colors, organic hand-drawn style, sunrise theme
@@ -462,14 +382,7 @@ This PRD covers the **second phase** of the Amara.day redesign, applying the des
 - **Page transitions**: 300ms slow
 - **Celebrations** (confetti, streak): 2-3 seconds (one-time, not repetitive)
 
-### 10.3 Dark Mode Design Principles
-
-- **Warm, not cold**: Use warm browns/grays, not pure black (#000000)
-- **Softer shadows**: Increase opacity for visibility on dark backgrounds
-- **Avoid pure white text**: Use warm off-white (#F5F1EB) for reduced eye strain
-- **Maintain warmth**: Dark mode should still feel inviting, not harsh or techy
-
-### 10.4 Professional Illustration Brief
+### 10.3 Professional Illustration Brief
 
 **Style**: Hand-drawn, organic, warm
 **Colors**: Terracotta (#D4745E), Sunset Orange (#E89C5A), Sage Green (#8B9A7E)
@@ -496,16 +409,7 @@ This PRD covers the **second phase** of the Amara.day redesign, applying the des
 9. Visits Progress page → Sees warm charts and stats + final ConversionModal
 10. Decides to sign up → Data seamlessly migrates to authenticated account
 
-### 11.2 Dark Mode User Journey
-
-1. User visits app at night → System preference detects dark mode
-2. App loads with warm dark theme (brown backgrounds, off-white text)
-3. User manually toggles to light mode using sun/moon icon in Navigation
-4. Smooth 300ms transition: colors fade to light theme
-5. User toggles back to dark mode → Smooth transition back
-6. User closes app → Next visit respects system preference again (no storage)
-
-### 11.3 Empty State to Content Journey
+### 11.2 Empty State to Content Journey
 
 1. New user sees empty state on Daily Log → Sunrise illustration with "No habits yet"
 2. Clicks "Add Your First Habit" → Modal opens
@@ -530,17 +434,11 @@ This PRD covers the **second phase** of the Amara.day redesign, applying the des
 
 **EH-4**: Use `<img>` `onerror` handler to show fallback SVG icon if PNG fails
 
-### 12.3 Dark Mode Errors
+### 12.3 Toast Errors
 
-**EH-5**: If `matchMedia` API unavailable, default to light mode
+**EH-5**: If toast fails to render, log to console but don't crash app (toasts are non-critical)
 
-**EH-6**: If dark mode toggle fails, display toast error: "Unable to switch theme. Please refresh."
-
-### 12.4 Toast Errors
-
-**EH-7**: If toast fails to render, log to console but don't crash app (toasts are non-critical)
-
-**EH-8**: Limit toast queue to prevent memory leaks (max 10 toasts in history, auto-clear oldest)
+**EH-6**: Limit toast queue to prevent memory leaks (max 10 toasts in history, auto-clear oldest)
 
 ---
 
@@ -572,17 +470,11 @@ This PRD covers the **second phase** of the Amara.day redesign, applying the des
 
 ### 13.4 Accessibility Metrics
 
-**SM-10**: Lighthouse Accessibility: Maintain **95+** score in both light and dark modes
+**SM-10**: Lighthouse Accessibility: Maintain **95+** score
 
-**SM-11**: axe-core violations: **0** in both themes
+**SM-11**: axe-core violations: **0**
 
 **SM-12**: Keyboard navigation: **100%** of features operable without mouse
-
-### 13.5 Dark Mode Adoption
-
-**SM-13**: Percentage of users using dark mode: Track via analytics (expected 20-40% based on system preferences)
-
-**SM-14**: Theme toggle usage: Track manual toggles (if analytics available)
 
 ---
 
@@ -624,67 +516,43 @@ This PRD covers the **second phase** of the Amara.day redesign, applying the des
 
 **AC-16**: Footer displays Amara.day wordmark, Privacy/Terms links, and dynamic copyright year in warm colors
 
-### 14.3 Dark Mode (Phase 5)
+### 14.3 Visual Regression Testing
 
-**AC-17**: Dark mode colors defined in `colors.css` under `[data-theme="dark"]` selector
+**AC-17**: Playwright screenshot comparison test file created (`e2e/visual-regression.spec.ts`)
 
-**AC-18**: Dark mode meets WCAG AA contrast requirements (verified with Lighthouse and manual testing)
+**AC-18**: Baseline screenshots captured for all pages
 
-**AC-19**: DarkModeToggle component displays sun/moon icon and toggles `data-theme` attribute on click
+**AC-19**: `npm run test:e2e:visual` script runs visual regression tests
 
-**AC-20**: Dark mode toggle positioned in Navigation with 44x44px touch target
+**AC-20**: `VISUAL_TESTING.md` documentation created with workflow instructions
 
-**AC-21**: App respects system preference on initial load (`prefers-color-scheme: dark`)
+### 14.4 Performance & Accessibility (All Phases)
 
-**AC-22**: Theme transition is smooth (300ms) with no jarring flashes
+**AC-21**: Lighthouse Performance score ≥ 90
 
-**AC-23**: All components from PRD #1 render correctly in dark mode (Navigation, ToggleSwitch, Buttons, Inputs, Cards)
+**AC-22**: Lighthouse Accessibility score ≥ 95
 
-**AC-24**: All pages render correctly in dark mode (Welcome, Daily Log, Progress, Manage Habits)
+**AC-23**: First Contentful Paint < 1.5 seconds on 4G throttling
 
-**AC-25**: Amara.day logo uses warm off-white wordmark in dark mode
+**AC-24**: Confetti animation runs at 30+ FPS (smooth, no lag)
 
-**AC-26**: Shadows are visible in dark mode (increased opacity)
+**AC-25**: axe-core reports 0 violations
 
-### 14.4 Visual Regression Testing
+**AC-26**: All interactive elements keyboard-navigable (Tab, Enter, Space)
 
-**AC-27**: Playwright screenshot comparison test file created (`e2e/visual-regression.spec.ts`)
+### 14.5 Cross-Browser Compatibility (All Phases)
 
-**AC-28**: Baseline screenshots captured for all pages in light and dark mode
+**AC-27**: All features work correctly in Chrome (latest), Safari (macOS + iOS), Firefox (latest)
 
-**AC-29**: `npm run test:e2e:visual` script runs visual regression tests
+**AC-28**: Animations run smoothly in all tested browsers
 
-**AC-30**: `VISUAL_TESTING.md` documentation created with workflow instructions
+### 14.6 Conversion & Engagement (Post-Launch Tracking)
 
-### 14.5 Performance & Accessibility (All Phases)
+**AC-29**: Demo → Signup conversion rate increased by 15-20% (measured 2 weeks post-launch)
 
-**AC-31**: Lighthouse Performance score ≥ 90 (light and dark modes)
+**AC-30**: Session duration increased by 10% (measured 2 weeks post-launch)
 
-**AC-32**: Lighthouse Accessibility score ≥ 95 (light and dark modes)
-
-**AC-33**: First Contentful Paint < 1.5 seconds on 4G throttling
-
-**AC-34**: Confetti animation runs at 30+ FPS (smooth, no lag)
-
-**AC-35**: axe-core reports 0 violations in both light and dark modes
-
-**AC-36**: All interactive elements keyboard-navigable (Tab, Enter, Space)
-
-### 14.6 Cross-Browser Compatibility (All Phases)
-
-**AC-37**: All features work correctly in Chrome (latest), Safari (macOS + iOS), Firefox (latest)
-
-**AC-38**: Dark mode renders correctly in all tested browsers
-
-**AC-39**: Animations run smoothly in all tested browsers
-
-### 14.7 Conversion & Engagement (Post-Launch Tracking)
-
-**AC-40**: Demo → Signup conversion rate increased by 15-20% (measured 2 weeks post-launch)
-
-**AC-41**: Session duration increased by 10% (measured 2 weeks post-launch)
-
-**AC-42**: Habits logged per user per week maintained or increased by 5%
+**AC-31**: Habits logged per user per week maintained or increased by 5%
 
 ---
 
@@ -698,13 +566,11 @@ This PRD covers the **second phase** of the Amara.day redesign, applying the des
 
 **OQ-4**: Should empty state illustrations be commissioned as a set (consistent style) or individually?
 
-**OQ-5**: If user has system dark mode preference but manually toggles to light, should we override system preference for future visits? (Current spec: No, always respect system)
+**OQ-5**: Should we add a subtle sound effect for confetti (with user preference to disable)?
 
-**OQ-6**: Should we add a subtle sound effect for confetti (with user preference to disable)?
+**OQ-6**: For visual regression tests, should we test every page or just key pages (Welcome, Daily Log)?
 
-**OQ-7**: For visual regression tests, should we test every page or just key pages (Welcome, Daily Log)?
-
-**OQ-8**: Should the toast notification stack vertically or horizontally when multiple toasts appear?
+**OQ-7**: Should the toast notification stack vertically or horizontally when multiple toasts appear?
 
 ---
 
@@ -717,21 +583,17 @@ This PRD covers the **second phase** of the Amara.day redesign, applying the des
 3. **Start with Phase 3**: Redesign pages one-by-one, test each before moving to next
 4. **Commission illustrations early**: Hire illustrator at start of Phase 3 so assets ready for Phase 4
 5. **Build Phase 4 incrementally**: Add polish features (loading, empty states, animations) as pages are completed
-6. **Implement Phase 5 last**: Dark mode is additive layer, easier when all light mode pages complete
 
 ### 16.2 Testing Strategy
 
-- **Visual testing**: Manually review each page at 320px, 375px, 768px, 1440px in both light and dark modes
+- **Visual testing**: Manually review each page at 320px, 375px, 768px, 1440px viewports
 - **Animation testing**: Use Chrome DevTools Performance tab to verify 60 FPS, CPU throttling to test on slower devices
-- **Dark mode testing**: Toggle theme multiple times, ensure no flashing or broken colors
 - **Conversion testing**: Clear localStorage, test full demo mode journey end-to-end
-- **Accessibility testing**: Run axe-core, test keyboard navigation, verify focus indicators visible in both themes
+- **Accessibility testing**: Run axe-core, test keyboard navigation, verify focus indicators are visible
 
 ### 16.3 Common Pitfalls to Avoid
 
-- **Don't skip dark mode testing**: Easy to miss contrast issues or invisible borders
 - **Don't over-animate**: Too many animations can feel chaotic, use sparingly for delight
-- **Don't hardcode dark colors**: Use CSS variables even for dark mode (`var(--color-background)`)
 - **Don't forget reduced motion**: Wrap all decorative animations in `@media (prefers-reduced-motion: no-preference)`
 - **Don't skip confetti flag**: Without localStorage check, confetti will trigger on every habit creation (annoying)
 - **Don't block on illustrations**: Use placeholder SVGs/emojis if professional illustrations delayed
@@ -746,7 +608,6 @@ src/
 │   ├── EmptyState.tsx (update)
 │   ├── Toast.tsx (new)
 │   ├── ToastContext.tsx (new)
-│   ├── DarkModeToggle.tsx (new)
 │   ├── FloatingActionButton.tsx (new - FAB)
 │   ├── Footer.tsx (update)
 ├── pages/
@@ -755,11 +616,9 @@ src/
 │   ├── ProgressPage.tsx + .css (update)
 │   ├── ManageHabitsPage.tsx + .css (update)
 ├── styles/
-│   ├── colors.css (update with dark mode)
 │   ├── animations.css (new - confetti, streaks, checkmarks)
 ├── utils/
 │   ├── confetti.ts (new - canvas confetti implementation)
-│   ├── darkMode.ts (new - system preference detection)
 public/
 ├── illustrations/
 │   ├── empty-habits.svg (new - commissioned)
@@ -786,29 +645,26 @@ VISUAL_TESTING.md (new)
 
 ## 18. Risks and Mitigations
 
-### Risk 1: Dark Mode Contrast Issues
-**Mitigation**: Run Lighthouse Accessibility audit early in Phase 5, adjust colors before finalizing
-
-### Risk 2: Animation Performance on Low-End Devices
+### Risk 1: Animation Performance on Low-End Devices
 **Mitigation**: Test on throttled CPU (Chrome DevTools), simplify animations if FPS drops below 30
 
-### Risk 3: Commissioned Illustrations Delayed
+### Risk 2: Commissioned Illustrations Delayed
 **Mitigation**: Use placeholder SVG icons/emojis until professional assets ready, don't block launch
 
-### Risk 4: Confetti Performance Impact
+### Risk 3: Confetti Performance Impact
 **Mitigation**: Use `requestAnimationFrame`, limit particle count to 20-30, auto-cleanup after 3 seconds
 
-### Risk 5: Visual Regression Tests Too Sensitive
+### Risk 4: Visual Regression Tests Too Sensitive
 **Mitigation**: Set pixel difference threshold (0.2% tolerance), use consistent test environment (Docker or CI)
 
-### Risk 6: Conversion Rate Doesn't Improve
+### Risk 5: Conversion Rate Doesn't Improve
 **Mitigation**: Track intermediate metrics (CTA clicks, time on Welcome page), A/B test copy/design if needed
 
 ---
 
 ## 19. Timeline and Effort Estimate
 
-**Total Estimated Effort**: 9-13 hours
+**Total Estimated Effort**: 7-11 hours
 
 ### Phase 3: Page Redesigns (4-5 hours)
 - Welcome Page: 1 hour
@@ -823,23 +679,16 @@ VISUAL_TESTING.md (new)
 - Toast notifications: 0.5 hours
 - Footer redesign: 0.25 hours
 
-### Phase 5: Dark Mode (2-3 hours)
-- Dark mode color system: 0.5 hours
-- Dark mode toggle component: 0.5 hours
-- Apply dark mode to all components: 1 hour
-- Apply dark mode to all pages: 0.5 hours
-- Dark mode testing and refinements: 0.5 hours
-
-### Phase 5: Visual Regression Testing (1-2 hours)
+### Phase 4: Visual Regression Testing (1-2 hours)
 - Set up Playwright screenshots: 0.5 hours
 - Capture baseline screenshots: 0.5 hours
 - Document workflow: 0.5 hours
 
-### Testing and Polish (1-2 hours)
-- Cross-browser testing: 0.5 hours
-- Accessibility testing (light + dark): 0.5 hours
-- Performance testing: 0.5 hours
-- Bug fixes and refinements: 0.5 hours
+### Testing and Polish (1 hour)
+- Cross-browser testing: 0.25 hours
+- Accessibility testing: 0.25 hours
+- Performance testing: 0.25 hours
+- Bug fixes and refinements: 0.25 hours
 
 ### Professional Illustrations (External)
 - Timeline: 1-2 weeks turnaround (commission at start of Phase 3)
@@ -859,11 +708,6 @@ VISUAL_TESTING.md (new)
 - **Test**: Trigger all animations (confetti, streaks, checkmarks), gather feedback
 - **Action**: Reduce animation duration or frequency if too much
 
-### Validation Checkpoint 3: After Phase 5 Completion
-- **Question**: "Is dark mode comfortable for nighttime use?"
-- **Test**: Use app in dark mode for 10 minutes, check for eye strain or readability issues
-- **Action**: Adjust contrast or reduce brightness if needed
-
 ### Final Validation: 2 Weeks Post-Launch
 - **Metrics Review**: Compare conversion rate, session duration, habits logged to baseline
 - **User Feedback**: Gather qualitative feedback on redesign warmth and usability
@@ -881,7 +725,6 @@ VISUAL_TESTING.md (new)
 ### Week 3-4 After Launch
 - **Analyze patterns**: Which conversion prompts drive most signups?
 - **Refine animations**: Adjust confetti/streaks if users report annoyance
-- **Optimize dark mode**: If dark mode adoption low, investigate usability issues
 
 ### Month 2-3 After Launch
 - **A/B test variations**: Test different empty state copy or CTA button text
@@ -908,7 +751,7 @@ VISUAL_TESTING.md (new)
 - ✅ Stakeholder approval to proceed with full redesign rollout
 
 **Final Approval Required:**
-- Stakeholder review of all pages in light and dark modes
+- Stakeholder review of all pages
 - Conversion rate improvement validation (2 weeks post-launch)
 - Performance and accessibility scores maintained
 

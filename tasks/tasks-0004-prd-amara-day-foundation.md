@@ -18,7 +18,7 @@ Based on PRD: `0004-prd-amara-day-foundation.md`
 
 ### Source Code - Design System
 
-- `src/styles/colors.css` - **NEW** - Color palette CSS custom properties (light mode + dark mode structure)
+- `src/styles/colors.css` - **NEW** - Color palette CSS custom properties
 - `src/styles/buttons.css` - **NEW** - Button component styles (primary, secondary)
 - `src/styles/main.css` - **UPDATE** - Typography, spacing, shadows, global transitions
 
@@ -91,8 +91,7 @@ Based on PRD: `0004-prd-amara-day-foundation.md`
     - Implement inline SVG with semi-circle sun + 3-5 organic rays
     - Use `<linearGradient>` for terracotta (#D4745E) to sunset (#E89C5A) gradient
     - Add `size` prop (number, default 32) to control width/height
-    - Add `variant` prop: `"full-color"` (default), `"dark-mode"`, `"monochrome"`
-    - Dark mode variant: Use warm off-white (#F5F1EB) instead of gradient
+    - Add `variant` prop: `"full-color"` (default), `"monochrome"`
     - Monochrome variant: Use currentColor for fill
     - Ensure viewBox="0 0 64 64" for consistent scaling
     - Add `className` prop for additional styling
@@ -164,10 +163,7 @@ Based on PRD: `0004-prd-amara-day-foundation.md`
       - Borders: `--color-border: #D4CFC5;`, `--color-border-light: #E8E3D9;`
       - Text: `--color-text-primary: #3A3631;`, `--color-text-secondary: #7A7166;`, `--color-text-tertiary: #9D9389;`
       - Error/warning: `--color-error: #C85A4F;`, `--color-warning: #D4915A;`
-  - [ ] 2.2 Add dark mode palette structure (placeholder for PRD #2)
-    - Add `[data-theme="dark"]` selector with commented note: "Dark mode colors will be defined in PRD #2"
-    - Leave placeholder variables (can copy light mode values for now)
-  - [ ] 2.3 Verify WCAG AA contrast compliance
+  - [ ] 2.2 Verify WCAG AA contrast compliance
     - Test primary text (#3A3631) on background (#FAF8F5) using contrast checker (target: 4.5:1)
     - Test secondary text (#7A7166) on background (target: 4.5:1 for normal, 3:1 for large text 18px+)
     - Test white (#FFFFFF) on primary button (#D4745E) (target: 4.5:1)
@@ -438,7 +434,7 @@ Based on PRD: `0004-prd-amara-day-foundation.md`
     - Create `src/components/branding/AmaraDayIcon.test.tsx`:
       - Test icon renders with default size (32px)
       - Test custom size prop (e.g., size={64})
-      - Test variant prop: full-color, dark-mode, monochrome
+      - Test variant prop: full-color, monochrome
       - Test className prop is applied to wrapper
       - Snapshot test for SVG structure
     - Create `src/components/branding/AmaraDayLogo.test.tsx`:
@@ -568,7 +564,7 @@ Based on PRD: `0004-prd-amara-day-foundation.md`
 
 - **Order of implementation**: Follow task order (Phase 0 → Phase 1 → Phase 2) for logical dependency chain
 - **CSS organization**: All new CSS files imported in `main.css` for single entry point
-- **Color usage**: Always use CSS variables, never hardcode colors (enables easy dark mode in PRD #2)
+- **Color usage**: Always use CSS variables, never hardcode colors (enables consistency and future theme variations)
 - **Testing strategy**: Unit tests for components, E2E tests for user journeys, manual testing for accessibility and cross-browser
 - **Performance budget**: CSS increase < 10KB gzipped, fonts preloaded, Lighthouse 90+
 - **Validation checkpoint**: PRD #2 cannot start until stakeholders approve: "This feels like Amara.day"
@@ -580,4 +576,4 @@ Based on PRD: `0004-prd-amara-day-foundation.md`
 
 **Estimated Total Effort:** 7-10 hours
 **Completion Criteria:** All acceptance criteria in PRD #0002 met, stakeholder validation passed
-**Next Steps:** After completion and validation, proceed to PRD #0003 (Pages, Polish & Dark Mode)
+**Next Steps:** After completion and validation, proceed to PRD #0005 (Pages & Polish)
