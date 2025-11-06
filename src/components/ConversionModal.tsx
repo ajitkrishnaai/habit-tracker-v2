@@ -110,7 +110,7 @@ export const ConversionModal: React.FC<ConversionModalProps> = ({ trigger, onClo
 
         {/* Primary CTA */}
         <button
-          className="conversion-modal-button-primary"
+          className="btn-primary conversion-modal-button-primary"
           onClick={handleSignInClick}
         >
           Sign In to Save Progress
@@ -118,7 +118,7 @@ export const ConversionModal: React.FC<ConversionModalProps> = ({ trigger, onClo
 
         {/* Secondary CTA */}
         <button
-          className="conversion-modal-button-secondary"
+          className="btn-secondary conversion-modal-button-secondary"
           onClick={handleContinueDemo}
         >
           Continue in Demo Mode

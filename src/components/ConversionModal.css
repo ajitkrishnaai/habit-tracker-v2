@@ -1,4 +1,4 @@
-/* ConversionModal Component Styles */
+/* ConversionModal Component Styles - Amara.day Redesign (PRD #0004) */
 
 .conversion-modal-overlay {
   /* Full-screen overlay */
@@ -9,8 +9,8 @@
   bottom: 0;
   z-index: 1000;
 
-  /* Semi-transparent background with blur effect */
-  background-color: rgba(0, 0, 0, 0.6);
+  /* Warm dark semi-transparent background with blur effect */
+  background-color: rgba(58, 54, 49, 0.5);
   backdrop-filter: blur(4px);
 
   /* Flexbox centering */
@@ -35,16 +35,16 @@
 }
 
 .conversion-modal-content {
-  /* Modal content styling */
-  background-color: white;
-  border-radius: 12px;
-  padding: 32px;
+  /* Modal content styling - warm surface */
+  background-color: var(--color-surface);
+  border-radius: var(--radius-xl);
+  padding: var(--space-xl);
   max-width: 500px;
   width: 100%;
   position: relative;
 
-  /* Box shadow for depth */
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  /* Warm soft shadow */
+  box-shadow: var(--shadow-xl);
 
   /* Slide-up animation */
   animation: slideUp 0.3s ease-out;
@@ -69,7 +69,7 @@
   background: none;
   border: none;
   font-size: 24px;
-  color: #6c757d;
+  color: var(--color-text-secondary);
   cursor: pointer;
   padding: 4px 8px;
   line-height: 1;
@@ -81,49 +81,51 @@
   align-items: center;
   justify-content: center;
 
-  transition: color 0.2s ease;
+  transition: color var(--transition-base);
 }
 
 .conversion-modal-close:hover {
-  color: #343a40;
+  color: var(--color-text-primary);
 }
 
-.conversion-modal-close:focus {
-  outline: 2px solid #667eea;
+.conversion-modal-close:focus-visible {
+  outline: 2px solid var(--color-primary);
   outline-offset: 2px;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
 }
 
 .conversion-modal-title {
-  /* Title styling */
-  font-size: 24px;
+  /* Title styling - warm display font */
+  font-size: var(--text-2xl);
   font-weight: 700;
-  color: #212529;
+  font-family: var(--font-display);
+  color: var(--color-text-primary);
   margin: 0 0 16px 0;
-  line-height: 1.3;
+  line-height: var(--leading-tight);
 }
 
 .conversion-modal-message {
   /* Message styling */
-  font-size: 16px;
-  color: #495057;
-  line-height: 1.6;
+  font-size: var(--text-base);
+  color: var(--color-text-secondary);
+  line-height: var(--leading-normal);
   margin: 0 0 24px 0;
 }
 
 .conversion-modal-benefits {
-  /* Benefits section styling */
-  background-color: #f8f9fa;
-  border-radius: 8px;
+  /* Benefits section styling - warm surface elevation */
+  background-color: var(--color-surface-hover);
+  border-radius: var(--radius-md);
   padding: 16px 20px;
   margin-bottom: 24px;
 }
 
 .conversion-modal-benefits-title {
   /* Benefits title */
-  font-size: 14px;
+  font-size: var(--text-sm);
   font-weight: 600;
-  color: #495057;
+  font-family: var(--font-display);
+  color: var(--color-text-secondary);
   margin: 0 0 12px 0;
 }
 
@@ -136,90 +138,36 @@
 
 .conversion-modal-benefits-list li {
   /* List item styling */
-  font-size: 14px;
-  color: #212529;
+  font-size: var(--text-sm);
+  color: var(--color-text-primary);
   margin-bottom: 8px;
-  line-height: 1.5;
+  line-height: var(--leading-snug);
 }
 
 .conversion-modal-benefits-list li:last-child {
   margin-bottom: 0;
 }
 
+/* Buttons use .btn-primary and .btn-secondary from buttons.css for consistency */
 .conversion-modal-button-primary {
-  /* Primary CTA button */
+  /* Full width override for modal context */
   width: 100%;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  font-size: 16px;
-  font-weight: 600;
-  padding: 14px 24px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-
-  /* Minimum touch target */
-  min-height: 48px;
-
-  /* Transition */
-  transition: all 0.2s ease-in-out;
-
   margin-bottom: 12px;
 }
 
-.conversion-modal-button-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
-}
-
-.conversion-modal-button-primary:focus {
-  outline: 2px solid #667eea;
-  outline-offset: 2px;
-}
-
-.conversion-modal-button-primary:active {
-  transform: translateY(0);
-}
-
 .conversion-modal-button-secondary {
-  /* Secondary CTA button */
+  /* Full width override for modal context */
   width: 100%;
-  background-color: white;
-  color: #667eea;
-  font-size: 14px;
-  font-weight: 600;
-  padding: 10px 24px;
-  border: 2px solid #667eea;
-  border-radius: 8px;
-  cursor: pointer;
-
-  /* Minimum touch target */
-  min-height: 44px;
-
-  /* Transition */
-  transition: all 0.2s ease-in-out;
-
   margin-bottom: 16px;
 }
 
-.conversion-modal-button-secondary:hover {
-  background-color: #f8f9fa;
-  border-color: #764ba2;
-  color: #764ba2;
-}
-
-.conversion-modal-button-secondary:focus {
-  outline: 2px solid #667eea;
-  outline-offset: 2px;
-}
-
 .conversion-modal-reassurance {
-  /* Reassurance text */
-  font-size: 13px;
-  color: #6c757d;
+  /* Reassurance text - warm tertiary color */
+  font-size: var(--text-xs);
+  color: var(--color-text-tertiary);
   text-align: center;
   margin: 0;
-  line-height: 1.5;
+  line-height: var(--leading-snug);
 }
 
 /* Mobile responsive styles (< 768px) */
