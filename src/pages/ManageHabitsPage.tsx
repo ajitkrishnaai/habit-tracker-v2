@@ -234,8 +234,11 @@ export const ManageHabitsPage = (): JSX.Element => {
 
           {habits.length === 0 ? (
             <EmptyState
-              title="No habits yet"
-              message="Use the form above to add your first habit and start tracking your progress"
+              iconName="Sunrise"
+              title="Your habit garden awaits"
+              message="Plant your first habit!"
+              actionText="Add Habit"
+              onAction={handleOpenHabitForm}
             />
           ) : (
             <div className="habits-grid">

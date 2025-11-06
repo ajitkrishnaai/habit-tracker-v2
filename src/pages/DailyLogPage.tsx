@@ -393,8 +393,10 @@ export const DailyLogPage: React.FC = () => {
     return (
       <div className="daily-log-page">
         <EmptyState
-          message="You haven't added any habits yet"
-          actionText="Go to Manage Habits"
+          iconName="Calendar"
+          title="No habits yet"
+          message="Add your first habit to get started!"
+          actionText="Add Habit"
           actionLink="/manage-habits"
         />
       </div>

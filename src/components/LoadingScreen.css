@@ -1,0 +1,70 @@
+/**
+ * LoadingScreen Styles
+ * Task 2.1 - Full-screen loading with warm gradient and pulse animation
+ */
+
+.loading-screen {
+  /* Full viewport height */
+  min-height: 100vh;
+
+  /* Warm gradient background */
+  background: linear-gradient(180deg, #FAF8F5 0%, #F5F1EB 100%);
+
+  /* Center content */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+
+  /* Padding for safety */
+  padding: var(--space-xl);
+}
+
+.loading-screen__content {
+  /* Center and space content */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-lg);
+  text-align: center;
+}
+
+.loading-screen__logo {
+  /* Gentle pulse animation - reuse from Welcome hero */
+  animation: gentle-pulse 2s ease-in-out infinite;
+}
+
+@keyframes gentle-pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.9;
+  }
+}
+
+.loading-message {
+  font-size: var(--text-lg);
+  color: var(--color-text-secondary);
+  font-weight: 400;
+  font-family: var(--font-body);
+  margin: 0;
+  letter-spacing: var(--tracking-normal);
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .loading-screen__logo {
+    animation: none;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 767px) {
+  .loading-message {
+    font-size: var(--text-base);
+  }
+}

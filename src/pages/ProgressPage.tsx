@@ -129,9 +129,10 @@ export const ProgressPage: React.FC = () => {
           <h1 className="page-title">Progress</h1>
         </header>
         <EmptyState
-          title="No habits to display"
-          message="Add some habits in the Manage Habits page to see your progress here."
-          actionText="Go to Manage Habits"
+          iconName="TrendingUp"
+          title="No progress yet"
+          message="Start tracking habits to see your progress bloom."
+          actionText="Add Your First Habit"
           actionLink="/manage-habits"
         />
       </div>
