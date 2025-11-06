@@ -209,7 +209,7 @@ Based on PRD: `0004-prd-amara-day-foundation.md`
     - Imported at line 13: `@import './colors.css';`
     - Also imports buttons.css at line 14
 
-- [ ] **3.0 Phase 2: Core Component Redesigns** (3-4 hours)
+- [x] **3.0 Phase 2: Core Component Redesigns** (3-4 hours) ✅
   - [x] 3.1 Update `src/components/Navigation.tsx` with Amara.day branding ✅
     - Import `AmaraDayLogo` from `@/components/branding`
     - Replace "Habit Tracker" text with `<AmaraDayLogo size={32} layout="horizontal" />`
