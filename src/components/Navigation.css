@@ -1,12 +1,18 @@
-/* Navigation Component Styles */
+/**
+ * Navigation Component Styles - Amara.day Redesign
+ * Features glassmorphism effect with backdrop blur
+ */
 
 .navigation {
   position: sticky;
   top: 0;
   z-index: 100;
-  background-color: var(--color-background);
-  border-bottom: 1px solid var(--color-border);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  /* Glassmorphism: semi-transparent with backdrop blur */
+  background-color: rgba(250, 248, 245, 0.9); /* --color-background with opacity */
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--color-border-light);
+  box-shadow: var(--shadow-sm);
 }
 
 .navigation-container {
@@ -23,6 +29,7 @@
   flex-shrink: 0;
 }
 
+/* Logo component handles its own styling */
 .navigation-title {
   font-size: var(--font-size-lg);
   font-weight: 600;
@@ -50,8 +57,8 @@
   font-weight: 500;
   color: var(--color-text-secondary);
   text-decoration: none;
-  border-radius: var(--border-radius);
-  transition: all 0.2s ease;
+  border-radius: var(--radius-md);
+  transition: all var(--transition-base);
 
   /* Ensure 44x44px minimum touch target */
   min-height: 44px;
@@ -63,22 +70,23 @@
 
 .navigation-link:hover {
   background-color: var(--color-surface);
-  color: var(--color-text-primary);
+  color: var(--color-primary);
 }
 
-.navigation-link:focus {
-  outline: 2px solid var(--color-accent);
+.navigation-link:focus-visible {
+  outline: 2px solid var(--color-primary);
   outline-offset: 2px;
 }
 
+/* Active link uses warm terracotta */
 .navigation-link--active {
-  background-color: var(--color-accent);
+  background-color: var(--color-primary);
   color: white;
   font-weight: 600;
 }
 
 .navigation-link--active:hover {
-  background-color: var(--color-accent-dark);
+  background-color: var(--color-primary-hover);
   color: white;
 }
 
