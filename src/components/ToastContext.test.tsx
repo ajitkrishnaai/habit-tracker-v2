@@ -3,8 +3,9 @@
  * Test global toast management functionality
  */
 
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { render, screen, waitFor, act } from '@testing-library/react';
+import { describe, it, expect, vi } from 'vitest';
+import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { ToastProvider, useToast } from './ToastContext';
 
 // Test component that uses the toast hook
@@ -13,13 +14,13 @@ const TestComponent = () => {
 
   return (
     <div>
-      <button onClick={() => showToast('Test message', 'success', 1000)}>
+      <button onClick={() => showToast('Test message', 'success', 100)}>
         Show Toast
       </button>
-      <button onClick={() => showToast('Error message', 'error', 1000)}>
+      <button onClick={() => showToast('Error message', 'error', 100)}>
         Show Error
       </button>
-      <button onClick={() => showToast('Info message', 'info', 1000)}>
+      <button onClick={() => showToast('Info message', 'info', 100)}>
         Show Info
       </button>
     </div>
@@ -27,14 +28,6 @@ const TestComponent = () => {
 };
 
 describe('ToastContext', () => {
-  beforeEach(() => {
-    vi.useFakeTimers();
-  });
-
-  afterEach(() => {
-    vi.restoreAllMocks();
-    vi.useRealTimers();
-  });
 
   describe('ToastProvider', () => {
     it('should render children', () => {
@@ -83,6 +76,7 @@ describe('ToastContext', () => {
 
   describe('showToast functionality', () => {
     it('should display toast when showToast is called', async () => {
+      const user = userEvent.setup();
       const { getByText } = render(
         <ToastProvider>
           <TestComponent />
@@ -90,9 +84,7 @@ describe('ToastContext', () => {
       );
 
       const button = getByText('Show Toast');
-      act(() => {
-        button.click();
-      });
+      await user.click(button);
 
       await waitFor(() => {
         expect(screen.getByText('Test message')).toBeInTheDocument();
@@ -100,6 +92,7 @@ describe('ToastContext', () => {
     });
 
     it('should display toast with success variant', async () => {
+      const user = userEvent.setup();
       const { getByText } = render(
         <ToastProvider>
           <TestComponent />
@@ -107,9 +100,7 @@ describe('ToastContext', () => {
       );
 
       const button = getByText('Show Toast');
-      act(() => {
-        button.click();
-      });
+      await user.click(button);
 
       await waitFor(() => {
         const toast = screen.getByText('Test message').closest('.toast');
@@ -118,6 +109,7 @@ describe('ToastContext', () => {
     });
 
     it('should display toast with error variant', async () => {
+      const user = userEvent.setup();
       const { getByText } = render(
         <ToastProvider>
           <TestComponent />
@@ -125,9 +117,7 @@ describe('ToastContext', () => {
       );
 
       const button = getByText('Show Error');
-      act(() => {
-        button.click();
-      });
+      await user.click(button);
 
       await waitFor(() => {
         const toast = screen.getByText('Error message').closest('.toast');
@@ -136,6 +126,7 @@ describe('ToastContext', () => {
     });
 
     it('should display toast with info variant', async () => {
+      const user = userEvent.setup();
       const { getByText } = render(
         <ToastProvider>
           <TestComponent />
@@ -143,9 +134,7 @@ describe('ToastContext', () => {
       );
 
       const button = getByText('Show Info');
-      act(() => {
-        button.click();
-      });
+      await user.click(button);
 
       await waitFor(() => {
         const toast = screen.getByText('Info message').closest('.toast');
@@ -154,6 +143,7 @@ describe('ToastContext', () => {
     });
 
     it('should auto-dismiss toast after duration', async () => {
+      const user = userEvent.setup();
       const { getByText } = render(
         <ToastProvider>
           <TestComponent />
@@ -161,44 +151,38 @@ describe('ToastContext', () => {
       );
 
       const button = getByText('Show Toast');
-      act(() => {
-        button.click();
-      });
+      await user.click(button);
 
       await waitFor(() => {
         expect(screen.getByText('Test message')).toBeInTheDocument();
       });
 
-      // Fast-forward time by duration (1000ms)
-      act(() => {
-        vi.advanceTimersByTime(1000);
-      });
-
-      await waitFor(() => {
-        expect(screen.queryByText('Test message')).not.toBeInTheDocument();
-      });
+      // Wait for toast to auto-dismiss (100ms duration)
+      await waitFor(
+        () => {
+          expect(screen.queryByText('Test message')).not.toBeInTheDocument();
+        },
+        { timeout: 500 }
+      );
     });
 
     it('should dismiss toast when close button is clicked', async () => {
-      const { getByText, getByLabelText } = render(
+      const user = userEvent.setup();
+      const { getByText } = render(
         <ToastProvider>
           <TestComponent />
         </ToastProvider>
       );
 
       const button = getByText('Show Toast');
-      act(() => {
-        button.click();
-      });
+      await user.click(button);
 
       await waitFor(() => {
         expect(screen.getByText('Test message')).toBeInTheDocument();
       });
 
-      const closeButton = getByLabelText('Close notification');
-      act(() => {
-        closeButton.click();
-      });
+      const closeButton = screen.getByLabelText('Close notification');
+      await user.click(closeButton);
 
       await waitFor(() => {
         expect(screen.queryByText('Test message')).not.toBeInTheDocument();
@@ -206,6 +190,7 @@ describe('ToastContext', () => {
     });
 
     it('should limit visible toasts to 3 maximum', async () => {
+      const user = userEvent.setup();
       const MultiToastComponent = () => {
         const { showToast } = useToast();
         return (
@@ -227,9 +212,7 @@ describe('ToastContext', () => {
       );
 
       const button = getByText('Show Multiple Toasts');
-      act(() => {
-        button.click();
-      });
+      await user.click(button);
 
       await waitFor(() => {
         // Should only show 3 toasts (oldest removed)
