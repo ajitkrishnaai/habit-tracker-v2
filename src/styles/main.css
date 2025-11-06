@@ -1,18 +1,85 @@
 /**
  * Amara.day Design System
- * Version 2.0 - Complete Token Scales
+ * Version 3.0 - Warm Minimalism Redesign (PRD #0004)
  *
- * Color Usage Ratios:
- * - Stone/Cloud: 70% (backgrounds, surfaces, text, borders)
- * - Moss: 20% (primary actions, selections)
- * - River: 8% (progress, links, tertiary actions)
- * - Sun: 2% (celebration moments ONLY)
+ * Philosophy:
+ * - Warm terracotta primary (grounded, comforting)
+ * - Sage green success (calm, growth)
+ * - Warm neutrals (inviting, not stark white)
+ * - Organic shapes and generous spacing
+ *
+ * Import custom color palette first
  */
+@import './colors.css';
+@import './buttons.css';
+
+/* ============================================
+   SELF-HOSTED FONTS (@font-face declarations)
+   DM Sans: Display font for headings and buttons
+   Inter: Body font for readability
+   ============================================ */
+
+/* DM Sans - Regular (400) */
+@font-face {
+  font-family: 'DM Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap; /* Prevents FOIT (Flash of Invisible Text) */
+  src: url('/fonts/dm-sans-v13-latin-regular.woff2') format('woff2');
+}
+
+/* DM Sans - Medium (500) */
+@font-face {
+  font-family: 'DM Sans';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/dm-sans-v13-latin-500.woff2') format('woff2');
+}
+
+/* DM Sans - Bold (700) */
+@font-face {
+  font-family: 'DM Sans';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/dm-sans-v13-latin-700.woff2') format('woff2');
+}
+
+/* Inter - Regular (400) */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/inter-v13-latin-regular.woff2') format('woff2');
+}
+
+/* Inter - Medium (500) */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/inter-v13-latin-500.woff2') format('woff2');
+}
+
+/* Inter - Semi-Bold (600) */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/fonts/inter-v13-latin-600.woff2') format('woff2');
+}
+
 :root {
   /* ============================================
-     MOSS SCALE (Primary - Growth, Action, Selection)
-     Usage: 20% of UI
+     LEGACY COLOR SCALES (preserved for backward compatibility)
+     Will be gradually migrated to new Amara.day palette
      ============================================ */
+
+  /* MOSS SCALE - Preserved for existing components */
   --moss-10: #F5F7F4;
   --moss-50: #E8EDE5;
   --moss-100: #D4DED0;
@@ -25,10 +92,7 @@
   --moss-800: #4A6342;
   --moss-900: #3F5A3C;
 
-  /* ============================================
-     RIVER SCALE (Accent - Progress, Flow, Links)
-     Usage: 8% of UI
-     ============================================ */
+  /* RIVER SCALE - Preserved for existing components */
   --river-10: #F0F7F9;
   --river-50: #E0EFF3;
   --river-100: #C7E3EB;
@@ -41,10 +105,7 @@
   --river-800: #27596A;
   --river-900: #1F4756;
 
-  /* ============================================
-     SUN SCALE (Highlight - Success, Celebration)
-     Usage: 2% of UI - SPARINGLY, meaningful moments only
-     ============================================ */
+  /* SUN SCALE - Preserved for celebrations */
   --sun-10: #FFFCF5;
   --sun-50: #FFF9E8;
   --sun-100: #FEF3D1;
@@ -53,10 +114,7 @@
   --sun-400: #F5D686;
   --sun-500: #E8C06B;
 
-  /* ============================================
-     STONE SCALE (Neutral - Backgrounds, Borders, Text)
-     Usage: 70% of UI
-     ============================================ */
+  /* STONE SCALE - Preserved for legacy components */
   --stone-0: #FEF9EC;
   --stone-50: #FDF7E5;
   --stone-100: #FCF4DC;
@@ -70,9 +128,7 @@
   --stone-900: #2F3529;
   --stone-1000: #1A1C14;
 
-  /* ============================================
-     CLOUD SCALE (Elevation - Surfaces, Overlays)
-     ============================================ */
+  /* CLOUD SCALE - Preserved for overlays */
   --cloud-0: #FFFFFF;
   --cloud-50: #FEFDFB;
   --cloud-100: #FDFCF9;
@@ -82,50 +138,23 @@
   --cloud-500: #F5F3EC;
 
   /* ============================================
-     SEMANTIC TOKENS - Use these in your code
+     AMARA.DAY SEMANTIC TOKENS (new palette from colors.css)
+     Use these for all new components and redesigns
      ============================================ */
 
-  /* Primary (Moss) - 20% of UI */
-  --color-primary: var(--moss-600);
-  --color-primary-hover: var(--moss-700);
-  --color-primary-light: var(--moss-400);
-  --color-primary-dark: var(--moss-800);
-
-  /* Accent (River) - 8% of UI */
-  --color-accent: var(--river-600);
-  --color-accent-hover: var(--river-700);
-  --color-accent-light: var(--river-400);
-  --color-accent-dark: var(--river-700); /* Legacy alias */
-
-  /* Highlight (Sun) - 2% of UI - Use sparingly! */
-  --color-success: var(--sun-400);
+  /* Legacy aliases - now point to Amara.day colors */
+  --color-accent: var(--color-primary); /* Unified accent with primary */
+  --color-accent-hover: var(--color-primary-hover);
+  --color-accent-light: var(--color-primary-light);
+  --color-accent-dark: var(--color-primary-dark);
+  --color-success-hover: var(--color-success);
   --color-celebration: var(--sun-300);
 
-  /* States */
-  --color-error: #C85A4F;
-  --color-warning: #D4915A;
-
-  /* Surfaces (Stone/Cloud) - 70% of UI */
-  --color-background: var(--stone-0);
-  --color-surface: var(--stone-50);
-  --color-surface-hover: var(--stone-100);
-  --color-surface-elevated: var(--cloud-100);
-
-  /* Borders */
-  --color-border: var(--stone-400);
-  --color-border-light: var(--stone-300);
-  --color-border-subtle: var(--stone-200);
-
-  /* Text */
-  --color-text-primary: var(--stone-900);
-  --color-text-secondary: var(--stone-700);
-  --color-text-tertiary: var(--stone-600);
-
   /* ============================================
-     TYPOGRAPHY
+     TYPOGRAPHY - Self-hosted fonts for offline PWA
      ============================================ */
 
-  /* Font Families */
+  /* Font Families (self-hosted woff2 for performance) */
   --font-display: 'DM Sans', ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Inter, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
   --font-body: 'Inter', ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
   --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
@@ -133,15 +162,15 @@
   /* Legacy alias */
   --font-family: var(--font-body);
 
-  /* Type Scale (Major Third: 1.25 ratio - 12, 15, 19, 24, 30, 38, 48) */
-  --text-xs: 12px;
-  --text-sm: 15px;
-  --text-base: 19px;
-  --text-lg: 24px;
-  --text-xl: 30px;
-  --text-2xl: 38px;
-  --text-3xl: 48px;
-  --text-4xl: 60px;
+  /* Fluid Type Scale (responsive via clamp) - Mobile to Desktop */
+  --text-xs: clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem); /* 12-14px */
+  --text-sm: clamp(0.875rem, 0.8rem + 0.375vw, 1rem); /* 14-16px */
+  --text-base: clamp(1rem, 0.95rem + 0.25vw, 1.125rem); /* 16-18px */
+  --text-lg: clamp(1.125rem, 1rem + 0.5vw, 1.375rem); /* 18-22px */
+  --text-xl: clamp(1.25rem, 1.1rem + 0.75vw, 1.75rem); /* 20-28px */
+  --text-2xl: clamp(1.5rem, 1.2rem + 1.5vw, 2.25rem); /* 24-36px */
+  --text-3xl: clamp(2rem, 1.5rem + 2.5vw, 3.5rem); /* 32-56px */
+  --text-4xl: clamp(2.5rem, 2rem + 3vw, 4.5rem); /* 40-72px */
 
   /* Legacy font-size aliases */
   --font-size-xs: 0.75rem; /* 12px */
@@ -204,13 +233,13 @@
   --border-radius-full: var(--radius-full);
 
   /* ============================================
-     SHADOWS (y=8, blur=24 per principles)
+     SHADOWS - Warm-toned soft shadows
      ============================================ */
-  --shadow-sm: 0 4px 12px rgba(58,54,49,0.08);
-  --shadow-md: 0 8px 24px rgba(58,54,49,0.12);
-  --shadow-lg: 0 12px 32px rgba(58,54,49,0.16);
-  --shadow-xl: 0 20px 48px rgba(58,54,49,0.20);
-  --shadow-card: 0 8px 24px rgba(217, 200, 154, 0.12);
+  --shadow-sm: 0 2px 8px rgba(58, 54, 49, 0.08);
+  --shadow-md: 0 4px 16px rgba(58, 54, 49, 0.12);
+  --shadow-lg: 0 8px 32px rgba(58, 54, 49, 0.16);
+  --shadow-xl: 0 16px 48px rgba(58, 54, 49, 0.2);
+  --shadow-card: 0 8px 24px rgba(217, 200, 154, 0.12); /* Preserved for legacy */
 
   /* ============================================
      MOTION (Natural easing - NOT Material Design)
@@ -245,6 +274,23 @@
   padding: 0;
 }
 
+/* Global smooth color transitions (Amara.day warm aesthetic) */
+* {
+  transition: background-color 300ms ease-in-out,
+              border-color 300ms ease-in-out,
+              color 300ms ease-in-out;
+}
+
+/* Respect user's motion preferences (accessibility) */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
 /* Base styles - Task 7.34: 16px base font size prevents iOS zoom */
 html {
   font-size: 16px; /* Task 7.34: Prevents iOS zoom on input focus */
@@ -253,20 +299,14 @@ html {
 }
 
 body {
-  font-family: var(--font-family); /* Task 7.39: System font stack */
+  font-family: var(--font-body);
   font-size: var(--font-size-base);
-  line-height: var(--line-height-normal);
+  line-height: var(--leading-normal);
   color: var(--color-text-primary);
-  /* Warm, organic background gradient (Stone scale) */
-  background: linear-gradient(165deg,
-    var(--stone-0) 0%,
-    var(--stone-50) 25%,
-    var(--stone-0) 50%,
-    var(--stone-100) 75%,
-    var(--stone-50) 100%
-  );
-  background-attachment: fixed;
+  /* Amara.day warm background - subtle, inviting */
+  background-color: var(--color-background);
   min-height: 100vh;
+  letter-spacing: var(--tracking-normal);
 }
 
 #root {
@@ -275,11 +315,13 @@ body {
   flex-direction: column;
 }
 
-/* Typography */
+/* Typography - Headings use DM Sans display font */
 h1, h2, h3, h4, h5, h6 {
-  line-height: var(--line-height-tight);
+  font-family: var(--font-display);
+  line-height: var(--leading-tight);
   font-weight: 600;
   color: var(--color-text-primary);
+  letter-spacing: var(--tracking-tight);
 }
 
 h1 {
@@ -476,16 +518,18 @@ button:focus-visible {
   }
 }
 
-/* Inputs */
+/* Inputs & Textareas - Warm organic design */
 input,
 textarea,
 select {
-  font-family: inherit;
+  font-family: var(--font-body);
   font-size: var(--font-size-base); /* Prevents iOS zoom on focus */
-  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  border: 2px solid var(--color-border);
   border-radius: var(--radius-md);
-  padding: var(--spacing-sm) var(--spacing-md);
-  transition: border-color var(--transition-fast);
+  padding: 0.875rem 1.25rem;
+  color: var(--color-text-primary);
+  transition: all var(--transition-base);
 }
 
 input:focus,
@@ -493,7 +537,38 @@ textarea:focus,
 select:focus {
   outline: none;
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  box-shadow: 0 0 0 4px rgba(212, 116, 94, 0.15); /* Soft terracotta glow */
+  background: var(--color-background);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--color-text-tertiary);
+}
+
+/* Card styles - Soft elevated surfaces */
+.card {
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--color-border-light);
+  transition: all var(--transition-base);
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+  background: var(--color-background);
+}
+
+.card--interactive {
+  cursor: pointer;
+}
+
+.card--interactive:active {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
 }
 
 /* Utility classes */

@@ -22,16 +22,17 @@ describe('Navigation', () => {
       expect(nav).toBeInTheDocument();
     });
 
-    it('should render brand/title', () => {
-      render(
+    it('should render Amara.day logo', () => {
+      const { container } = render(
         <MemoryRouter>
           <Navigation />
         </MemoryRouter>
       );
 
-      const title = screen.getByRole('heading', { name: /habit tracker/i });
-      expect(title).toBeInTheDocument();
-      expect(title.tagName).toBe('H1');
+      const logo = container.querySelector('.amara-day-logo');
+      expect(logo).toBeInTheDocument();
+      expect(logo).toHaveTextContent('Amara');
+      expect(logo).toHaveTextContent('.day');
     });
 
     it('should render all three navigation links', () => {
@@ -210,15 +211,17 @@ describe('Navigation', () => {
       expect(brand).toBeInTheDocument();
     });
 
-    it('should apply navigation-title class to h1', () => {
-      render(
+    it('should display AmaraDayLogo in navigation brand', () => {
+      const { container } = render(
         <MemoryRouter>
           <Navigation />
         </MemoryRouter>
       );
 
-      const title = screen.getByRole('heading', { name: /habit tracker/i });
-      expect(title.className).toContain('navigation-title');
+      const logo = container.querySelector('.amara-day-logo');
+      expect(logo).toBeInTheDocument();
+      expect(logo).toHaveTextContent('Amara');
+      expect(logo).toHaveTextContent('.day');
     });
 
     it('should apply navigation-item class to list items', () => {

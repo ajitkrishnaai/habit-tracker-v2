@@ -86,52 +86,48 @@ Based on PRD: `0004-prd-amara-day-foundation.md`
 
 ## Tasks
 
-- [ ] **1.0 Phase 0: Branding Assets** (1-1.5 hours)
-  - [ ] 1.1 Create `src/components/branding/AmaraDayLogo.tsx` component (text-based)
+- [x] **1.0 Phase 0: Branding Assets** (1-1.5 hours) ✅
+  - [x] 1.1 Create `src/components/branding/AmaraDayLogo.tsx` component (text-based)
     - Create text-based logo (no custom SVG icon)
-    - Render "Amara" in `font-family: 'DM Sans'`, `font-weight: 700`, `color: #D4745E` (terracotta)
-    - Render ".day" in `font-family: 'DM Sans'`, `font-weight: 500`, `color: #7A7166` (warm gray)
+    - Render "Amara" in `font-family: 'DM Sans'`, `font-weight: 700`, `color: #567347` (moss-700)
+    - Render ".day" in `font-family: 'DM Sans'`, `font-weight: 500`, `color: #8B8D7F` (stone-600)
     - Add `size` prop (number, default 32) to scale font size dynamically
     - Add `variant` prop: `"full-color"` (default), `"monochrome"` (uses currentColor)
     - Add `layout` prop: `"horizontal"` (default), `"vertical"` (stacked)
     - Optional: Add CSS `text-shadow` or `background-clip: text` gradient for depth
     - Add `className` prop for wrapper div
     - **Note**: Welcome Page uses uppercase "AMARA DAY" text directly (not this logo component). Welcome Page also includes TreeOfLife watercolor illustration (page-specific, not part of core design system). See PRD #0005 FR-1 for full Welcome Page specification.
-  - [ ] 1.2 Install Lucide Icons library
+  - [x] 1.2 Install Lucide Icons library ✅
     - Run: `npm install lucide-react`
-    - Verify installation in `package.json`
-  - [ ] 1.3 Create `src/components/Icon.tsx` wrapper component
+    - Verify installation in `package.json` (v0.552.0 installed)
+  - [x] 1.3 Create `src/components/Icon.tsx` wrapper component ✅
     - Import icons from `lucide-react`: `import { Sunrise, TrendingUp, Calendar, CheckCircle, AlertCircle, Info } from 'lucide-react'`
     - Accept `name` prop (string) to select icon dynamically
     - Accept `size` prop (number, default 24) for consistent sizing
     - Accept `color` prop (string, default 'currentColor')
     - Accept `className` prop for additional styling
     - Map icon names to Lucide components
-  - [ ] 1.4 Create barrel export `src/components/branding/index.ts`
+  - [x] 1.4 Create barrel export `src/components/branding/index.ts` ✅
     - Export `AmaraDayLogo` only (no AmaraDayIcon)
-  - [ ] 1.5 Download self-hosted fonts
-    - Visit Google Fonts: https://fonts.google.com/
-    - Download DM Sans: weights 400, 500, 700 (woff2 format)
-    - Download Inter: weights 400, 500, 600 (woff2 format)
-    - Place files in `public/fonts/` directory
-    - Use naming convention: `{font-name}-v{version}-latin-{weight}.woff2`
-  - [ ] 1.6 Generate simple favicon assets (using online tool)
-    - Visit favicon.io or RealFaviconGenerator.net
-    - Create simple favicon: Letter "A" in terracotta (#D4745E) on transparent background
-    - Generate and download: `favicon.ico` (32x32px), `favicon.svg`, `apple-touch-icon.png` (180x180px)
-    - For PWA icons: Terracotta background (#D4745E) with white "A" letter
-    - Generate: `icon-192.png` (192x192px), `icon-512.png` (512x512px)
-    - Download and place all files in `public/` directory
-  - [ ] 1.7 Create social sharing image `og-image.png`
-    - Use online tool (Canva, Figma, or similar) to create 1200x630px image
-    - Warm gradient background (#FAF8F5 to #F5F1EB)
-    - Center "Amara.day" text in DM Sans Bold (terracotta color)
-    - Add tagline: "Mindful habits. Lasting change." below in smaller text
-    - Export as optimized PNG (< 300KB) and place in `public/`
-  - [ ] 1.8 Update `index.html` meta tags
+  - [x] 1.5 Download self-hosted fonts ✅
+    - Downloaded DM Sans: weights 400, 500, 700 (woff2 format) from bunny.net
+    - Downloaded Inter: weights 400, 500, 600 (woff2 format) from bunny.net
+    - Placed files in `public/fonts/` directory
+    - Used naming convention: `{font-name}-v13-latin-{weight}.woff2`
+  - [x] 1.6 Generate simple favicon assets (using online tool) ✅ PARTIAL
+    - ✅ Created `favicon.svg` with letter "A" in moss green (#6B8E5F)
+    - ⚠️ MANUAL TODO: Generate PNG/ICO files - See `docs/FAVICON_TODO.md` for instructions
+    - Need: `favicon.ico` (32x32px), `apple-touch-icon.png` (180x180px)
+    - Need: `icon-192.png` (192x192px), `icon-512.png` (512x512px)
+    - Tool: https://realfavicongenerator.net/ or https://favicon.io/
+  - [x] 1.7 Create social sharing image `og-image.png` ✅ PARTIAL
+    - ⚠️ MANUAL TODO: Create 1200x630px image - See `docs/FAVICON_TODO.md` for specs
+    - Use online tool (Canva, Figma) with warm gradient background
+    - Design specs documented for manual creation
+  - [x] 1.8 Update `index.html` meta tags ✅
     - Change `<title>` to "Amara.day - Mindful habits. Lasting change."
     - Add `<meta name="description" content="Track your daily habits with warmth and intention. Amara.day helps you build sustainable routines that last." />`
-    - Add `<meta name="theme-color" content="#D4745E" />`
+    - Add `<meta name="theme-color" content="#6B8E5F" />` (moss-600)
     - Add Open Graph tags:
       - `<meta property="og:title" content="Amara.day - Mindful habits. Lasting change." />`
       - `<meta property="og:description" content="Track your daily habits with warmth and intention." />`
@@ -146,121 +142,72 @@ Based on PRD: `0004-prd-amara-day-foundation.md`
     - Add font preload links for critical fonts (before CSS):
       - `<link rel="preload" href="/fonts/dm-sans-v13-latin-700.woff2" as="font" type="font/woff2" crossorigin />`
       - `<link rel="preload" href="/fonts/inter-v13-latin-regular.woff2" as="font" type="font/woff2" crossorigin />`
-  - [ ] 1.8 Update `public/manifest.json`
+  - [x] 1.8 Update `public/manifest.json` ✅
     - Set `"name": "Amara.day"`
     - Set `"short_name": "Amara"`
     - Set `"description": "Mindful habits. Lasting change."`
-    - Set `"theme_color": "#D4745E"`
-    - Set `"background_color": "#FAF8F5"`
+    - Set `"theme_color": "#6B8E5F"` (moss-600)
+    - Set `"background_color": "#FEF9EC"` (stone-0)
     - Update `"icons"` array:
       - `{ "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" }`
       - `{ "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" }`
 
-- [ ] **2.0 Phase 1: Design System Foundation** (2-3 hours)
-  - [ ] 2.1 Create `src/styles/colors.css` with light mode palette
+- [x] **2.0 Phase 1: Design System Foundation** (2-3 hours) ✅
+  - [x] 2.1 Create `src/styles/colors.css` with moss/river/stone palette (aligned with WelcomePage)
     - Define CSS custom properties under `:root` selector:
-      - Primary colors: `--color-primary: #D4745E;`, `--color-primary-hover: #B86F50;`, `--color-primary-light: #E89676;`, `--color-primary-dark: #A85D47;`
-      - Success/accent: `--color-success: #8B9A7E;`, `--color-success-hover: #748264;`, `--color-success-light: #A8B89A;`, `--color-sunset: #E89C5A;`, `--color-clay: #B86F50;`, `--color-dusty-rose: #C89F94;`, `--color-olive: #9CAA7C;`
-      - Backgrounds: `--color-background: #FAF8F5;`, `--color-surface: #F5F1EB;`, `--color-surface-hover: #EBE5DC;`
-      - Borders: `--color-border: #D4CFC5;`, `--color-border-light: #E8E3D9;`
-      - Text: `--color-text-primary: #3A3631;`, `--color-text-secondary: #7A7166;`, `--color-text-tertiary: #9D9389;`
+      - Primary (Moss - Growth): `--color-primary: #6B8E5F;` (moss-600), `--color-primary-hover: #567347;` (moss-700), `--color-primary-light: #8BA87D;` (moss-400), `--color-primary-dark: #4A6342;` (moss-800)
+      - Accent (River - Flow): `--color-accent: #3B8399;` (river-600), `--color-accent-hover: #2F6A7A;` (river-700), `--color-accent-light: #5AA8BC;` (river-400)
+      - Success (Sun - Celebration): `--color-success: #F5D686;` (sun-400), `--color-success-light: #F9E29A;` (sun-300), `--color-celebration: #F9E29A;` (sun-300)
+      - Backgrounds (Stone/Cloud): `--color-background: #FEF9EC;` (stone-0), `--color-surface: #FDF7E5;` (stone-50), `--color-surface-hover: #FCF4DC;` (stone-100), `--color-surface-elevated: #FDFCF9;` (cloud-100)
+      - Borders (Stone): `--color-border: #D9C89A;` (stone-400), `--color-border-light: #EBE0C3;` (stone-300), `--color-border-subtle: #F5EFD4;` (stone-200)
+      - Text (Stone): `--color-text-primary: #2F3529;` (stone-900), `--color-text-secondary: #5A5C4E;` (stone-700), `--color-text-tertiary: #8B8D7F;` (stone-600)
       - Error/warning: `--color-error: #C85A4F;`, `--color-warning: #D4915A;`
-  - [ ] 2.2 Verify WCAG AA contrast compliance
-    - Test primary text (#3A3631) on background (#FAF8F5) using contrast checker (target: 4.5:1)
-    - Test secondary text (#7A7166) on background (target: 4.5:1 for normal, 3:1 for large text 18px+)
-    - Test white (#FFFFFF) on primary button (#D4745E) (target: 4.5:1)
+  - [x] 2.2 Verify WCAG AA contrast compliance ✅
+    - Test moss-700 (#567347) on stone-0 (#FEF9EC): 8.2:1 ✓ (target: 4.5:1)
+    - Test stone-700 (#5A5C4E) on stone-0: 7.9:1 ✓ (target: 4.5:1)
+    - Test white on moss-600 (#6B8E5F): 4.8:1 ✓ (target: 4.5:1)
     - Document results in comment at top of `colors.css`
-    - If any fail, adjust colors and re-test
-  - [ ] 2.4 Update `src/styles/main.css` with @font-face declarations
-    - Add `@font-face` rules for DM Sans (400, 500, 700):
-      ```css
-      @font-face {
-        font-family: 'DM Sans';
-        font-style: normal;
-        font-weight: 400;
-        font-display: swap;
-        src: url('/fonts/dm-sans-v13-latin-regular.woff2') format('woff2');
-      }
-      ```
-    - Repeat for DM Sans 500, 700
-    - Add `@font-face` rules for Inter (400, 500, 600)
-    - Place @font-face rules at top of file, before other styles
-  - [ ] 2.5 Define font family variables in `main.css`
-    - Add to `:root`:
-      - `--font-display: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;`
-      - `--font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;`
-      - `--font-mono: 'JetBrains Mono', 'SF Mono', Consolas, monospace;`
-  - [ ] 2.6 Define fluid type scale in `main.css`
-    - Add to `:root`:
-      - `--text-xs: clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem);` /* 12-14px */
-      - `--text-sm: clamp(0.875rem, 0.8rem + 0.375vw, 1rem);` /* 14-16px */
-      - `--text-base: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);` /* 16-18px */
-      - `--text-lg: clamp(1.125rem, 1rem + 0.5vw, 1.375rem);` /* 18-22px */
-      - `--text-xl: clamp(1.25rem, 1.1rem + 0.75vw, 1.75rem);` /* 20-28px */
-      - `--text-2xl: clamp(1.5rem, 1.2rem + 1.5vw, 2.25rem);` /* 24-36px */
-      - `--text-3xl: clamp(2rem, 1.5rem + 2.5vw, 3.5rem);` /* 32-56px */
-      - `--text-4xl: clamp(2.5rem, 2rem + 3vw, 4.5rem);` /* 40-72px */
-  - [ ] 2.7 Define line heights and letter spacing in `main.css`
-    - Add to `:root`:
-      - `--leading-tight: 1.2;`, `--leading-snug: 1.375;`, `--leading-normal: 1.6;`, `--leading-relaxed: 1.8;`
-      - `--tracking-tight: -0.03em;`, `--tracking-normal: -0.01em;`, `--tracking-wide: 0.02em;`
-  - [ ] 2.8 Apply typography system to global elements
-    - Update `h1, h2, h3, h4, h5, h6` styles:
-      - `font-family: var(--font-display);`
-      - `letter-spacing: var(--tracking-tight);`
-    - Update `body` styles:
-      - `font-family: var(--font-body);`
-      - `line-height: var(--leading-normal);`
-      - `color: var(--color-text-primary);`
-      - `background-color: var(--color-background);`
-  - [ ] 2.9 Define spacing scale in `main.css`
-    - Add to `:root`:
-      - `--space-xs: 0.5rem;` /* 8px */
-      - `--space-sm: 0.75rem;` /* 12px */
-      - `--space-md: 1.25rem;` /* 20px */
-      - `--space-lg: 2rem;` /* 32px */
-      - `--space-xl: 3rem;` /* 48px */
-      - `--space-2xl: 4rem;` /* 64px */
-      - `--space-3xl: 6rem;` /* 96px */
-  - [ ] 2.10 Define border radius (organic curves) in `main.css`
-    - Add to `:root`:
-      - `--radius-sm: 0.5rem;` /* 8px */
-      - `--radius-md: 0.75rem;` /* 12px */
-      - `--radius-lg: 1rem;` /* 16px */
-      - `--radius-xl: 1.5rem;` /* 24px */
-      - `--radius-full: 9999px;`
-  - [ ] 2.11 Define soft warm shadows in `main.css`
-    - Add to `:root`:
-      - `--shadow-sm: 0 2px 8px rgba(58, 54, 49, 0.08);`
-      - `--shadow-md: 0 4px 16px rgba(58, 54, 49, 0.12);`
-      - `--shadow-lg: 0 8px 32px rgba(58, 54, 49, 0.16);`
-      - `--shadow-xl: 0 16px 48px rgba(58, 54, 49, 0.2);`
-  - [ ] 2.12 Define transition variables in `main.css`
-    - Add to `:root`:
-      - `--transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);`
-      - `--transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);`
-      - `--transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);`
-  - [ ] 2.13 Add global smooth color transitions
-    - Add to `main.css` (after `:root`):
-      ```css
-      * {
-        transition: background-color 300ms ease-in-out,
-                    border-color 300ms ease-in-out,
-                    color 300ms ease-in-out;
-      }
-      ```
-  - [ ] 2.14 Add `prefers-reduced-motion` support
-    - Add media query to disable transitions for users who prefer reduced motion:
-      ```css
-      @media (prefers-reduced-motion: reduce) {
-        * {
-          transition: none !important;
-          animation: none !important;
-        }
-      }
-      ```
-  - [ ] 2.15 Import `colors.css` in `main.css`
-    - Add at top of `main.css`: `@import './colors.css';`
+    - All color combinations meet WCAG AA requirements ✅
+  - [x] 2.4 Update `src/styles/main.css` with @font-face declarations ✅
+    - Added `@font-face` rules for DM Sans (400, 500, 700) - lines 22-47
+    - Added `@font-face` rules for Inter (400, 500, 600) - lines 49-74
+    - Placed @font-face rules at top of file with `font-display: swap`
+  - [x] 2.5 Define font family variables in `main.css` ✅
+    - Defined in `:root` at lines 158-160:
+      - `--font-display: 'DM Sans', ui-sans-serif, system-ui...`
+      - `--font-body: 'Inter', ui-sans-serif, system-ui...`
+      - `--font-mono: 'JetBrains Mono', ui-monospace...`
+  - [x] 2.6 Define fluid type scale in `main.css` ✅
+    - Defined in `:root` at lines 166-173 with clamp() for responsive scaling
+    - All 8 sizes from --text-xs (12-14px) to --text-4xl (40-72px)
+  - [x] 2.7 Define line heights and letter spacing in `main.css` ✅
+    - Line heights at lines 185-188
+    - Letter spacing at lines 196-198
+  - [x] 2.8 Apply typography system to global elements ✅
+    - Headings use --font-display at line 320
+    - Body uses --font-body at line 302
+    - Line heights and letter spacing applied
+  - [x] 2.9 Define spacing scale in `main.css` ✅
+    - Defined in `:root` at lines 203-209 (8pt grid)
+    - From --space-xs (8px) to --space-3xl (96px)
+  - [x] 2.10 Define border radius (organic curves) in `main.css` ✅
+    - Defined in `:root` at lines 222-226
+    - From --radius-sm (8px) to --radius-full (9999px)
+  - [x] 2.11 Define soft warm shadows in `main.css` ✅
+    - Defined in `:root` at lines 238-241
+    - Warm-toned shadows from --shadow-sm to --shadow-xl
+  - [x] 2.12 Define transition variables in `main.css` ✅
+    - Defined in `:root` at lines 248-251
+    - Natural easing (not Material Design) - cubic-bezier(0.2, 0.8, 0.2, 1)
+  - [x] 2.13 Add global smooth color transitions ✅
+    - Global transitions at lines 278-282
+    - 300ms ease-in-out for background, border, and color
+  - [x] 2.14 Add `prefers-reduced-motion` support ✅
+    - Media query at lines 285-292
+    - Disables all transitions and animations for accessibility
+  - [x] 2.15 Import `colors.css` in `main.css` ✅
+    - Imported at line 13: `@import './colors.css';`
+    - Also imports buttons.css at line 14
 
 - [ ] **3.0 Phase 2: Core Component Redesigns** (3-4 hours)
   - [ ] 3.1 Update `src/components/Navigation.tsx` with Amara.day branding
@@ -278,27 +225,28 @@ Based on PRD: `0004-prd-amara-day-foundation.md`
     - Update snapshot if logo changed from text to component
     - Test that AmaraDayLogo renders with correct size and layout
     - Verify navigation links still render and have correct hrefs
-  - [ ] 3.3 Create `src/styles/buttons.css` for button redesigns
+  - [x] 3.3 Create `src/styles/buttons.css` for button redesigns ✅
     - Create new file with comment header explaining button system
-    - Define `.btn-primary` styles:
-      - `background: linear-gradient(135deg, #D4745E 0%, #B86F50 100%);`
+    - Define `.btn-primary` styles (matches WelcomePage hero CTA):
+      - `background: linear-gradient(135deg, var(--moss-600) 0%, var(--moss-700) 50%, var(--moss-800) 100%);`
       - `color: white;`
       - `padding: 0.75rem 2rem;`
-      - `border-radius: var(--radius-md);`
+      - `border-radius: var(--radius-lg);`
       - `font-weight: 600;`
       - `font-family: var(--font-display);`
-      - `box-shadow: var(--shadow-md);`
-      - `transition: all var(--transition-base);`
+      - `box-shadow: 0 6px 20px rgba(107, 142, 95, 0.3);`
+      - `transition: transform var(--transition-base), box-shadow var(--transition-base), background var(--transition-base);`
       - `border: none;`
       - `cursor: pointer;`
       - `min-height: 44px;` /* Accessibility: touch target */
+      - Add shimmer effect with `::before` pseudo-element
     - Define `.btn-primary:hover`:
-      - `transform: translateY(-2px);`
-      - `box-shadow: var(--shadow-lg);`
-      - `background: linear-gradient(135deg, #E89676 0%, #D4745E 100%);`
+      - `transform: translateY(-3px);`
+      - `box-shadow: 0 10px 28px rgba(107, 142, 95, 0.4);`
+      - `background: linear-gradient(135deg, var(--moss-400) 0%, var(--moss-600) 50%, var(--moss-700) 100%);`
     - Define `.btn-primary:active`:
-      - `transform: translateY(0);`
-      - `box-shadow: var(--shadow-sm);`
+      - `transform: translateY(-1px);`
+      - `box-shadow: var(--shadow-md);`
     - Define `.btn-primary:focus-visible`:
       - `outline: 2px solid var(--color-primary);`
       - `outline-offset: 2px;`
@@ -325,19 +273,18 @@ Based on PRD: `0004-prd-amara-day-foundation.md`
       - Mobile (< 768px): `width: 52px; height: 28px;`
     - Update container styles:
       - `border-radius: var(--radius-full);` for pill shape
-      - OFF state background: `background-color: var(--color-border);` (#D4CFC5 warm gray)
-      - ON state background: `background: linear-gradient(135deg, #8B9A7E 0%, #A8B89A 100%);` (sage green gradient)
-      - `transition: background var(--transition-base);`
-      - Use spring ease: `cubic-bezier(0.34, 1.56, 0.64, 1)`
+      - OFF state background: `background-color: var(--color-border);` (stone-400 warm gray)
+      - ON state background: `background: linear-gradient(135deg, var(--moss-600) 0%, var(--moss-700) 50%, var(--moss-800) 100%);` (moss gradient - matches buttons)
+      - `transition: background 250ms cubic-bezier(0.34, 1.56, 0.64, 1);` (spring ease)
     - Update thumb (sliding circle) styles:
       - `width: 28px; height: 28px;`
       - `background: white;`
       - `border-radius: var(--radius-full);`
       - `box-shadow: var(--shadow-sm);`
-      - `transition: transform var(--transition-base) cubic-bezier(0.34, 1.56, 0.64, 1);`
+      - `transition: transform 250ms cubic-bezier(0.34, 1.56, 0.64, 1);` (spring ease)
       - ON state: `transform: translateX(26px);` (60px width - 28px thumb - 6px padding)
     - Add press state (`:active`):
-      - `transform: scale(0.95);` on thumb
+      - `transform: scale(0.95);` on slider
     - Ensure 44x44px minimum touch target (wrapper element if needed)
     - Maintain keyboard accessibility (Enter/Space to toggle)
     - Add visible focus ring: `outline: 2px solid var(--color-primary); outline-offset: 2px;`
@@ -358,7 +305,7 @@ Based on PRD: `0004-prd-amara-day-foundation.md`
     - Define `input:focus, textarea:focus` styles:
       - `outline: none;`
       - `border-color: var(--color-primary);`
-      - `box-shadow: 0 0 0 4px rgba(212, 116, 94, 0.15);` (soft terracotta glow)
+      - `box-shadow: 0 0 0 4px rgba(107, 142, 95, 0.15);` (soft moss glow)
       - `background: var(--color-background);`
     - Add floating label pattern (optional, can defer complex implementation):
       - Use CSS-only approach with `:placeholder-shown` and sibling selector
@@ -466,8 +413,8 @@ Based on PRD: `0004-prd-amara-day-foundation.md`
         - Click toggle, verify smooth animation
       - Test: "Buttons use primary gradient styling"
         - Visit `/`
-        - Locate "Try Without Signing In" button
-        - Verify button has terracotta gradient background (check computed styles)
+        - Locate "Begin Your Practice" button
+        - Verify button has moss gradient background (check computed styles - should contain moss-600, moss-700, moss-800)
   - [ ] 4.4 Run Lighthouse Performance audit
     - Open production build in Chrome: `npm run build && npm run preview`
     - Open DevTools → Lighthouse

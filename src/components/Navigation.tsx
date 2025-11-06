@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { getUserProfile, logout } from '../services/auth';
+import { AmaraDayLogo } from './branding';
 import './Navigation.css';
 
 /**
@@ -10,6 +11,10 @@ import './Navigation.css';
  * - Shows user profile with logout option
  * - Accessible with semantic HTML and ARIA labels
  * Updated for Supabase: displays user info from Supabase Auth session
+ *
+ * Amara.day Redesign (PRD #0004 Phase 2):
+ * - Uses AmaraDayLogo component for branding
+ * - Warm colors and backdrop blur glassmorphism effect
  */
 const Navigation: React.FC = () => {
   const navigate = useNavigate();
@@ -29,7 +34,7 @@ const Navigation: React.FC = () => {
     <nav className="navigation" role="navigation" aria-label="Main navigation">
       <div className="navigation-container">
         <div className="navigation-brand">
-          <h1 className="navigation-title">Habit Tracker</h1>
+          <AmaraDayLogo size={28} layout="horizontal" />
         </div>
 
         <ul className="navigation-menu">
