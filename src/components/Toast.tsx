@@ -1,21 +1,27 @@
 import React, { useEffect } from 'react';
+import { X } from 'lucide-react';
 import './Toast.css';
 
 /**
- * Toast Component
+ * Toast Component (Task 2.12 - Enhanced with warm styling and variants)
  *
- * Displays temporary notification messages for milestone celebrations.
- * Auto-dismisses after a configurable duration (default 4 seconds).
+ * Displays temporary notification messages for milestone celebrations and feedback.
+ * Auto-dismisses after a configurable duration (default 3 seconds for success).
  *
  * Features:
- * - Customizable icon and message
+ * - Variant support: success (sage green), error (warm red), info (terracotta)
+ * - Slide-in animation from top
+ * - Manual close button
  * - Auto-dismiss with cleanup
  * - Accessible with ARIA live region
- * - Positioned at bottom-center (mobile-safe)
+ * - Positioned at top-center
  */
 
-interface ToastProps {
+export type ToastVariant = 'success' | 'error' | 'info';
+
+export interface ToastProps {
   message: string;
+  variant?: ToastVariant;
   icon?: string;
   duration?: number;
   onClose: () => void;
@@ -23,8 +29,9 @@ interface ToastProps {
 
 export const Toast: React.FC<ToastProps> = ({
   message,
-  icon = '🎉',
-  duration = 4000,
+  variant = 'success',
+  icon,
+  duration = 3000,
   onClose,
 }) => {
   useEffect(() => {
@@ -39,16 +46,33 @@ export const Toast: React.FC<ToastProps> = ({
     };
   }, [duration, onClose]);
 
+  // Default icons for each variant
+  const defaultIcons: Record<ToastVariant, string> = {
+    success: '✓',
+    error: '⚠️',
+    info: 'ℹ️',
+  };
+
+  const displayIcon = icon || defaultIcons[variant];
+
   return (
     <div
-      className="toast"
+      className={`toast toast--${variant} toast-enter`}
       role="alert"
       aria-live="polite"
     >
       <span className="toast-icon" aria-hidden="true">
-        {icon}
+        {displayIcon}
       </span>
       <span className="toast-message">{message}</span>
+      <button
+        className="toast-close"
+        onClick={onClose}
+        aria-label="Close notification"
+        type="button"
+      >
+        <X size={16} />
+      </button>
     </div>
   );
 };

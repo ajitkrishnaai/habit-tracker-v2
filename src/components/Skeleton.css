@@ -1,0 +1,61 @@
+/**
+ * Skeleton Styles
+ * Task 2.2 - Shimmer loading animation with warm colors
+ */
+
+.skeleton {
+  /* Base skeleton background with shimmer gradient */
+  background: linear-gradient(
+    90deg,
+    var(--color-surface) 0%,
+    var(--color-border-light) 50%,
+    var(--color-surface) 100%
+  );
+  background-size: 200% 100%;
+  border-radius: var(--radius-md);
+
+  /* Shimmer animation */
+  animation: skeleton-loading 1.5s ease-in-out infinite;
+
+  /* Prevent text selection */
+  user-select: none;
+  pointer-events: none;
+}
+
+@keyframes skeleton-loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Text variant - horizontal line for text placeholders */
+.skeleton--text {
+  height: 1rem;
+  width: 100%;
+  border-radius: var(--radius-sm);
+}
+
+/* Circle variant - round skeleton for avatars/icons */
+.skeleton--circle {
+  border-radius: var(--radius-full);
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+}
+
+/* Rect variant - rectangular block (default) */
+.skeleton--rect {
+  /* Uses base skeleton styles */
+  /* Width and height set via inline styles */
+}
+
+/* Reduced motion preference - disable animation */
+@media (prefers-reduced-motion: reduce) {
+  .skeleton {
+    animation: none;
+    background: var(--color-surface);
+  }
+}

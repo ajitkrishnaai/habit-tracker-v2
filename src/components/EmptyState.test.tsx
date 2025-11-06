@@ -20,16 +20,18 @@ describe('EmptyState', () => {
     it('should render with default icon when no props provided', () => {
       const { container } = render(<EmptyState />, { wrapper: Wrapper });
 
-      const icon = container.querySelector('.empty-state-icon');
+      const icon = container.querySelector('.empty-state-icon-emoji');
       expect(icon).toBeInTheDocument();
       expect(icon).toHaveTextContent('📋');
-      expect(icon).toHaveAttribute('aria-hidden', 'true');
+
+      const iconWrapper = container.querySelector('.empty-state-icon-wrapper');
+      expect(iconWrapper).toHaveAttribute('aria-hidden', 'true');
     });
 
     it('should render with custom icon', () => {
       const { container } = render(<EmptyState icon="🎯" />, { wrapper: Wrapper });
 
-      const icon = container.querySelector('.empty-state-icon');
+      const icon = container.querySelector('.empty-state-icon-emoji');
       expect(icon).toHaveTextContent('🎯');
     });
 
@@ -170,7 +172,7 @@ describe('EmptyState', () => {
       );
 
       expect(container.querySelector('.empty-state')).toBeInTheDocument();
-      expect(container.querySelector('.empty-state-icon')).toBeInTheDocument();
+      expect(container.querySelector('.empty-state-icon-emoji')).toBeInTheDocument();
       expect(container.querySelector('.empty-state-title')).toBeInTheDocument();
       expect(container.querySelector('.empty-state-message')).toBeInTheDocument();
       expect(container.querySelector('.empty-state-button')).toBeInTheDocument();
@@ -200,8 +202,8 @@ describe('EmptyState', () => {
     it('should mark icon as decorative with aria-hidden', () => {
       const { container } = render(<EmptyState icon="🎨" />, { wrapper: Wrapper });
 
-      const icon = container.querySelector('.empty-state-icon');
-      expect(icon).toHaveAttribute('aria-hidden', 'true');
+      const iconWrapper = container.querySelector('.empty-state-icon-wrapper');
+      expect(iconWrapper).toHaveAttribute('aria-hidden', 'true');
     });
 
     it('should have accessible heading for title', () => {
@@ -236,6 +238,53 @@ describe('EmptyState', () => {
 
       const button = screen.getByRole('button', { name: /perform action/i });
       expect(button).toBeInTheDocument();
+    });
+  });
+
+  describe('Lucide Icons (Task 2.3)', () => {
+    it('should render Sunrise Lucide icon when iconName="Sunrise"', () => {
+      const { container } = render(<EmptyState iconName="Sunrise" />, { wrapper: Wrapper });
+
+      const lucideIcon = container.querySelector('.empty-state-icon-lucide');
+      expect(lucideIcon).toBeInTheDocument();
+
+      const iconBackground = container.querySelector('.empty-state-icon-background');
+      expect(iconBackground).toBeInTheDocument();
+    });
+
+    it('should render TrendingUp Lucide icon when iconName="TrendingUp"', () => {
+      const { container } = render(<EmptyState iconName="TrendingUp" />, { wrapper: Wrapper });
+
+      const lucideIcon = container.querySelector('.empty-state-icon-lucide');
+      expect(lucideIcon).toBeInTheDocument();
+    });
+
+    it('should render Calendar Lucide icon when iconName="Calendar"', () => {
+      const { container } = render(<EmptyState iconName="Calendar" />, { wrapper: Wrapper });
+
+      const lucideIcon = container.querySelector('.empty-state-icon-lucide');
+      expect(lucideIcon).toBeInTheDocument();
+    });
+
+    it('should render emoji fallback when iconName not provided', () => {
+      const { container } = render(<EmptyState icon="🎯" />, { wrapper: Wrapper });
+
+      const emojiIcon = container.querySelector('.empty-state-icon-emoji');
+      expect(emojiIcon).toBeInTheDocument();
+      expect(emojiIcon).toHaveTextContent('🎯');
+    });
+
+    it('should have btn-primary class on CTA button', () => {
+      render(
+        <EmptyState
+          actionText="Add Habit"
+          actionLink="/manage-habits"
+        />,
+        { wrapper: Wrapper }
+      );
+
+      const link = screen.getByRole('link', { name: /add habit/i });
+      expect(link).toHaveClass('btn-primary');
     });
   });
 
@@ -299,7 +348,9 @@ describe('EmptyState', () => {
       const { container } = render(<EmptyState />, { wrapper: Wrapper });
 
       expect(container.querySelector('.empty-state')).toBeInTheDocument();
-      expect(container.querySelector('.empty-state-icon')).toHaveTextContent('📋');
+      const iconEmoji = container.querySelector('.empty-state-icon-emoji');
+      expect(iconEmoji).toBeInTheDocument();
+      expect(iconEmoji).toHaveTextContent('📋');
       expect(container.querySelector('.empty-state-title')).not.toBeInTheDocument();
       expect(container.querySelector('.empty-state-message')).not.toBeInTheDocument();
     });
