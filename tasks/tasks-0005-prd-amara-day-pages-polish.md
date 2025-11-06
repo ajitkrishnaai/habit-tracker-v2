@@ -353,7 +353,7 @@ Based on PRD: `0005-prd-amara-day-pages-polish.md`
       - Category color picker: Display warm palette swatches (terracotta, sage, sunset, olive, etc.)
 
 - [ ] **2.0 Phase 4: Polish & Delight** (2-3 hours)
-  - [ ] 2.1 Create LoadingScreen component
+  - [x] 2.1 Create LoadingScreen component
     - Create `src/components/LoadingScreen.tsx`:
       - Import `AmaraDayLogo`
       - Render `<AmaraDayLogo size={80} layout="vertical" />`
@@ -366,7 +366,7 @@ Based on PRD: `0005-prd-amara-day-pages-polish.md`
     - Create `src/components/LoadingScreen.test.tsx`:
       - Test renders logo and loading message
       - Test pulse animation applied (class or keyframe check)
-  - [ ] 2.2 Create Skeleton component
+  - [x] 2.2 Create Skeleton component
     - Create `src/components/Skeleton.tsx`:
       - Base skeleton styles:
         - `background: linear-gradient(90deg, var(--color-surface) 0%, var(--color-border-light) 50%, var(--color-surface) 100%);`
@@ -389,7 +389,7 @@ Based on PRD: `0005-prd-amara-day-pages-polish.md`
       - Test renders with default variant
       - Test custom width/height applied
       - Test circle variant has full border-radius
-  - [ ] 2.3 Update EmptyState component with Lucide icons
+  - [x] 2.3 Update EmptyState component with Lucide icons
     - Update `src/components/EmptyState.tsx`:
       - Accept `iconName` prop (string) to specify which Lucide icon to render
       - Import icons from `lucide-react`: `import { Sunrise, TrendingUp, Calendar } from 'lucide-react'`
@@ -405,14 +405,14 @@ Based on PRD: `0005-prd-amara-day-pages-polish.md`
       - Test renders with specified Lucide icon name
       - Test renders fallback emoji if icon fails
       - Test CTA button calls onClick handler
-  - [ ] 2.4 Apply icon-based empty states to pages
+  - [x] 2.4 Apply icon-based empty states to pages
     - Update `src/pages/DailyLogPage.tsx`:
       - When no habits: `<EmptyState iconName="Calendar" title="No habits yet" message="Add your first habit to get started!" actionText="Add Habit" actionLink="/manage-habits" />`
     - Update `src/pages/ProgressPage.tsx`:
       - When no progress: `<EmptyState iconName="TrendingUp" title="No progress yet" message="Start tracking habits to see your progress bloom." actionText="Add Your First Habit" actionLink="/manage-habits" />`
     - Update `src/pages/ManageHabitsPage.tsx`:
       - When no habits: `<EmptyState iconName="Sunrise" title="Your habit garden awaits" message="Plant your first habit!" actionText="Add Habit" onClick={openHabitForm} />`
-  - [ ] 2.5 Create confetti animation utility
+  - [x] 2.5 Create confetti animation utility
     - Create `src/utils/confetti.ts`:
       - Implement canvas-based confetti particle system
       - Function: `triggerConfetti(canvasElement: HTMLCanvasElement, options?: ConfettiOptions)`
@@ -427,7 +427,7 @@ Based on PRD: `0005-prd-amara-day-pages-polish.md`
       - Test confetti function creates canvas context
       - Test particles rendered with warm colors
       - Test animation completes and cleans up (mock requestAnimationFrame)
-  - [ ] 2.6 Integrate confetti on first habit creation
+  - [x] 2.6 Integrate confetti on first habit creation
     - Update `src/pages/ManageHabitsPage.tsx` or habit creation logic:
       - Check localStorage flag: `amaday_confetti_shown`
       - If false and habit created successfully:

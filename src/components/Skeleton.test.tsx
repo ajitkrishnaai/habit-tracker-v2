@@ -49,7 +49,9 @@ describe('Skeleton', () => {
     const { getByTestId } = render(<Skeleton height="3rem" />);
 
     const skeleton = getByTestId('skeleton');
-    expect(skeleton).toHaveStyle({ height: '3rem' });
+    // Check that height attribute is set (browser may compute differently)
+    expect(skeleton).toHaveAttribute('style');
+    expect(skeleton.getAttribute('style')).toContain('height: 3rem');
   });
 
   it('should apply custom height as number (converts to px)', () => {
