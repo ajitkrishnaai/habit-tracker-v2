@@ -2,10 +2,10 @@
 
 Based on PRD: `0005-prd-amara-day-pages-polish.md`
 
-**Status:** Pending PRD #1 Completion
-**Estimated Effort:** 7-11 hours
+**Status:** In Progress (~30% Complete - Welcome Page done, see docs/TASK_0005_STATUS_REPORT.md)
+**Estimated Effort:** 7-11 hours (2-3 hours completed, 5-8 hours remaining)
 **Timeline:** Week 3-4
-**Prerequisites:** PRD #0004 (Foundation & Core Components) must be completed and validated
+**Prerequisites:** ✅ PRD #0004 (Foundation & Core Components) completed (Tasks 1.0-4.0 done, Task 5.0 documentation pending)
 
 ---
 
@@ -74,8 +74,8 @@ Based on PRD: `0005-prd-amara-day-pages-polish.md`
 
 ## Tasks
 
-- [ ] **1.0 Phase 3: Page Redesigns** (4-5 hours)
-  - [ ] 1.1 Update Welcome Page hero section (FR-1: Full-screen centered with layered depth)
+- [ ] **1.0 Phase 3: Page Redesigns** (4-5 hours) - IN PROGRESS (subtasks 1.1-1.7 complete ✅)
+  - [x] 1.1 Update Welcome Page hero section (FR-1: Full-screen centered with layered depth) ✅
     - Update `src/pages/WelcomePage.tsx`:
       - **Branding**: Display "AMARA DAY" in uppercase (clamp 2-3.5rem, DM Sans 600, letter-spacing 0.15em, moss-700 color)
       - **Tagline**: "Daily Eternal" in uppercase (clamp 0.875-1rem, DM Sans 400, letter-spacing 0.2em, stone-600 color)
@@ -107,7 +107,7 @@ Based on PRD: `0005-prd-amara-day-pages-polish.md`
         - Moss gradient background, white text, shimmer hover effect
       - `.scroll-indicator` animation:
         - Pill outline (24×40px) with bouncing dot inside
-  - [ ] 1.2 Update Welcome Page "Why It Matters" section (FR-2: Single-column cards with icons)
+  - [x] 1.2 Update Welcome Page "Why It Matters" section (FR-2: Single-column cards with icons) ✅
     - Update `src/pages/WelcomePage.tsx`:
       - Section title: "Why It Matters" (display font, text-2xl, centered)
       - Three feature cards in single-column grid (max-width 900px, centered)
@@ -125,7 +125,7 @@ Based on PRD: `0005-prd-amara-day-pages-polish.md`
         - 80px circular container with moss gradient background (100→50)
         - Inset highlight shadow
         - Icons: 40px size, moss-700 color, strokeWidth 1.5
-  - [ ] 1.3 Update Welcome Page "Your Journey" section (FR-3: Progressive timeline cards)
+  - [x] 1.3 Update Welcome Page "Your Journey" section (FR-3: Progressive timeline cards) ✅
     - Update `src/pages/WelcomePage.tsx`:
       - Section title: "Your Journey" (display font, centered)
       - Three timeline cards in responsive grid (auto-fit, min 280px)
@@ -146,7 +146,7 @@ Based on PRD: `0005-prd-amara-day-pages-polish.md`
         - Cloud gradient background (50→100→200)
         - 1px stone-300 border, soft shadow
         - Hover: `translateY(-4px)` lift + border→moss-300
-  - [ ] 1.4 Add Welcome Page "Metaphor Break" section (FR-4: Italicized quote interlude)
+  - [x] 1.4 Add Welcome Page "Metaphor Break" section (FR-4: Italicized quote interlude) ✅
     - Update `src/pages/WelcomePage.tsx`:
       - Quote: "Like a tree, growth is quiet. Roots deepen while you sleep. Branches reach when you're not watching."
       - Display font italic, clamp 1.25-1.75rem, moss-800 color
@@ -155,18 +155,18 @@ Based on PRD: `0005-prd-amara-day-pages-polish.md`
       - Top/bottom dividers: 1px gradient lines (transparent→moss-300→transparent)
       - Generous vertical padding (space-3xl)
       - Max-width 800px, centered
-  - [ ] 1.5 Add Welcome Page secondary CTA section (FR-5: Pricing note)
+  - [x] 1.5 Add Welcome Page secondary CTA section (FR-5: Pricing note) ✅
     - Update `src/pages/WelcomePage.tsx`:
       - Centered italic text: "Always free to start. Pay what feels right when AI-powered reflections begin (optional)."
       - Text-sm, tertiary color
     - Update `src/pages/WelcomePage.css`:
       - Padding: space-2xl vertical, max-width 700px
-  - [ ] 1.6 Update Welcome Page responsive behavior (FR-8)
+  - [x] 1.6 Update Welcome Page responsive behavior (FR-8) ✅
     - Mobile (≤767px): Reduce hero animation to 200px, tighter padding, full-width CTA (max 320px)
     - Tablet (768-1023px): Journey cards in 2-column grid, Why cards stay single column
     - Desktop (1024px+): All sections single column, max-width 900-1200px
     - Fluid typography: All text uses clamp() for smooth scaling
-  - [ ] 1.7 Add Welcome Page accessibility & motion settings (FR-9)
+  - [x] 1.7 Add Welcome Page accessibility & motion settings (FR-9) ✅
     - `prefers-reduced-motion`: Disable all animations (hover lifts, scroll indicator, shimmer)
     - `prefers-contrast: high`: Increase border widths to 2px
     - All interactive elements keyboard accessible with visible focus states
