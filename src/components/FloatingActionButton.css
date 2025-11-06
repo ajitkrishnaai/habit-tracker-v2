@@ -1,0 +1,96 @@
+/**
+ * Floating Action Button Styles
+ * Task 1.20 - Circular FAB with warm gradient and rotation animation
+ */
+
+.fab {
+  /* Positioning */
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 50;
+
+  /* Shape and Size */
+  width: 64px;
+  height: 64px;
+  border-radius: var(--radius-full);
+  border: none;
+  padding: 0;
+
+  /* Warm gradient background (terracotta to sunset) */
+  background: linear-gradient(135deg, #D4745E 0%, #E89C5A 100%);
+
+  /* Shadow */
+  box-shadow: var(--shadow-xl);
+
+  /* Content centering */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* Interaction */
+  cursor: pointer;
+
+  /* Smooth transitions */
+  transition: all var(--transition-base);
+}
+
+.fab__icon {
+  width: 28px;
+  height: 28px;
+  color: white;
+  transition: transform var(--transition-base);
+}
+
+/* Hover animation - scale and rotate */
+.fab:hover {
+  transform: scale(1.1) rotate(90deg);
+  box-shadow: 0 20px 60px rgba(212, 116, 94, 0.4);
+}
+
+/* Active state - pressed down */
+.fab:active {
+  transform: scale(1.05) rotate(90deg);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Focus state for keyboard navigation */
+.fab:focus-visible {
+  outline: 3px solid rgba(212, 116, 94, 0.5);
+  outline-offset: 4px;
+}
+
+/* Disabled state */
+.fab:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+  transform: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 767px) {
+  .fab {
+    /* Slightly smaller on mobile */
+    width: 56px;
+    height: 56px;
+    bottom: 1.5rem;
+    right: 1.5rem;
+  }
+
+  .fab__icon {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .fab,
+  .fab__icon {
+    transition: none;
+  }
+
+  .fab:hover {
+    transform: scale(1.05); /* Still scale, but no rotation */
+  }
+}

@@ -14,13 +14,16 @@ import { Toast } from '../components/Toast';
 import { HabitForm } from '../components/HabitForm';
 import { HabitListItem } from '../components/HabitListItem';
 import { EmptyState } from '../components/EmptyState';
+import { FloatingActionButton } from '../components/FloatingActionButton';
 import type { Habit } from '../types/habit';
+import './ManageHabitsPage.css';
 
 export const ManageHabitsPage = (): JSX.Element => {
   const [habits, setHabits] = useState<Habit[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [editingHabit, setEditingHabit] = useState<Habit | null>(null);
+  const [showHabitForm, setShowHabitForm] = useState(false);
 
   // Demo mode state (Task 3.4 - REQ-15, REQ-28, REQ-29)
   const [showConversionModal, setShowConversionModal] = useState(false);
@@ -56,8 +59,9 @@ export const ManageHabitsPage = (): JSX.Element => {
   const handleHabitSaved = () => {
     // Reload habits after adding or updating
     loadHabits();
-    // Clear editing state
+    // Clear editing state and hide form
     setEditingHabit(null);
+    setShowHabitForm(false);
 
     // Demo mode tracking (Task 3.4 - REQ-15, REQ-28, REQ-29)
     if (demoModeService.isDemoMode()) {
@@ -86,15 +90,25 @@ export const ManageHabitsPage = (): JSX.Element => {
   };
 
   const handleEditHabit = (habit: Habit) => {
-    // Set habit to edit mode
+    // Set habit to edit mode and show form
     setEditingHabit(habit);
+    setShowHabitForm(true);
+    // Scroll to top to show form
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleOpenHabitForm = () => {
+    // Open form in add mode (not editing)
+    setEditingHabit(null);
+    setShowHabitForm(true);
     // Scroll to top to show form
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleCancelEdit = () => {
-    // Clear editing state
+    // Clear editing state and hide form
     setEditingHabit(null);
+    setShowHabitForm(false);
   };
 
   if (loading) {
@@ -155,28 +169,52 @@ export const ManageHabitsPage = (): JSX.Element => {
           </div>
         )}
 
-        {/* Habit Form */}
-        <div style={{
-          backgroundColor: 'white',
-          borderRadius: '8px',
-          padding: '1.5rem',
-          marginBottom: '2rem',
-          boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
-        }}>
-          <h2 style={{
-            fontSize: '1.25rem',
-            fontWeight: '600',
-            marginBottom: '1rem',
-            color: '#111827',
-          }}>
-            {editingHabit ? 'Edit Habit' : 'Add New Habit'}
-          </h2>
-          <HabitForm
-            editingHabit={editingHabit}
-            onSuccess={handleHabitSaved}
-            onCancel={editingHabit ? handleCancelEdit : undefined}
-          />
-        </div>
+        {/* Habit Form Modal (Task 1.22 - shown only when showHabitForm is true) */}
+        {showHabitForm && (
+          <div
+            className="habit-form-modal-backdrop"
+            onClick={handleCancelEdit}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="habit-form-title"
+          >
+            <div
+              className="habit-form-modal"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="habit-form-modal__header">
+                <h2 id="habit-form-title" className="habit-form-modal__title">
+                  {editingHabit ? 'Edit Habit' : 'Add New Habit'}
+                </h2>
+                <button
+                  className="habit-form-modal__close"
+                  onClick={handleCancelEdit}
+                  aria-label="Close form"
+                  type="button"
+                >
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <line x1="18" y1="6" x2="6" y2="18" />
+                    <line x1="6" y1="6" x2="18" y2="18" />
+                  </svg>
+                </button>
+              </div>
+              <HabitForm
+                editingHabit={editingHabit}
+                onSuccess={handleHabitSaved}
+                onCancel={handleCancelEdit}
+              />
+            </div>
+          </div>
+        )}
 
         {/* Habits List */}
         <div style={{
@@ -200,7 +238,7 @@ export const ManageHabitsPage = (): JSX.Element => {
               message="Use the form above to add your first habit and start tracking your progress"
             />
           ) : (
-            <div>
+            <div className="habits-grid">
               {habits.map((habit) => (
                 <HabitListItem
                   key={habit.habit_id}
@@ -227,6 +265,12 @@ export const ManageHabitsPage = (): JSX.Element => {
           />
         )}
       </div>
+
+      {/* Floating Action Button for adding habits (Task 1.21) */}
+      <FloatingActionButton
+        onClick={handleOpenHabitForm}
+        aria-label="Add new habit"
+      />
     </div>
   );
 };

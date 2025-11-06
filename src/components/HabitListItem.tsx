@@ -11,6 +11,7 @@ import { syncService } from '../services/syncService';
 import { supabaseDataService } from '../services/supabaseDataService';
 import { parseError, formatErrorMessage, logError } from '../utils/errorHandler';
 import type { Habit } from '../types/habit';
+import './HabitListItem.css';
 
 interface HabitListItemProps {
   habit: Habit;
@@ -70,93 +71,36 @@ export const HabitListItem = ({ habit, onEdit, onDelete }: HabitListItemProps): 
   };
 
   return (
-    <div
-      style={{
-        padding: '1rem',
-        borderBottom: '1px solid #e5e7eb',
-      }}
-    >
+    <div className="habit-list-item">
       {/* Error Display */}
       {error && (
-        <div style={{
-          marginBottom: '1rem',
-          padding: '0.75rem',
-          backgroundColor: '#fee2e2',
-          border: '1px solid #ef4444',
-          borderRadius: '6px',
-          color: '#991b1b',
-          fontSize: '0.875rem',
-        }}>
+        <div className="habit-list-item__error">
           {error}
         </div>
       )}
 
       {/* Habit Display or Confirmation Dialog */}
       {!showConfirmDelete ? (
-        <div style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          gap: '1rem',
-          flexWrap: 'wrap',
-        }}>
+        <div className="habit-list-item__content">
           {/* Habit Info */}
-          <div style={{ flex: '1 1 0%', minWidth: '200px' }}>
-            <div style={{
-              fontSize: '1.125rem',
-              fontWeight: '500',
-              color: '#111827',
-              marginBottom: '0.5rem',
-            }}>
+          <div className="habit-list-item__info">
+            <div className="habit-list-item__name">
               {habit.name}
             </div>
 
             {habit.category && (
-              <span style={{
-                display: 'inline-block',
-                fontSize: '0.875rem',
-                padding: '0.25rem 0.75rem',
-                backgroundColor: '#dbeafe',
-                color: '#1e40af',
-                borderRadius: '9999px',
-              }}>
+              <span className="habit-list-item__category">
                 {habit.category}
               </span>
             )}
           </div>
 
           {/* Action Buttons */}
-          <div style={{
-            display: 'flex',
-            gap: '0.5rem',
-            flexShrink: 0,
-          }}>
+          <div className="habit-list-item__actions">
             <button
               onClick={handleEditClick}
               disabled={deleting}
-              style={{
-                padding: '0.5rem 1rem',
-                fontSize: '0.875rem',
-                fontWeight: '500',
-                color: '#2563eb',
-                backgroundColor: 'transparent',
-                border: '1px solid #2563eb',
-                borderRadius: '6px',
-                cursor: deleting ? 'not-allowed' : 'pointer',
-                transition: 'all 0.2s',
-                minWidth: '44px', // Touch target size
-                minHeight: '44px',
-              }}
-              onMouseOver={(e) => {
-                if (!deleting) {
-                  e.currentTarget.style.backgroundColor = '#eff6ff';
-                }
-              }}
-              onMouseOut={(e) => {
-                if (!deleting) {
-                  e.currentTarget.style.backgroundColor = 'transparent';
-                }
-              }}
+              className="habit-list-item__edit-btn"
             >
               Edit
             </button>
@@ -164,29 +108,7 @@ export const HabitListItem = ({ habit, onEdit, onDelete }: HabitListItemProps): 
             <button
               onClick={handleRemoveClick}
               disabled={deleting}
-              style={{
-                padding: '0.5rem 1rem',
-                fontSize: '0.875rem',
-                fontWeight: '500',
-                color: '#dc2626',
-                backgroundColor: 'transparent',
-                border: '1px solid #dc2626',
-                borderRadius: '6px',
-                cursor: deleting ? 'not-allowed' : 'pointer',
-                transition: 'all 0.2s',
-                minWidth: '44px', // Touch target size
-                minHeight: '44px',
-              }}
-              onMouseOver={(e) => {
-                if (!deleting) {
-                  e.currentTarget.style.backgroundColor = '#fef2f2';
-                }
-              }}
-              onMouseOut={(e) => {
-                if (!deleting) {
-                  e.currentTarget.style.backgroundColor = 'transparent';
-                }
-              }}
+              className="habit-list-item__delete-btn"
             >
               Remove
             </button>
@@ -194,46 +116,16 @@ export const HabitListItem = ({ habit, onEdit, onDelete }: HabitListItemProps): 
         </div>
       ) : (
         /* Confirmation Dialog */
-        <div>
-          <p style={{
-            fontSize: '1rem',
-            color: '#111827',
-            marginBottom: '1rem',
-          }}>
+        <div className="habit-list-item__confirm">
+          <p className="habit-list-item__confirm-text">
             Are you sure you want to remove "<strong>{habit.name}</strong>"? This will mark it as inactive, but historical data will be preserved.
           </p>
 
-          <div style={{
-            display: 'flex',
-            gap: '0.75rem',
-            justifyContent: 'flex-end',
-          }}>
+          <div className="habit-list-item__confirm-actions">
             <button
               onClick={handleCancelDelete}
               disabled={deleting}
-              style={{
-                padding: '0.5rem 1rem',
-                fontSize: '0.875rem',
-                fontWeight: '500',
-                color: '#374151',
-                backgroundColor: 'white',
-                border: '1px solid #d1d5db',
-                borderRadius: '6px',
-                cursor: deleting ? 'not-allowed' : 'pointer',
-                transition: 'background-color 0.2s',
-                minWidth: '44px',
-                minHeight: '44px',
-              }}
-              onMouseOver={(e) => {
-                if (!deleting) {
-                  e.currentTarget.style.backgroundColor = '#f3f4f6';
-                }
-              }}
-              onMouseOut={(e) => {
-                if (!deleting) {
-                  e.currentTarget.style.backgroundColor = 'white';
-                }
-              }}
+              className="habit-list-item__cancel-btn"
             >
               Cancel
             </button>
@@ -241,29 +133,7 @@ export const HabitListItem = ({ habit, onEdit, onDelete }: HabitListItemProps): 
             <button
               onClick={handleConfirmDelete}
               disabled={deleting}
-              style={{
-                padding: '0.5rem 1rem',
-                fontSize: '0.875rem',
-                fontWeight: '600',
-                color: 'white',
-                backgroundColor: deleting ? '#9ca3af' : '#dc2626',
-                border: 'none',
-                borderRadius: '6px',
-                cursor: deleting ? 'not-allowed' : 'pointer',
-                transition: 'background-color 0.2s',
-                minWidth: '44px',
-                minHeight: '44px',
-              }}
-              onMouseOver={(e) => {
-                if (!deleting) {
-                  e.currentTarget.style.backgroundColor = '#b91c1c';
-                }
-              }}
-              onMouseOut={(e) => {
-                if (!deleting) {
-                  e.currentTarget.style.backgroundColor = '#dc2626';
-                }
-              }}
+              className="habit-list-item__confirm-btn"
             >
               {deleting ? 'Removing...' : 'Yes, Remove'}
             </button>

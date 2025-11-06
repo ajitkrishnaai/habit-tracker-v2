@@ -290,7 +290,7 @@ Based on PRD: `0005-prd-amara-day-pages-polish.md`
         - Sparklines: Sunset orange (#E89C5A)
       - Ensure colors meet WCAG AA contrast on backgrounds
     - If no chart library, note: "Charts will use warm colors per design system"
-  - [ ] 1.18 Update Manage Habits Page with responsive grid (FR-13)
+  - [x] 1.18 Update Manage Habits Page with responsive grid (FR-13) ✅
     - Update `src/pages/ManageHabitsPage.tsx`:
       - Wrap habit cards in grid container: `<div className="habits-grid">{habitCards}</div>`
     - Update `src/pages/ManageHabitsPage.css`:
@@ -300,14 +300,14 @@ Based on PRD: `0005-prd-amara-day-pages-polish.md`
         - `gap: var(--space-lg);`
         - `@media (min-width: 768px)`: `grid-template-columns: repeat(2, 1fr);` /* Tablet: 2 columns */
         - `@media (min-width: 1024px)`: `grid-template-columns: repeat(3, 1fr);` /* Desktop: 3 columns (or 2, adjust as needed) */
-  - [ ] 1.19 Update Manage Habits habit cards (FR-14)
+  - [x] 1.19 Update Manage Habits habit cards (FR-14) ✅
     - Update habit card styles in `ManageHabitsPage.css` or component:
       - Apply `.card` base styles
       - Style edit/delete buttons:
         - Edit button: `color: var(--color-primary);` on hover
         - Delete button: `color: var(--color-error);` on hover
       - Add hover lift (already in `.card:hover`)
-  - [ ] 1.20 Create FloatingActionButton component for "Add Habit" (FR-15)
+  - [x] 1.20 Create FloatingActionButton component for "Add Habit" (FR-15) ✅
     - Create `src/components/FloatingActionButton.tsx`:
       - Circular button: `width: 64px; height: 64px; border-radius: var(--radius-full);`
       - Position: `position: fixed; bottom: 2rem; right: 2rem; z-index: 50;`
@@ -327,12 +327,12 @@ Based on PRD: `0005-prd-amara-day-pages-polish.md`
       - Test FAB renders with plus icon
       - Test onClick handler called when clicked
       - Test hover animation (via snapshot or class check)
-  - [ ] 1.21 Integrate FAB into Manage Habits Page
+  - [x] 1.21 Integrate FAB into Manage Habits Page ✅
     - Update `src/pages/ManageHabitsPage.tsx`:
       - Import `FloatingActionButton`
       - Render `<FloatingActionButton onClick={openHabitFormModal} />` at bottom of page
       - Ensure FAB appears above all content (z-index)
-  - [ ] 1.22 Update Habit Form Modal styling (FR-16)
+  - [x] 1.22 Update Habit Form Modal styling (FR-16) ✅
     - Update `src/components/HabitForm.tsx` or modal wrapper:
       - Add slide-up animation:
         ```css
