@@ -1,0 +1,73 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`AmaraDayLogo > Snapshot Tests > should match snapshot for custom size 1`] = `
+<div
+  class="amara-day-logo "
+  style="display: inline-flex; flex-direction: row; align-items: baseline; gap: 0.1em; font-family: "DM Sans", -apple-system, BlinkMacSystemFont, sans-serif; font-size: 64px; line-height: 1.2;"
+>
+  <span
+    style="font-weight: 700; color: #567347; letter-spacing: -0.03em;"
+  >
+    Amara
+  </span>
+  <span
+    style="font-weight: 500; color: #8B8D7F; letter-spacing: -0.01em;"
+  >
+    .day
+  </span>
+</div>
+`;
+
+exports[`AmaraDayLogo > Snapshot Tests > should match snapshot for default props 1`] = `
+<div
+  class="amara-day-logo "
+  style="display: inline-flex; flex-direction: row; align-items: baseline; gap: 0.1em; font-family: "DM Sans", -apple-system, BlinkMacSystemFont, sans-serif; font-size: 32px; line-height: 1.2;"
+>
+  <span
+    style="font-weight: 700; color: #567347; letter-spacing: -0.03em;"
+  >
+    Amara
+  </span>
+  <span
+    style="font-weight: 500; color: #8B8D7F; letter-spacing: -0.01em;"
+  >
+    .day
+  </span>
+</div>
+`;
+
+exports[`AmaraDayLogo > Snapshot Tests > should match snapshot for monochrome variant 1`] = `
+<div
+  class="amara-day-logo "
+  style="display: inline-flex; flex-direction: row; align-items: baseline; gap: 0.1em; font-family: "DM Sans", -apple-system, BlinkMacSystemFont, sans-serif; font-size: 32px; line-height: 1.2;"
+>
+  <span
+    style="font-weight: 700; color: currentcolor; letter-spacing: -0.03em;"
+  >
+    Amara
+  </span>
+  <span
+    style="font-weight: 500; color: currentcolor; letter-spacing: -0.01em;"
+  >
+    .day
+  </span>
+</div>
+`;
+
+exports[`AmaraDayLogo > Snapshot Tests > should match snapshot for vertical layout 1`] = `
+<div
+  class="amara-day-logo "
+  style="display: inline-flex; flex-direction: column; align-items: flex-start; gap: 0; font-family: "DM Sans", -apple-system, BlinkMacSystemFont, sans-serif; font-size: 32px; line-height: 1.2;"
+>
+  <span
+    style="font-weight: 700; color: #567347; letter-spacing: -0.03em;"
+  >
+    Amara
+  </span>
+  <span
+    style="font-weight: 500; color: #8B8D7F; letter-spacing: -0.01em;"
+  >
+    .day
+  </span>
+</div>
+`;
