@@ -11,26 +11,26 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'masked-icon.svg'],
       manifest: {
-        name: 'Habit Tracker',
-        short_name: 'Habits',
-        description: 'Track your daily habits with complete data ownership - all data stored in your Google Drive',
-        theme_color: '#ffffff',
-        background_color: '#ffffff',
+        name: 'Amara.day',
+        short_name: 'Amara',
+        description: 'Mindful habits. Lasting change.',
+        theme_color: '#D4745E',
+        background_color: '#FAF8F5',
         display: 'standalone',
         orientation: 'portrait',
         icons: [
           {
-            src: 'pwa-192x192.png',
+            src: 'icon-192.png',
             sizes: '192x192',
             type: 'image/png'
           },
           {
-            src: 'pwa-512x512.png',
+            src: 'icon-512.png',
             sizes: '512x512',
             type: 'image/png'
           },
           {
-            src: 'pwa-512x512.png',
+            src: 'icon-512.png',
             sizes: '512x512',
             type: 'image/png',
             purpose: 'any maskable'
