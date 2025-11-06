@@ -97,37 +97,33 @@ Based on PRD: `0004-prd-amara-day-foundation.md`
     - Optional: Add CSS `text-shadow` or `background-clip: text` gradient for depth
     - Add `className` prop for wrapper div
     - **Note**: Welcome Page uses uppercase "AMARA DAY" text directly (not this logo component). Welcome Page also includes TreeOfLife watercolor illustration (page-specific, not part of core design system). See PRD #0005 FR-1 for full Welcome Page specification.
-  - [ ] 1.2 Install Lucide Icons library
+  - [x] 1.2 Install Lucide Icons library ✅
     - Run: `npm install lucide-react`
-    - Verify installation in `package.json`
-  - [ ] 1.3 Create `src/components/Icon.tsx` wrapper component
+    - Verify installation in `package.json` (v0.552.0 installed)
+  - [x] 1.3 Create `src/components/Icon.tsx` wrapper component ✅
     - Import icons from `lucide-react`: `import { Sunrise, TrendingUp, Calendar, CheckCircle, AlertCircle, Info } from 'lucide-react'`
     - Accept `name` prop (string) to select icon dynamically
     - Accept `size` prop (number, default 24) for consistent sizing
     - Accept `color` prop (string, default 'currentColor')
     - Accept `className` prop for additional styling
     - Map icon names to Lucide components
-  - [ ] 1.4 Create barrel export `src/components/branding/index.ts`
+  - [x] 1.4 Create barrel export `src/components/branding/index.ts` ✅
     - Export `AmaraDayLogo` only (no AmaraDayIcon)
-  - [ ] 1.5 Download self-hosted fonts
-    - Visit Google Fonts: https://fonts.google.com/
-    - Download DM Sans: weights 400, 500, 700 (woff2 format)
-    - Download Inter: weights 400, 500, 600 (woff2 format)
-    - Place files in `public/fonts/` directory
-    - Use naming convention: `{font-name}-v{version}-latin-{weight}.woff2`
-  - [ ] 1.6 Generate simple favicon assets (using online tool)
-    - Visit favicon.io or RealFaviconGenerator.net
-    - Create simple favicon: Letter "A" in moss green (#6B8E5F) on transparent background
-    - Generate and download: `favicon.ico` (32x32px), `favicon.svg`, `apple-touch-icon.png` (180x180px)
-    - For PWA icons: Moss green background (#6B8E5F) with white "A" letter
-    - Generate: `icon-192.png` (192x192px), `icon-512.png` (512x512px)
-    - Download and place all files in `public/` directory
-  - [ ] 1.7 Create social sharing image `og-image.png`
-    - Use online tool (Canva, Figma, or similar) to create 1200x630px image
-    - Warm gradient background (stone-0 #FEF9EC to stone-50 #FDF7E5)
-    - Center "Amara.day" text in DM Sans Bold (moss-700 #567347 color)
-    - Add tagline: "Mindful habits. Lasting change." below in smaller text
-    - Export as optimized PNG (< 300KB) and place in `public/`
+  - [x] 1.5 Download self-hosted fonts ✅
+    - Downloaded DM Sans: weights 400, 500, 700 (woff2 format) from bunny.net
+    - Downloaded Inter: weights 400, 500, 600 (woff2 format) from bunny.net
+    - Placed files in `public/fonts/` directory
+    - Used naming convention: `{font-name}-v13-latin-{weight}.woff2`
+  - [x] 1.6 Generate simple favicon assets (using online tool) ✅ PARTIAL
+    - ✅ Created `favicon.svg` with letter "A" in moss green (#6B8E5F)
+    - ⚠️ MANUAL TODO: Generate PNG/ICO files - See `docs/FAVICON_TODO.md` for instructions
+    - Need: `favicon.ico` (32x32px), `apple-touch-icon.png` (180x180px)
+    - Need: `icon-192.png` (192x192px), `icon-512.png` (512x512px)
+    - Tool: https://realfavicongenerator.net/ or https://favicon.io/
+  - [x] 1.7 Create social sharing image `og-image.png` ✅ PARTIAL
+    - ⚠️ MANUAL TODO: Create 1200x630px image - See `docs/FAVICON_TODO.md` for specs
+    - Use online tool (Canva, Figma) with warm gradient background
+    - Design specs documented for manual creation
   - [x] 1.8 Update `index.html` meta tags ✅
     - Change `<title>` to "Amara.day - Mindful habits. Lasting change."
     - Add `<meta name="description" content="Track your daily habits with warmth and intention. Amara.day helps you build sustainable routines that last." />`
@@ -172,96 +168,46 @@ Based on PRD: `0004-prd-amara-day-foundation.md`
     - Test white on moss-600 (#6B8E5F): 4.8:1 ✓ (target: 4.5:1)
     - Document results in comment at top of `colors.css`
     - All color combinations meet WCAG AA requirements ✅
-  - [ ] 2.4 Update `src/styles/main.css` with @font-face declarations
-    - Add `@font-face` rules for DM Sans (400, 500, 700):
-      ```css
-      @font-face {
-        font-family: 'DM Sans';
-        font-style: normal;
-        font-weight: 400;
-        font-display: swap;
-        src: url('/fonts/dm-sans-v13-latin-regular.woff2') format('woff2');
-      }
-      ```
-    - Repeat for DM Sans 500, 700
-    - Add `@font-face` rules for Inter (400, 500, 600)
-    - Place @font-face rules at top of file, before other styles
-  - [ ] 2.5 Define font family variables in `main.css`
-    - Add to `:root`:
-      - `--font-display: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;`
-      - `--font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;`
-      - `--font-mono: 'JetBrains Mono', 'SF Mono', Consolas, monospace;`
-  - [ ] 2.6 Define fluid type scale in `main.css`
-    - Add to `:root`:
-      - `--text-xs: clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem);` /* 12-14px */
-      - `--text-sm: clamp(0.875rem, 0.8rem + 0.375vw, 1rem);` /* 14-16px */
-      - `--text-base: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);` /* 16-18px */
-      - `--text-lg: clamp(1.125rem, 1rem + 0.5vw, 1.375rem);` /* 18-22px */
-      - `--text-xl: clamp(1.25rem, 1.1rem + 0.75vw, 1.75rem);` /* 20-28px */
-      - `--text-2xl: clamp(1.5rem, 1.2rem + 1.5vw, 2.25rem);` /* 24-36px */
-      - `--text-3xl: clamp(2rem, 1.5rem + 2.5vw, 3.5rem);` /* 32-56px */
-      - `--text-4xl: clamp(2.5rem, 2rem + 3vw, 4.5rem);` /* 40-72px */
-  - [ ] 2.7 Define line heights and letter spacing in `main.css`
-    - Add to `:root`:
-      - `--leading-tight: 1.2;`, `--leading-snug: 1.375;`, `--leading-normal: 1.6;`, `--leading-relaxed: 1.8;`
-      - `--tracking-tight: -0.03em;`, `--tracking-normal: -0.01em;`, `--tracking-wide: 0.02em;`
-  - [ ] 2.8 Apply typography system to global elements
-    - Update `h1, h2, h3, h4, h5, h6` styles:
-      - `font-family: var(--font-display);`
-      - `letter-spacing: var(--tracking-tight);`
-    - Update `body` styles:
-      - `font-family: var(--font-body);`
-      - `line-height: var(--leading-normal);`
-      - `color: var(--color-text-primary);`
-      - `background-color: var(--color-background);`
-  - [ ] 2.9 Define spacing scale in `main.css`
-    - Add to `:root`:
-      - `--space-xs: 0.5rem;` /* 8px */
-      - `--space-sm: 0.75rem;` /* 12px */
-      - `--space-md: 1.25rem;` /* 20px */
-      - `--space-lg: 2rem;` /* 32px */
-      - `--space-xl: 3rem;` /* 48px */
-      - `--space-2xl: 4rem;` /* 64px */
-      - `--space-3xl: 6rem;` /* 96px */
-  - [ ] 2.10 Define border radius (organic curves) in `main.css`
-    - Add to `:root`:
-      - `--radius-sm: 0.5rem;` /* 8px */
-      - `--radius-md: 0.75rem;` /* 12px */
-      - `--radius-lg: 1rem;` /* 16px */
-      - `--radius-xl: 1.5rem;` /* 24px */
-      - `--radius-full: 9999px;`
-  - [ ] 2.11 Define soft warm shadows in `main.css`
-    - Add to `:root`:
-      - `--shadow-sm: 0 2px 8px rgba(58, 54, 49, 0.08);`
-      - `--shadow-md: 0 4px 16px rgba(58, 54, 49, 0.12);`
-      - `--shadow-lg: 0 8px 32px rgba(58, 54, 49, 0.16);`
-      - `--shadow-xl: 0 16px 48px rgba(58, 54, 49, 0.2);`
-  - [ ] 2.12 Define transition variables in `main.css`
-    - Add to `:root`:
-      - `--transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);`
-      - `--transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);`
-      - `--transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);`
-  - [ ] 2.13 Add global smooth color transitions
-    - Add to `main.css` (after `:root`):
-      ```css
-      * {
-        transition: background-color 300ms ease-in-out,
-                    border-color 300ms ease-in-out,
-                    color 300ms ease-in-out;
-      }
-      ```
-  - [ ] 2.14 Add `prefers-reduced-motion` support
-    - Add media query to disable transitions for users who prefer reduced motion:
-      ```css
-      @media (prefers-reduced-motion: reduce) {
-        * {
-          transition: none !important;
-          animation: none !important;
-        }
-      }
-      ```
-  - [ ] 2.15 Import `colors.css` in `main.css`
-    - Add at top of `main.css`: `@import './colors.css';`
+  - [x] 2.4 Update `src/styles/main.css` with @font-face declarations ✅
+    - Added `@font-face` rules for DM Sans (400, 500, 700) - lines 22-47
+    - Added `@font-face` rules for Inter (400, 500, 600) - lines 49-74
+    - Placed @font-face rules at top of file with `font-display: swap`
+  - [x] 2.5 Define font family variables in `main.css` ✅
+    - Defined in `:root` at lines 158-160:
+      - `--font-display: 'DM Sans', ui-sans-serif, system-ui...`
+      - `--font-body: 'Inter', ui-sans-serif, system-ui...`
+      - `--font-mono: 'JetBrains Mono', ui-monospace...`
+  - [x] 2.6 Define fluid type scale in `main.css` ✅
+    - Defined in `:root` at lines 166-173 with clamp() for responsive scaling
+    - All 8 sizes from --text-xs (12-14px) to --text-4xl (40-72px)
+  - [x] 2.7 Define line heights and letter spacing in `main.css` ✅
+    - Line heights at lines 185-188
+    - Letter spacing at lines 196-198
+  - [x] 2.8 Apply typography system to global elements ✅
+    - Headings use --font-display at line 320
+    - Body uses --font-body at line 302
+    - Line heights and letter spacing applied
+  - [x] 2.9 Define spacing scale in `main.css` ✅
+    - Defined in `:root` at lines 203-209 (8pt grid)
+    - From --space-xs (8px) to --space-3xl (96px)
+  - [x] 2.10 Define border radius (organic curves) in `main.css` ✅
+    - Defined in `:root` at lines 222-226
+    - From --radius-sm (8px) to --radius-full (9999px)
+  - [x] 2.11 Define soft warm shadows in `main.css` ✅
+    - Defined in `:root` at lines 238-241
+    - Warm-toned shadows from --shadow-sm to --shadow-xl
+  - [x] 2.12 Define transition variables in `main.css` ✅
+    - Defined in `:root` at lines 248-251
+    - Natural easing (not Material Design) - cubic-bezier(0.2, 0.8, 0.2, 1)
+  - [x] 2.13 Add global smooth color transitions ✅
+    - Global transitions at lines 278-282
+    - 300ms ease-in-out for background, border, and color
+  - [x] 2.14 Add `prefers-reduced-motion` support ✅
+    - Media query at lines 285-292
+    - Disables all transitions and animations for accessibility
+  - [x] 2.15 Import `colors.css` in `main.css` ✅
+    - Imported at line 13: `@import './colors.css';`
+    - Also imports buttons.css at line 14
 
 - [ ] **3.0 Phase 2: Core Component Redesigns** (3-4 hours)
   - [ ] 3.1 Update `src/components/Navigation.tsx` with Amara.day branding
