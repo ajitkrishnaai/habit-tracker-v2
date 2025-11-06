@@ -82,7 +82,6 @@ export const triggerConfetti = (
   }
 
   const startTime = Date.now();
-  let animationFrameId: number;
 
   const animate = () => {
     const elapsed = Date.now() - startTime;
@@ -122,16 +121,13 @@ export const triggerConfetti = (
 
     // Continue animation if not complete
     if (progress < 1) {
-      animationFrameId = requestAnimationFrame(animate);
+      requestAnimationFrame(animate);
     } else {
-      // Cleanup: clear canvas and remove animation frame
+      // Cleanup: clear canvas when animation completes
       ctx.clearRect(0, 0, canvasElement.width, canvasElement.height);
     }
   };
 
   // Start animation
-  animationFrameId = requestAnimationFrame(animate);
-
-  // Cleanup function (not returned, but animation auto-cleans up)
-  // If needed, caller can track animationFrameId and call cancelAnimationFrame
+  requestAnimationFrame(animate);
 };

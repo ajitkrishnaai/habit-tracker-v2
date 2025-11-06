@@ -9,7 +9,7 @@
  * - Type-safe toast variants (success, error, info)
  */
 
-import React, { createContext, useContext, useState, useCallback } from 'react';
+import React, { createContext, useState, useCallback } from 'react';
 import { Toast, ToastVariant } from './Toast';
 
 interface ToastData {
@@ -20,12 +20,13 @@ interface ToastData {
   duration?: number;
 }
 
-interface ToastContextValue {
+export interface ToastContextValue {
   showToast: (message: string, variant?: ToastVariant, duration?: number, icon?: string) => void;
   dismissToast: (id: string) => void;
 }
 
-const ToastContext = createContext<ToastContextValue | undefined>(undefined);
+// eslint-disable-next-line react-refresh/only-export-components
+export const ToastContext = createContext<ToastContextValue | undefined>(undefined);
 
 export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [toasts, setToasts] = useState<ToastData[]>([]);
@@ -88,20 +89,4 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       </div>
     </ToastContext.Provider>
   );
-};
-
-/**
- * useToast Hook
- * Access toast functionality from any component
- *
- * @example
- * const { showToast } = useToast();
- * showToast('Notes saved ✓', 'success');
- */
-export const useToast = (): ToastContextValue => {
-  const context = useContext(ToastContext);
-  if (!context) {
-    throw new Error('useToast must be used within a ToastProvider');
-  }
-  return context;
 };
