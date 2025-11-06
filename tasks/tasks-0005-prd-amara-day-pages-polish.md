@@ -74,7 +74,7 @@ Based on PRD: `0005-prd-amara-day-pages-polish.md`
 
 ## Tasks
 
-- [ ] **1.0 Phase 3: Page Redesigns** (4-5 hours) - IN PROGRESS (subtasks 1.1-1.7 complete ✅)
+- [x] **1.0 Phase 3: Page Redesigns** (4-5 hours) - ✅ COMPLETE (all subtasks 1.1-1.22 complete)
   - [x] 1.1 Update Welcome Page hero section (FR-1: Full-screen centered with layered depth) ✅
     - Update `src/pages/WelcomePage.tsx`:
       - **Branding**: Display "AMARA DAY" in uppercase (clamp 2-3.5rem, DM Sans 600, letter-spacing 0.15em, moss-700 color)
