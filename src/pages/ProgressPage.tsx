@@ -80,9 +80,9 @@ export const ProgressPage: React.FC = () => {
   if (isLoading) {
     return (
       <div className="progress-page">
-        <div className="page-header">
-          <h1>Progress</h1>
-        </div>
+        <header className="page-header">
+          <h1 className="page-title">Progress</h1>
+        </header>
         <LoadingSpinner text="Loading your progress..." />
       </div>
     );
@@ -92,9 +92,9 @@ export const ProgressPage: React.FC = () => {
   if (isDemo && !isLoading) {
     return (
       <div className="progress-page">
-        <div className="page-header">
-          <h1>Progress</h1>
-        </div>
+        <header className="page-header">
+          <h1 className="page-title">Progress</h1>
+        </header>
         <LockedProgressPreview />
         {showConversionModal && (
           <ConversionModal
@@ -109,9 +109,9 @@ export const ProgressPage: React.FC = () => {
   if (error) {
     return (
       <div className="progress-page">
-        <div className="page-header">
-          <h1>Progress</h1>
-        </div>
+        <header className="page-header">
+          <h1 className="page-title">Progress</h1>
+        </header>
         <div className="error-state">
           <p>{error}</p>
           <button onClick={loadHabitsAndLogs} className="retry-button">
@@ -125,9 +125,9 @@ export const ProgressPage: React.FC = () => {
   if (habitsWithLogs.length === 0) {
     return (
       <div className="progress-page">
-        <div className="page-header">
-          <h1>Progress</h1>
-        </div>
+        <header className="page-header">
+          <h1 className="page-title">Progress</h1>
+        </header>
         <EmptyState
           title="No habits to display"
           message="Add some habits in the Manage Habits page to see your progress here."
@@ -140,12 +140,10 @@ export const ProgressPage: React.FC = () => {
 
   return (
     <div className="progress-page">
-      <div className="page-header">
-        <h1>Progress</h1>
-        <p className="page-subtitle">
-          Track your habits and see insights from your notes
-        </p>
-      </div>
+      <header className="page-header">
+        <h1 className="page-title">Progress</h1>
+        <p className="page-subtitle">Track your habits and discover patterns</p>
+      </header>
 
       <div className="progress-list">
         {habitsWithLogs.map(({ habit, logs }) => (

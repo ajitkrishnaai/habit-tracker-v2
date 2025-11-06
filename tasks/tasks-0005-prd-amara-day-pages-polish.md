@@ -235,7 +235,7 @@ Based on PRD: `0005-prd-amara-day-pages-polish.md`
         - `min-height: 120px;`
       - `.notes-char-count` styles:
         - `color: var(--color-text-tertiary); font-size: var(--text-sm); text-align: right; display: block; margin-top: var(--space-xs);`
-  - [ ] 1.12 Update Progress Page header (FR-8)
+  - [x] 1.12 Update Progress Page header ✅ (FR-8)
     - Update `src/pages/ProgressPage.tsx`:
       - Add page header:
         ```tsx
@@ -246,14 +246,14 @@ Based on PRD: `0005-prd-amara-day-pages-polish.md`
         ```
     - Update `src/pages/ProgressPage.css`:
       - Use same `.page-header`, `.page-title`, `.page-subtitle` styles as Daily Log
-  - [ ] 1.13 Update Progress Card with gradient border (FR-9)
+  - [x] 1.13 Update Progress Card with gradient border ✅ (FR-9)
     - Update `src/components/ProgressCard.tsx` or `.css`:
       - Add gradient top border:
         - `border-top: 4px solid;`
         - `border-image: linear-gradient(90deg, #D4745E 0%, #8B9A7E 100%) 1;`
       - Apply warm surface background and shadow (already in `.card`)
       - Add hover lift (already in `.card:hover`)
-  - [ ] 1.14 Create warm-toned stat icons (SVG components) (FR-10)
+  - [x] 1.14 Create warm-toned stat icons ✅ (SVG components) (FR-10)
     - Create `src/components/icons/FlameIcon.tsx`:
       - SVG flame icon with warm gradient (terracotta to sunset)
       - Accept `size` prop (default 24px)
@@ -267,12 +267,12 @@ Based on PRD: `0005-prd-amara-day-pages-polish.md`
       - Accept `size` prop
       - Use for completion percentage display
     - Create `src/components/icons/index.ts` barrel export
-  - [ ] 1.15 Update Progress Page stat display
+  - [x] 1.15 Update Progress Page stat display ✅
     - Update `src/components/ProgressCard.tsx`:
       - Import stat icons (FlameIcon, TrophyIcon, ChartIcon)
       - Render icons next to corresponding stats
       - Apply larger font to numbers: `font-family: var(--font-display); font-size: var(--text-2xl);`
-  - [ ] 1.16 Update Progress Page pattern analysis (FR-11)
+  - [x] 1.16 Update Progress Page pattern analysis ✅ (FR-11)
     - Update `src/pages/ProgressPage.tsx` or `src/components/ProgressCard.tsx`:
       - Style keyword badges:
         - `.keyword-badge` class:
@@ -282,7 +282,7 @@ Based on PRD: `0005-prd-amara-day-pages-polish.md`
       - Highlight correlation text:
         - Wrap correlation text in `<span className="correlation-highlight">`
         - `background: var(--color-surface); padding: var(--space-xs) var(--space-sm); border-radius: var(--radius-sm);`
-  - [ ] 1.17 Update Progress Page charts (if using chart library) (FR-12)
+  - [x] 1.17 Update Progress Page charts ✅ (if using chart library) (FR-12)
     - If using Chart.js, Recharts, or similar:
       - Update chart color schemes to warm palette:
         - Bar charts: Terracotta gradient (#D4745E to #E89676)
