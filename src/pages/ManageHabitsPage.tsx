@@ -5,10 +5,11 @@
  * This is the main habit management interface.
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { storageService } from '../services/storage';
 import { parseError, formatErrorMessage, logError } from '../utils/errorHandler';
 import { demoModeService } from '../services/demoMode';
+import { triggerConfetti } from '../utils/confetti';
 import { ConversionModal } from '../components/ConversionModal';
 import { Toast } from '../components/Toast';
 import { HabitForm } from '../components/HabitForm';
@@ -30,6 +31,9 @@ export const ManageHabitsPage = (): JSX.Element => {
   const [conversionTrigger, setConversionTrigger] = useState<'habits_threshold' | 'first_log' | 'progress_page'>('habits_threshold');
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
+
+  // Confetti canvas ref (Task 2.6 - REQ for first habit creation)
+  const confettiCanvasRef = useRef<HTMLCanvasElement | null>(null);
 
   // Load habits on component mount
   useEffect(() => {
@@ -56,12 +60,24 @@ export const ManageHabitsPage = (): JSX.Element => {
     }
   };
 
-  const handleHabitSaved = () => {
+  const handleHabitSaved = async () => {
+    // Check if this is the first habit (before reloading)
+    const isFirstHabit = habits.length === 0 && !editingHabit;
+
     // Reload habits after adding or updating
-    loadHabits();
+    await loadHabits();
     // Clear editing state and hide form
     setEditingHabit(null);
     setShowHabitForm(false);
+
+    // Task 2.6: Trigger confetti on first habit creation
+    if (isFirstHabit) {
+      const confettiShown = localStorage.getItem('amaday_confetti_shown');
+      if (confettiShown !== 'true' && confettiCanvasRef.current) {
+        triggerConfetti(confettiCanvasRef.current);
+        localStorage.setItem('amaday_confetti_shown', 'true');
+      }
+    }
 
     // Demo mode tracking (Task 3.4 - REQ-15, REQ-28, REQ-29)
     if (demoModeService.isDemoMode()) {
@@ -273,6 +289,21 @@ export const ManageHabitsPage = (): JSX.Element => {
       <FloatingActionButton
         onClick={handleOpenHabitForm}
         aria-label="Add new habit"
+      />
+
+      {/* Hidden canvas for confetti animation (Task 2.6) */}
+      <canvas
+        ref={confettiCanvasRef}
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          pointerEvents: 'none',
+          zIndex: 9999,
+        }}
+        aria-hidden="true"
       />
     </div>
   );
