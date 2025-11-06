@@ -82,7 +82,7 @@ describe('ProgressCard', () => {
       ];
       render(<ProgressCard habit={mockHabit} logs={logs} />);
 
-      expect(screen.getByText('Current:')).toBeInTheDocument();
+      expect(screen.getByText('Current Streak')).toBeInTheDocument();
       expect(screen.getByText('3 days')).toBeInTheDocument();
     });
 
@@ -98,7 +98,7 @@ describe('ProgressCard', () => {
       ];
       render(<ProgressCard habit={mockHabit} logs={logs} />);
 
-      expect(screen.getByText('Best:')).toBeInTheDocument();
+      expect(screen.getByText('Longest Streak')).toBeInTheDocument();
       expect(screen.getByText('5 days')).toBeInTheDocument();
     });
 
@@ -112,7 +112,7 @@ describe('ProgressCard', () => {
       ];
       render(<ProgressCard habit={mockHabit} logs={logs} />);
 
-      expect(screen.getByText('Completion:')).toBeInTheDocument();
+      expect(screen.getByText('Completion')).toBeInTheDocument();
       // Should show "4/5 days - 80%"
       expect(screen.getByText(/4\/5 days - 80%/)).toBeInTheDocument();
     });
