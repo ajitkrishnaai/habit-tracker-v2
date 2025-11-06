@@ -2,10 +2,10 @@
 
 Based on PRD: `0005-prd-amara-day-pages-polish.md`
 
-**Status:** Pending PRD #1 Completion
-**Estimated Effort:** 7-11 hours
+**Status:** In Progress (~30% Complete - Welcome Page done, see docs/TASK_0005_STATUS_REPORT.md)
+**Estimated Effort:** 7-11 hours (2-3 hours completed, 5-8 hours remaining)
 **Timeline:** Week 3-4
-**Prerequisites:** PRD #0004 (Foundation & Core Components) must be completed and validated
+**Prerequisites:** ✅ PRD #0004 (Foundation & Core Components) completed (Tasks 1.0-4.0 done, Task 5.0 documentation pending)
 
 ---
 
@@ -74,8 +74,8 @@ Based on PRD: `0005-prd-amara-day-pages-polish.md`
 
 ## Tasks
 
-- [ ] **1.0 Phase 3: Page Redesigns** (4-5 hours)
-  - [ ] 1.1 Update Welcome Page hero section (FR-1: Full-screen centered with layered depth)
+- [ ] **1.0 Phase 3: Page Redesigns** (4-5 hours) - IN PROGRESS (subtasks 1.1-1.7 complete ✅)
+  - [x] 1.1 Update Welcome Page hero section (FR-1: Full-screen centered with layered depth) ✅
     - Update `src/pages/WelcomePage.tsx`:
       - **Branding**: Display "AMARA DAY" in uppercase (clamp 2-3.5rem, DM Sans 600, letter-spacing 0.15em, moss-700 color)
       - **Tagline**: "Daily Eternal" in uppercase (clamp 0.875-1rem, DM Sans 400, letter-spacing 0.2em, stone-600 color)
@@ -107,7 +107,7 @@ Based on PRD: `0005-prd-amara-day-pages-polish.md`
         - Moss gradient background, white text, shimmer hover effect
       - `.scroll-indicator` animation:
         - Pill outline (24×40px) with bouncing dot inside
-  - [ ] 1.2 Update Welcome Page "Why It Matters" section (FR-2: Single-column cards with icons)
+  - [x] 1.2 Update Welcome Page "Why It Matters" section (FR-2: Single-column cards with icons) ✅
     - Update `src/pages/WelcomePage.tsx`:
       - Section title: "Why It Matters" (display font, text-2xl, centered)
       - Three feature cards in single-column grid (max-width 900px, centered)
@@ -125,7 +125,7 @@ Based on PRD: `0005-prd-amara-day-pages-polish.md`
         - 80px circular container with moss gradient background (100→50)
         - Inset highlight shadow
         - Icons: 40px size, moss-700 color, strokeWidth 1.5
-  - [ ] 1.3 Update Welcome Page "Your Journey" section (FR-3: Progressive timeline cards)
+  - [x] 1.3 Update Welcome Page "Your Journey" section (FR-3: Progressive timeline cards) ✅
     - Update `src/pages/WelcomePage.tsx`:
       - Section title: "Your Journey" (display font, centered)
       - Three timeline cards in responsive grid (auto-fit, min 280px)
@@ -146,7 +146,7 @@ Based on PRD: `0005-prd-amara-day-pages-polish.md`
         - Cloud gradient background (50→100→200)
         - 1px stone-300 border, soft shadow
         - Hover: `translateY(-4px)` lift + border→moss-300
-  - [ ] 1.4 Add Welcome Page "Metaphor Break" section (FR-4: Italicized quote interlude)
+  - [x] 1.4 Add Welcome Page "Metaphor Break" section (FR-4: Italicized quote interlude) ✅
     - Update `src/pages/WelcomePage.tsx`:
       - Quote: "Like a tree, growth is quiet. Roots deepen while you sleep. Branches reach when you're not watching."
       - Display font italic, clamp 1.25-1.75rem, moss-800 color
@@ -155,22 +155,22 @@ Based on PRD: `0005-prd-amara-day-pages-polish.md`
       - Top/bottom dividers: 1px gradient lines (transparent→moss-300→transparent)
       - Generous vertical padding (space-3xl)
       - Max-width 800px, centered
-  - [ ] 1.5 Add Welcome Page secondary CTA section (FR-5: Pricing note)
+  - [x] 1.5 Add Welcome Page secondary CTA section (FR-5: Pricing note) ✅
     - Update `src/pages/WelcomePage.tsx`:
       - Centered italic text: "Always free to start. Pay what feels right when AI-powered reflections begin (optional)."
       - Text-sm, tertiary color
     - Update `src/pages/WelcomePage.css`:
       - Padding: space-2xl vertical, max-width 700px
-  - [ ] 1.6 Update Welcome Page responsive behavior (FR-8)
+  - [x] 1.6 Update Welcome Page responsive behavior (FR-8) ✅
     - Mobile (≤767px): Reduce hero animation to 200px, tighter padding, full-width CTA (max 320px)
     - Tablet (768-1023px): Journey cards in 2-column grid, Why cards stay single column
     - Desktop (1024px+): All sections single column, max-width 900-1200px
     - Fluid typography: All text uses clamp() for smooth scaling
-  - [ ] 1.7 Add Welcome Page accessibility & motion settings (FR-9)
+  - [x] 1.7 Add Welcome Page accessibility & motion settings (FR-9) ✅
     - `prefers-reduced-motion`: Disable all animations (hover lifts, scroll indicator, shimmer)
     - `prefers-contrast: high`: Increase border widths to 2px
     - All interactive elements keyboard accessible with visible focus states
-  - [ ] 1.8 Update Daily Log Page header (FR-4)
+  - [x] 1.8 Update Daily Log Page header (FR-4) ✅
     - Update `src/pages/DailyLogPage.tsx`:
       - Add page header section:
         ```tsx
@@ -186,7 +186,7 @@ Based on PRD: `0005-prd-amara-day-pages-polish.md`
         - `font-size: var(--text-3xl); font-family: var(--font-display); color: var(--color-text-primary);`
       - `.page-subtitle` styles:
         - `font-size: var(--text-lg); color: var(--color-text-secondary);`
-  - [ ] 1.9 Update Daily Log date navigator (FR-5)
+  - [x] 1.9 Update Daily Log date navigator ✅ (FR-5)
     - Update `src/components/DateNavigator.tsx` or `src/pages/DailyLogPage.css`:
       - Active date pill styles:
         - `background: var(--color-primary); color: white; border-radius: var(--radius-full); padding: var(--space-sm) var(--space-md);`
@@ -203,7 +203,7 @@ Based on PRD: `0005-prd-amara-day-pages-polish.md`
           transform: translateX(10px);
         }
         ```
-  - [ ] 1.10 Update Daily Log habit cards (FR-6)
+  - [x] 1.10 Update Daily Log habit cards ✅ (FR-6)
     - Update `src/pages/DailyLogPage.css` or `src/components/HabitListItem.tsx` styles:
       - Apply `.card` base styles
       - Add category badge styles:
@@ -224,7 +224,7 @@ Based on PRD: `0005-prd-amara-day-pages-polish.md`
         }
         ```
       - Add checkmark fade-in when toggle ON (use existing checkmark or create new)
-  - [ ] 1.11 Update Daily Log notes section (FR-7)
+  - [x] 1.11 Update Daily Log notes section ✅ (FR-7)
     - Update `src/pages/DailyLogPage.tsx`:
       - Increase textarea rows or min-height
       - Add floating label if not already present
@@ -235,7 +235,7 @@ Based on PRD: `0005-prd-amara-day-pages-polish.md`
         - `min-height: 120px;`
       - `.notes-char-count` styles:
         - `color: var(--color-text-tertiary); font-size: var(--text-sm); text-align: right; display: block; margin-top: var(--space-xs);`
-  - [ ] 1.12 Update Progress Page header (FR-8)
+  - [x] 1.12 Update Progress Page header ✅ (FR-8)
     - Update `src/pages/ProgressPage.tsx`:
       - Add page header:
         ```tsx
@@ -246,14 +246,14 @@ Based on PRD: `0005-prd-amara-day-pages-polish.md`
         ```
     - Update `src/pages/ProgressPage.css`:
       - Use same `.page-header`, `.page-title`, `.page-subtitle` styles as Daily Log
-  - [ ] 1.13 Update Progress Card with gradient border (FR-9)
+  - [x] 1.13 Update Progress Card with gradient border ✅ (FR-9)
     - Update `src/components/ProgressCard.tsx` or `.css`:
       - Add gradient top border:
         - `border-top: 4px solid;`
         - `border-image: linear-gradient(90deg, #D4745E 0%, #8B9A7E 100%) 1;`
       - Apply warm surface background and shadow (already in `.card`)
       - Add hover lift (already in `.card:hover`)
-  - [ ] 1.14 Create warm-toned stat icons (SVG components) (FR-10)
+  - [x] 1.14 Create warm-toned stat icons ✅ (SVG components) (FR-10)
     - Create `src/components/icons/FlameIcon.tsx`:
       - SVG flame icon with warm gradient (terracotta to sunset)
       - Accept `size` prop (default 24px)
@@ -267,12 +267,12 @@ Based on PRD: `0005-prd-amara-day-pages-polish.md`
       - Accept `size` prop
       - Use for completion percentage display
     - Create `src/components/icons/index.ts` barrel export
-  - [ ] 1.15 Update Progress Page stat display
+  - [x] 1.15 Update Progress Page stat display ✅
     - Update `src/components/ProgressCard.tsx`:
       - Import stat icons (FlameIcon, TrophyIcon, ChartIcon)
       - Render icons next to corresponding stats
       - Apply larger font to numbers: `font-family: var(--font-display); font-size: var(--text-2xl);`
-  - [ ] 1.16 Update Progress Page pattern analysis (FR-11)
+  - [x] 1.16 Update Progress Page pattern analysis ✅ (FR-11)
     - Update `src/pages/ProgressPage.tsx` or `src/components/ProgressCard.tsx`:
       - Style keyword badges:
         - `.keyword-badge` class:
@@ -282,7 +282,7 @@ Based on PRD: `0005-prd-amara-day-pages-polish.md`
       - Highlight correlation text:
         - Wrap correlation text in `<span className="correlation-highlight">`
         - `background: var(--color-surface); padding: var(--space-xs) var(--space-sm); border-radius: var(--radius-sm);`
-  - [ ] 1.17 Update Progress Page charts (if using chart library) (FR-12)
+  - [x] 1.17 Update Progress Page charts ✅ (if using chart library) (FR-12)
     - If using Chart.js, Recharts, or similar:
       - Update chart color schemes to warm palette:
         - Bar charts: Terracotta gradient (#D4745E to #E89676)
@@ -290,7 +290,7 @@ Based on PRD: `0005-prd-amara-day-pages-polish.md`
         - Sparklines: Sunset orange (#E89C5A)
       - Ensure colors meet WCAG AA contrast on backgrounds
     - If no chart library, note: "Charts will use warm colors per design system"
-  - [ ] 1.18 Update Manage Habits Page with responsive grid (FR-13)
+  - [x] 1.18 Update Manage Habits Page with responsive grid (FR-13) ✅
     - Update `src/pages/ManageHabitsPage.tsx`:
       - Wrap habit cards in grid container: `<div className="habits-grid">{habitCards}</div>`
     - Update `src/pages/ManageHabitsPage.css`:
@@ -300,14 +300,14 @@ Based on PRD: `0005-prd-amara-day-pages-polish.md`
         - `gap: var(--space-lg);`
         - `@media (min-width: 768px)`: `grid-template-columns: repeat(2, 1fr);` /* Tablet: 2 columns */
         - `@media (min-width: 1024px)`: `grid-template-columns: repeat(3, 1fr);` /* Desktop: 3 columns (or 2, adjust as needed) */
-  - [ ] 1.19 Update Manage Habits habit cards (FR-14)
+  - [x] 1.19 Update Manage Habits habit cards (FR-14) ✅
     - Update habit card styles in `ManageHabitsPage.css` or component:
       - Apply `.card` base styles
       - Style edit/delete buttons:
         - Edit button: `color: var(--color-primary);` on hover
         - Delete button: `color: var(--color-error);` on hover
       - Add hover lift (already in `.card:hover`)
-  - [ ] 1.20 Create FloatingActionButton component for "Add Habit" (FR-15)
+  - [x] 1.20 Create FloatingActionButton component for "Add Habit" (FR-15) ✅
     - Create `src/components/FloatingActionButton.tsx`:
       - Circular button: `width: 64px; height: 64px; border-radius: var(--radius-full);`
       - Position: `position: fixed; bottom: 2rem; right: 2rem; z-index: 50;`
@@ -327,12 +327,12 @@ Based on PRD: `0005-prd-amara-day-pages-polish.md`
       - Test FAB renders with plus icon
       - Test onClick handler called when clicked
       - Test hover animation (via snapshot or class check)
-  - [ ] 1.21 Integrate FAB into Manage Habits Page
+  - [x] 1.21 Integrate FAB into Manage Habits Page ✅
     - Update `src/pages/ManageHabitsPage.tsx`:
       - Import `FloatingActionButton`
       - Render `<FloatingActionButton onClick={openHabitFormModal} />` at bottom of page
       - Ensure FAB appears above all content (z-index)
-  - [ ] 1.22 Update Habit Form Modal styling (FR-16)
+  - [x] 1.22 Update Habit Form Modal styling (FR-16) ✅
     - Update `src/components/HabitForm.tsx` or modal wrapper:
       - Add slide-up animation:
         ```css

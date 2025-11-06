@@ -403,6 +403,12 @@ export const DailyLogPage: React.FC = () => {
 
   return (
     <div className="daily-log-page">
+      {/* Page Header */}
+      <header className="page-header">
+        <h1 className="page-title">Today's Habits</h1>
+        <p className="page-subtitle">Track your mindful practice</p>
+      </header>
+
       {/* Date Navigator */}
       <DateNavigator
         currentDate={currentDate}

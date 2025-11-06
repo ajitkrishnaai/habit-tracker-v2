@@ -1,25 +1,39 @@
 /**
  * ProgressCard Styles
+ * Task 1.13: Gradient border for warm styling
  */
 
 .progress-card {
-  background: linear-gradient(135deg, var(--cloud-50), var(--cloud-100), var(--cloud-200));
-  border: 1px solid var(--stone-300);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-light);
   border-radius: var(--radius-lg);
-  padding: 1.25rem;
-  box-shadow: var(--shadow-card);
-  transition: transform var(--transition-base), box-shadow var(--transition-base), border-color var(--transition-base);
+  padding: var(--space-lg);
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-base);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Gradient top border - Task 1.13 */
+.progress-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #D4745E 0%, #8B9A7E 100%); /* terracotta to sage */
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
 }
 
 .progress-card:hover {
-  transform: translateY(-2px);
+  transform: translateY(-4px);
   box-shadow: var(--shadow-md);
-  border-color: var(--moss-300);
+  background: var(--color-background);
 }
 
 .progress-card.expanded {
-  box-shadow: var(--shadow-lg);
-  border-color: var(--moss-400);
+  box-shadow: var(--shadow-md);
 }
 
 /* Header Section */
@@ -76,30 +90,42 @@
   transition: transform 0.3s;
 }
 
-/* Summary Section */
+/* Summary Section - Task 1.15: Icons and larger numbers */
 .progress-summary {
   display: flex;
-  gap: 1.5rem;
+  gap: var(--space-xl);
   flex-wrap: wrap;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid var(--border-light);
+  padding-bottom: var(--space-lg);
+  border-bottom: 1px solid var(--color-border-light);
+  margin-top: var(--space-md);
 }
 
 .stat-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.stat-icon {
+  flex-shrink: 0;
+}
+
+.stat-content {
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
 }
 
 .stat-label {
-  font-size: 0.85rem;
-  color: var(--text-secondary);
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
   font-weight: 500;
 }
 
 .stat-value {
-  font-size: 1rem;
-  color: var(--text-primary);
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  color: var(--color-text-primary);
   font-weight: 600;
 }
 
@@ -161,20 +187,23 @@
   margin-top: 0.5rem;
 }
 
+/* Task 1.16: Warm-toned keyword badges */
 .keyword-badge {
-  background: var(--cloud-100);
-  color: var(--river-600);
-  padding: 0.35rem 0.75rem;
+  display: inline-block;
+  background: #E89C5A; /* sunset color */
+  color: white;
+  padding: var(--space-xs) var(--space-sm);
   border-radius: var(--radius-full);
-  font-size: 0.85rem;
-  font-weight: 500;
-  border: 1px solid var(--river-300);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  border: none;
+  margin-right: var(--space-xs);
   transition: all var(--transition-fast);
 }
 
 .keyword-badge:hover {
-  background: var(--river-50);
-  border-color: var(--river-400);
+  background: #D4745E; /* terracotta on hover */
+  transform: scale(1.05);
 }
 
 .sentiment-summary {

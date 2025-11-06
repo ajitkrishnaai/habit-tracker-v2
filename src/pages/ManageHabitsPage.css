@@ -1,0 +1,158 @@
+/**
+ * Manage Habits Page Styles
+ * Task 1.18 - Responsive grid layout for habit cards
+ * Task 1.22 - Habit Form Modal styling
+ */
+
+/* Habits Grid - Responsive layout */
+.habits-grid {
+  display: grid;
+  grid-template-columns: 1fr; /* Mobile: 1 column */
+  gap: var(--space-lg);
+  margin-top: var(--space-lg);
+}
+
+/* Tablet breakpoint: 2 columns */
+@media (min-width: 768px) {
+  .habits-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Desktop breakpoint: 3 columns */
+@media (min-width: 1024px) {
+  .habits-grid {
+    grid-template-columns: repeat(2, 1fr); /* Keep at 2 for better card width on wide screens */
+  }
+}
+
+/* Desktop large screens: Allow 3 columns if space permits */
+@media (min-width: 1280px) {
+  .habits-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* ============================================
+   HABIT FORM MODAL (Task 1.22)
+   ============================================ */
+
+/* Modal Backdrop - Warm dark semi-transparent overlay */
+.habit-form-modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(58, 54, 49, 0.5); /* Warm dark overlay */
+  z-index: 40;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  animation: fade-in 200ms ease-out;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Modal Container - Slides up from bottom */
+.habit-form-modal {
+  background: var(--color-surface); /* Warm surface */
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0; /* Rounded top corners */
+  padding: var(--space-xl);
+  width: 100%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-xl);
+  animation: slide-up 300ms ease-out;
+  position: relative;
+}
+
+@keyframes slide-up {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Modal Header */
+.habit-form-modal__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-lg);
+}
+
+.habit-form-modal__title {
+  font-size: var(--text-2xl);
+  font-weight: 600;
+  color: var(--color-text-primary);
+  font-family: var(--font-display);
+}
+
+.habit-form-modal__close {
+  padding: var(--space-xs);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--color-text-secondary);
+  transition: color var(--transition-base);
+  border-radius: var(--radius-sm);
+  min-width: var(--touch-target-min);
+  min-height: var(--touch-target-min);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.habit-form-modal__close:hover {
+  color: var(--color-text-primary);
+  background: var(--color-surface-hover);
+}
+
+.habit-form-modal__close:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Desktop view - Center modal instead of bottom */
+@media (min-width: 768px) {
+  .habit-form-modal-backdrop {
+    align-items: center;
+  }
+
+  .habit-form-modal {
+    border-radius: var(--radius-xl); /* All corners rounded on desktop */
+    max-height: 80vh;
+  }
+
+  @keyframes slide-up {
+    from {
+      transform: translateY(20px) scale(0.95);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0) scale(1);
+      opacity: 1;
+    }
+  }
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .habit-form-modal-backdrop,
+  .habit-form-modal {
+    animation: none;
+  }
+}

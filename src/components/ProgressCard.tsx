@@ -17,6 +17,7 @@ import {
 } from '../utils/percentageCalculator';
 import { analyzeNotes } from '../utils/notesAnalyzer';
 import { NotesHistory } from './NotesHistory';
+import { FlameIcon, TrophyIcon, ChartIcon } from './icons';
 
 interface ProgressCardProps {
   habit: Habit;
@@ -60,18 +61,27 @@ export const ProgressCard: React.FC<ProgressCardProps> = ({ habit, logs }) => {
 
       <div className="progress-summary">
         <div className="stat-item">
-          <span className="stat-label">Current:</span>
-          <span className="stat-value">{streaks.current} days</span>
+          <FlameIcon size={24} className="stat-icon" />
+          <div className="stat-content">
+            <span className="stat-label">Current Streak</span>
+            <span className="stat-value">{streaks.current} days</span>
+          </div>
         </div>
         <div className="stat-item">
-          <span className="stat-label">Best:</span>
-          <span className="stat-value">{streaks.longest} days</span>
+          <TrophyIcon size={24} className="stat-icon" />
+          <div className="stat-content">
+            <span className="stat-label">Longest Streak</span>
+            <span className="stat-value">{streaks.longest} days</span>
+          </div>
         </div>
         <div className="stat-item">
-          <span className="stat-label">Completion:</span>
-          <span className="stat-value">
-            {formatCompletionStats(completionStats)}
-          </span>
+          <ChartIcon size={24} className="stat-icon" />
+          <div className="stat-content">
+            <span className="stat-label">Completion</span>
+            <span className="stat-value">
+              {formatCompletionStats(completionStats)}
+            </span>
+          </div>
         </div>
       </div>
 

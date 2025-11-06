@@ -1,27 +1,37 @@
 /**
  * ProgressPage Styles
+ * Task 1.12-1.17: Progress Page redesign with warm styling
  */
 
 .progress-page {
-  padding: 1rem;
+  padding: var(--space-md);
   max-width: 800px;
   margin: 0 auto;
+  min-height: 100vh;
+  background-color: var(--color-background);
 }
 
+/* Page Header - matches Daily Log Page */
 .progress-page .page-header {
-  margin-bottom: 2rem;
+  text-align: center;
+  padding: var(--space-xl) var(--space-md);
+  margin-bottom: var(--space-xl);
 }
 
-.progress-page h1 {
-  font-size: 1.75rem;
-  margin-bottom: 0.5rem;
-  color: var(--text-primary);
+.progress-page .page-title {
+  font-size: var(--text-3xl);
+  font-family: var(--font-display);
+  color: var(--color-text-primary);
+  margin: 0 0 var(--space-xs) 0;
+  font-weight: 600;
+  letter-spacing: var(--tracking-tight);
 }
 
 .progress-page .page-subtitle {
-  color: var(--text-secondary);
-  font-size: 0.95rem;
+  font-size: var(--text-lg);
+  color: var(--color-text-secondary);
   margin: 0;
+  font-weight: 400;
 }
 
 .progress-list {
