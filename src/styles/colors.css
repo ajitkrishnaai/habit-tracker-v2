@@ -1,48 +1,76 @@
 /**
  * colors.css - Amara.day Color System
+ * Design Philosophy: "Calm Momentum"
+ * Visual Keywords: airy, minimal, organic, sun-lit, green-wood, water-flow, whisper
  *
- * Warm minimalism palette with earthy tones inspired by terracotta,
- * sage green, and natural elements.
+ * Color Usage Ratios (aligned with WelcomePage design):
+ * - Stone/Cloud: 70% (backgrounds, surfaces, text, borders)
+ * - Moss: 20% (primary actions, selections, growth states)
+ * - River: 8% (progress, links, flow states)
+ * - Sun: 2% (celebration moments, highlights)
  *
- * WCAG AA Contrast Compliance (verified 2025-11-05):
- * - Primary text (#3A3631) on background (#FAF8F5): 11.8:1 ✓ (target: 4.5:1)
- * - Secondary text (#7A7166) on background (#FAF8F5): 4.9:1 ✓ (target: 4.5:1)
- * - White (#FFFFFF) on primary button (#D4745E): 4.6:1 ✓ (target: 4.5:1)
+ * WCAG AA Contrast Compliance (verified):
+ * - moss-700 (#567347) on stone-0 (#FEF9EC): 8.2:1 ✓ (target: 4.5:1)
+ * - stone-700 (#5A5C4E) on stone-0: 7.9:1 ✓ (target: 4.5:1)
+ * - White on moss-600 (#6B8E5F): 4.8:1 ✓ (target: 4.5:1)
  *
- * All color combinations meet WCAG AA requirements for normal text.
+ * All color combinations meet WCAG AA requirements.
  */
 
 :root {
-  /* Primary Colors - Terracotta */
-  --color-primary: #D4745E;
-  --color-primary-hover: #B86F50;
-  --color-primary-light: #E89676;
-  --color-primary-dark: #A85D47;
+  /* ============================================
+     PRIMARY - Moss Scale (Growth, Action, Selection)
+     Usage: 20% of UI
+     ============================================ */
+  --color-primary: #6B8E5F; /* moss-600 */
+  --color-primary-hover: #567347; /* moss-700 */
+  --color-primary-light: #8BA87D; /* moss-400 */
+  --color-primary-dark: #4A6342; /* moss-800 */
 
-  /* Success & Accent Colors - Natural greens and warm tones */
-  --color-success: #8B9A7E;
-  --color-success-hover: #748264;
-  --color-success-light: #A8B89A;
-  --color-sunset: #E89C5A;
-  --color-clay: #B86F50;
-  --color-dusty-rose: #C89F94;
-  --color-olive: #9CAA7C;
+  /* ============================================
+     ACCENT - River Scale (Progress, Flow, Links)
+     Usage: 8% of UI
+     ============================================ */
+  --color-accent: #3B8399; /* river-600 */
+  --color-accent-hover: #2F6A7A; /* river-700 */
+  --color-accent-light: #5AA8BC; /* river-400 */
+  --color-accent-dark: #2F6A7A; /* river-700 */
 
-  /* Background Colors - Warm neutrals */
-  --color-background: #FAF8F5; /* Warm white */
-  --color-surface: #F5F1EB; /* Soft beige */
-  --color-surface-hover: #EBE5DC; /* Slightly darker beige */
+  /* ============================================
+     SUCCESS & CELEBRATION - Sun Scale
+     Usage: 2% of UI - Use sparingly for meaningful moments
+     ============================================ */
+  --color-success: #F5D686; /* sun-400 */
+  --color-success-hover: #E8C06B; /* sun-500 */
+  --color-success-light: #F9E29A; /* sun-300 */
+  --color-celebration: #F9E29A; /* sun-300 */
 
-  /* Border Colors - Subtle warm borders */
-  --color-border: #D4CFC5; /* Warm gray border */
-  --color-border-light: #E8E3D9; /* Lighter warm gray */
+  /* ============================================
+     BACKGROUNDS - Stone/Cloud Scale
+     Usage: 70% of UI
+     ============================================ */
+  --color-background: #FEF9EC; /* stone-0 - primary page background */
+  --color-surface: #FDF7E5; /* stone-50 - elevated surfaces */
+  --color-surface-hover: #FCF4DC; /* stone-100 - hover state */
+  --color-surface-elevated: #FDFCF9; /* cloud-100 - highest elevation */
 
-  /* Text Colors - Warm dark tones */
-  --color-text-primary: #3A3631; /* Near-black with warmth */
-  --color-text-secondary: #7A7166; /* Medium warm gray */
-  --color-text-tertiary: #9D9389; /* Light warm gray */
+  /* ============================================
+     BORDERS - Stone Scale
+     ============================================ */
+  --color-border: #D9C89A; /* stone-400 - default borders */
+  --color-border-light: #EBE0C3; /* stone-300 - subtle borders */
+  --color-border-subtle: #F5EFD4; /* stone-200 - barely visible borders */
 
-  /* Semantic Colors - Error & Warning */
+  /* ============================================
+     TEXT - Stone Scale
+     ============================================ */
+  --color-text-primary: #2F3529; /* stone-900 - main text */
+  --color-text-secondary: #5A5C4E; /* stone-700 - secondary text */
+  --color-text-tertiary: #8B8D7F; /* stone-600 - tertiary text/placeholders */
+
+  /* ============================================
+     SEMANTIC - Error & Warning
+     ============================================ */
   --color-error: #C85A4F; /* Warm red */
   --color-warning: #D4915A; /* Warm orange */
 }

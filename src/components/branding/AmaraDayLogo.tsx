@@ -29,8 +29,8 @@ export const AmaraDayLogo: React.FC<AmaraDayLogoProps> = ({
   const isMonochrome = variant === 'monochrome';
   const isVertical = layout === 'vertical';
 
-  const amaraColor = isMonochrome ? 'currentColor' : '#D4745E'; // Terracotta
-  const dayColor = isMonochrome ? 'currentColor' : '#7A7166'; // Warm gray
+  const amaraColor = isMonochrome ? 'currentColor' : '#567347'; // moss-700
+  const dayColor = isMonochrome ? 'currentColor' : '#8B8D7F'; // stone-600
 
   const containerStyle: React.CSSProperties = {
     display: 'inline-flex',

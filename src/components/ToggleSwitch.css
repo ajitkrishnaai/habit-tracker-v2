@@ -76,10 +76,10 @@
   transform: translateX(0);
 }
 
-/* ON state - Sage green gradient background */
+/* ON state - Moss gradient background (aligned with design system) */
 .toggle-switch--on .toggle-switch__slider {
-  background: linear-gradient(135deg, #8B9A7E 0%, #A8B89A 100%);
-  box-shadow: 0 2px 8px rgba(139, 154, 126, 0.25);
+  background: linear-gradient(135deg, var(--moss-600) 0%, var(--moss-700) 50%, var(--moss-800) 100%);
+  box-shadow: 0 2px 8px rgba(107, 142, 95, 0.25);
 }
 
 .toggle-switch--on .toggle-switch__thumb {

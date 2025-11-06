@@ -8,7 +8,7 @@
   top: 0;
   z-index: 100;
   /* Glassmorphism: semi-transparent with backdrop blur */
-  background-color: rgba(250, 248, 245, 0.9); /* --color-background with opacity */
+  background-color: rgba(254, 249, 236, 0.9); /* stone-0 with opacity */
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--color-border-light);
