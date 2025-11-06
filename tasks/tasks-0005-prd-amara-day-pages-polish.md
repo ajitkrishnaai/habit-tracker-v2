@@ -170,7 +170,7 @@ Based on PRD: `0005-prd-amara-day-pages-polish.md`
     - `prefers-reduced-motion`: Disable all animations (hover lifts, scroll indicator, shimmer)
     - `prefers-contrast: high`: Increase border widths to 2px
     - All interactive elements keyboard accessible with visible focus states
-  - [ ] 1.8 Update Daily Log Page header (FR-4)
+  - [x] 1.8 Update Daily Log Page header (FR-4) ✅
     - Update `src/pages/DailyLogPage.tsx`:
       - Add page header section:
         ```tsx
@@ -186,7 +186,7 @@ Based on PRD: `0005-prd-amara-day-pages-polish.md`
         - `font-size: var(--text-3xl); font-family: var(--font-display); color: var(--color-text-primary);`
       - `.page-subtitle` styles:
         - `font-size: var(--text-lg); color: var(--color-text-secondary);`
-  - [ ] 1.9 Update Daily Log date navigator (FR-5)
+  - [x] 1.9 Update Daily Log date navigator ✅ (FR-5)
     - Update `src/components/DateNavigator.tsx` or `src/pages/DailyLogPage.css`:
       - Active date pill styles:
         - `background: var(--color-primary); color: white; border-radius: var(--radius-full); padding: var(--space-sm) var(--space-md);`
@@ -203,7 +203,7 @@ Based on PRD: `0005-prd-amara-day-pages-polish.md`
           transform: translateX(10px);
         }
         ```
-  - [ ] 1.10 Update Daily Log habit cards (FR-6)
+  - [x] 1.10 Update Daily Log habit cards ✅ (FR-6)
     - Update `src/pages/DailyLogPage.css` or `src/components/HabitListItem.tsx` styles:
       - Apply `.card` base styles
       - Add category badge styles:
@@ -224,7 +224,7 @@ Based on PRD: `0005-prd-amara-day-pages-polish.md`
         }
         ```
       - Add checkmark fade-in when toggle ON (use existing checkmark or create new)
-  - [ ] 1.11 Update Daily Log notes section (FR-7)
+  - [x] 1.11 Update Daily Log notes section ✅ (FR-7)
     - Update `src/pages/DailyLogPage.tsx`:
       - Increase textarea rows or min-height
       - Add floating label if not already present
