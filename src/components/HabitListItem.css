@@ -1,16 +1,13 @@
 /**
  * Habit List Item Styles
  * Task 1.19 - Apply card styles and warm button colors
+ * Extends .card base styles from main.css
  */
 
 .habit-list-item {
-  /* Apply base card styles from main.css */
-  background: var(--color-background);
-  border-radius: var(--radius-lg);
-  padding: var(--space-lg);
-  box-shadow: var(--shadow-sm);
-  border: 1px solid var(--color-border-light);
-  transition: all var(--transition-base);
+  /* Inherits from .card in main.css */
+  /* Additional habit-specific overrides */
+  background: var(--color-background); /* Slight variation from card default */
   min-width: 0;
   max-width: 100%;
   box-sizing: border-box;
@@ -19,9 +16,7 @@
 }
 
 .habit-list-item:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
-  border-color: var(--color-border);
+  transform: translateY(-2px); /* Slightly smaller lift than default card */
 }
 
 .habit-list-item__content {

@@ -1,7 +1,50 @@
 /**
  * Global Animations
  * Task 2.0 - Keyframe animations for milestone celebrations and feedback
+ *
+ * UNIFIED MODAL ANIMATIONS - Used by all modals (AuthModal, ConversionModal, HabitFormModal)
  */
+
+/* Modal fade-in - Used for modal overlays/backdrops */
+@keyframes modal-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Modal slide-up - Used for mobile modal entry (bottom to center) */
+@keyframes modal-slide-up {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Modal slide-up desktop - Used for desktop modal entry (slight scale + translate) */
+@keyframes modal-slide-up-desktop {
+  from {
+    transform: translateY(20px) scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+/* Spinner animation - Used for loading states */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
 
 /* Task 2.8: Streak Milestone Animation - Flame Pulse */
 @keyframes flame-pulse {

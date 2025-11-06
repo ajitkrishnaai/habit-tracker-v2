@@ -438,7 +438,7 @@ export const DailyLogPage: React.FC = () => {
         <h2 className="daily-log-page__section-title">Today's Habits</h2>
         <ul className="daily-log-page__habits-list">
           {habitLogs.map(({ habit, status }) => (
-            <li key={habit.habit_id} className="daily-log-page__habit-item">
+            <li key={habit.habit_id} className="card daily-log-page__habit-item">
               <div className="daily-log-page__habit-info">
                 <span className="daily-log-page__habit-name">{habit.name}</span>
                 {habit.category && (
