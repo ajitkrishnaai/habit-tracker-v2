@@ -71,7 +71,7 @@ export const WelcomePage = (): JSX.Element => {
             type="button"
             onClick={handleBeginPractice}
             disabled={loading || !authInitialized}
-            className="welcome-hero-cta"
+            className="btn-primary welcome-hero-cta"
             aria-label="Begin your daily practice with Amara.day"
           >
             {loading ? 'Starting...' : 'Begin Your Practice'}

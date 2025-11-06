@@ -126,52 +126,14 @@
   max-width: 600px;
 }
 
-/* Hero CTA Button */
+/* Hero CTA Button - Uses .btn-primary from buttons.css with Welcome-specific overrides */
 .welcome-hero-cta {
-  font-family: var(--font-display);
-  font-weight: 600;
+  /* Responsive text size for hero context */
   font-size: clamp(1rem, 2.5vw, 1.25rem);
+  /* Generous padding for hero button */
   padding: 1rem 2.5rem;
-  border-radius: var(--radius-lg);
-  border: none;
-  color: #fff;
-  background: linear-gradient(135deg, var(--moss-600) 0%, var(--moss-700) 50%, var(--moss-800) 100%);
-  box-shadow: 0 6px 20px rgba(107, 142, 95, 0.3);
+  /* Taller minimum height for prominence */
   min-height: 56px;
-  cursor: pointer;
-  transition: transform var(--transition-base), box-shadow var(--transition-base), background var(--transition-base);
-  position: relative;
-  overflow: hidden;
-}
-
-.welcome-hero-cta::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-  transition: left 0.6s;
-}
-
-.welcome-hero-cta:hover::before {
-  left: 100%;
-}
-
-.welcome-hero-cta:hover:not(:disabled) {
-  transform: translateY(-3px);
-  box-shadow: 0 10px 28px rgba(107, 142, 95, 0.4);
-  background: linear-gradient(135deg, var(--moss-400) 0%, var(--moss-600) 50%, var(--moss-700) 100%);
-}
-
-.welcome-hero-cta:active:not(:disabled) {
-  transform: translateY(-1px);
-}
-
-.welcome-hero-cta:disabled {
-  opacity: 0.7;
-  cursor: not-allowed;
 }
 
 /* Inline Sign In Link Below CTA */
