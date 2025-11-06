@@ -376,7 +376,7 @@ Based on PRD: `0004-prd-amara-day-foundation.md`
     - Create `src/pages/ManageHabitsPage.css` if doesn't exist:
       - ⚠️ DEFERRED - Already exists and uses design system (to be verified in Task 4.0 Testing)
 
-- [ ] **4.0 Testing & Quality Assurance** (1-2 hours)
+- [x] **4.0 Testing & Quality Assurance** (1-2 hours) ✅
   - [x] 4.1 Create unit tests for branding components ✅
     - ✅ Created `src/components/branding/AmaraDayLogo.test.tsx`:
       - ✅ Test logo renders with "Amara" + ".day" text
