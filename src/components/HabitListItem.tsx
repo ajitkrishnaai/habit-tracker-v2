@@ -100,7 +100,7 @@ export const HabitListItem = ({ habit, onEdit, onDelete }: HabitListItemProps): 
             <button
               onClick={handleEditClick}
               disabled={deleting}
-              className="habit-list-item__edit-btn"
+              className="btn-primary btn-sm"
             >
               Edit
             </button>
@@ -108,7 +108,7 @@ export const HabitListItem = ({ habit, onEdit, onDelete }: HabitListItemProps): 
             <button
               onClick={handleRemoveClick}
               disabled={deleting}
-              className="habit-list-item__delete-btn"
+              className="btn-danger btn-sm"
             >
               Remove
             </button>
@@ -125,7 +125,7 @@ export const HabitListItem = ({ habit, onEdit, onDelete }: HabitListItemProps): 
             <button
               onClick={handleCancelDelete}
               disabled={deleting}
-              className="habit-list-item__cancel-btn"
+              className="btn-secondary btn-sm"
             >
               Cancel
             </button>
@@ -133,7 +133,7 @@ export const HabitListItem = ({ habit, onEdit, onDelete }: HabitListItemProps): 
             <button
               onClick={handleConfirmDelete}
               disabled={deleting}
-              className="habit-list-item__confirm-btn"
+              className="btn-danger-primary btn-sm"
             >
               {deleting ? 'Removing...' : 'Yes, Remove'}
             </button>

@@ -1,6 +1,7 @@
 /**
  * Navigation Component Styles - Amara.day Redesign
  * Features glassmorphism effect with backdrop blur
+ * Simplified inline layout with pipe separators
  */
 
 .navigation {
@@ -20,34 +21,31 @@
   margin: 0 auto;
   padding: var(--spacing-md) var(--spacing-lg);
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
-  gap: var(--spacing-md);
-}
-
-.navigation-brand {
-  flex-shrink: 0;
-}
-
-/* Logo component handles its own styling */
-.navigation-title {
-  font-size: var(--font-size-lg);
-  font-weight: 600;
-  color: var(--color-text-primary);
-  margin: 0;
 }
 
 .navigation-menu {
   display: flex;
-  gap: var(--spacing-sm);
+  align-items: center;
+  gap: var(--spacing-md);
   list-style: none;
   margin: 0;
   padding: 0;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
 }
 
 .navigation-item {
   display: inline-block;
+}
+
+.navigation-separator {
+  display: inline-block;
+  color: var(--stone-400);
+  font-size: var(--font-size-base);
+  user-select: none;
+  padding: 0;
+  margin: 0;
 }
 
 .navigation-link {
@@ -57,8 +55,8 @@
   font-weight: 500;
   color: var(--color-text-secondary);
   text-decoration: none;
-  border-radius: var(--radius-md);
   transition: all var(--transition-base);
+  position: relative;
 
   /* Ensure 44x44px minimum touch target */
   min-height: 44px;
@@ -69,59 +67,60 @@
 }
 
 .navigation-link:hover {
-  background-color: var(--color-surface);
-  color: var(--color-primary);
+  color: var(--color-text-primary);
 }
 
 .navigation-link:focus-visible {
   outline: 2px solid var(--color-primary);
   outline-offset: 2px;
+  border-radius: var(--radius-sm);
 }
 
-/* Active link uses warm terracotta */
+/* Active link - subtle underline indicator with moss color */
 .navigation-link--active {
-  background-color: var(--color-primary);
-  color: white;
+  color: var(--moss-700);
   font-weight: 600;
 }
 
+.navigation-link--active::after {
+  content: '';
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 24px;
+  height: 2px;
+  background-color: var(--moss-600);
+  border-radius: 1px;
+}
+
 .navigation-link--active:hover {
-  background-color: var(--color-primary-hover);
-  color: white;
+  color: var(--moss-800);
 }
 
 /* Mobile optimizations */
 @media (max-width: 767px) {
   .navigation-container {
     padding: var(--spacing-sm) var(--spacing-md);
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .navigation-title {
-    font-size: var(--font-size-base);
   }
 
   .navigation-menu {
-    width: 100%;
-    justify-content: space-between;
-    gap: var(--spacing-xs);
+    gap: var(--spacing-sm);
   }
 
   .navigation-link {
     font-size: var(--font-size-sm);
-    padding: var(--spacing-sm);
-    flex: 1;
-    text-align: center;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    min-width: auto;
+  }
+
+  .navigation-separator {
+    font-size: var(--font-size-sm);
   }
 }
 
 /* Tablet and desktop */
 @media (min-width: 768px) {
-  .navigation-container {
-    flex-direction: row;
-  }
-
   .navigation-menu {
     gap: var(--spacing-md);
   }

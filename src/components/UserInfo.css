@@ -1,0 +1,48 @@
+/**
+ * UserInfo Component Styles
+ *
+ * Displays logged-in user's email in a subtle, centered format
+ * below the main navigation.
+ */
+
+.user-info {
+  text-align: center;
+  padding: var(--space-xs) var(--space-md);
+  background-color: var(--stone-50);
+  border-bottom: 1px solid var(--stone-200);
+}
+
+.user-info-text {
+  font-size: 0.875rem;
+  font-style: italic;
+  color: var(--stone-600);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.user-info-email {
+  font-weight: 500;
+  color: var(--stone-700);
+}
+
+/* Mobile optimizations */
+@media (max-width: 767px) {
+  .user-info {
+    padding: var(--space-xs) var(--space-sm);
+  }
+
+  .user-info-text {
+    font-size: 0.8125rem;
+  }
+}
+
+/* Accessibility: High contrast mode */
+@media (prefers-contrast: high) {
+  .user-info {
+    border-bottom-width: 2px;
+  }
+
+  .user-info-email {
+    color: var(--stone-900);
+  }
+}

@@ -146,11 +146,11 @@
   color: var(--color-text-primary);
 }
 
-/* Task 1.10: Category badge with warm sunset color */
+/* Task 1.10: Category badge with warm color */
 .daily-log-page__habit-category {
   display: inline-block;
   padding: var(--space-xs) var(--space-sm);
-  background-color: #E89C5A; /* sunset color from design system */
+  background-color: var(--color-warning); /* warm orange from design system */
   color: white;
   font-size: var(--text-xs);
   font-weight: 600;

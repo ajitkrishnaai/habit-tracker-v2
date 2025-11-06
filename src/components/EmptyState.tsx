@@ -7,7 +7,7 @@
  */
 
 import { Link } from 'react-router-dom';
-import { Sunrise, TrendingUp, Calendar, LucideIcon } from 'lucide-react';
+import { Sunrise, TrendingUp, CalendarDays, LucideIcon } from 'lucide-react';
 import './EmptyState.css';
 
 interface EmptyStateProps {
@@ -26,7 +26,7 @@ interface EmptyStateProps {
 const iconMap: Record<string, LucideIcon> = {
   Sunrise,
   TrendingUp,
-  Calendar,
+  Calendar: CalendarDays, // Use CalendarDays for better brand consistency
 };
 
 // Map icon names to emoji fallbacks

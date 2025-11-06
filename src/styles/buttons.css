@@ -1,8 +1,35 @@
 /**
  * buttons.css - Amara.day Button System
  *
- * Warm, organic button styles with hover/active animations.
+ * Consistent button patterns for all actions throughout the app.
  * All buttons meet 44x44px minimum touch target for accessibility.
+ *
+ * BUTTON PATTERNS:
+ *
+ * 1. POSITIVE ACTIONS (Edit, Save, Confirm):
+ *    - Use .btn-primary (filled moss green with shimmer)
+ *    - Pattern: <button class="btn-primary">Edit</button>
+ *
+ * 2. NEUTRAL ACTIONS (Cancel, Back):
+ *    - Use .btn-secondary (outlined neutral with hover)
+ *    - Pattern: <button class="btn-secondary">Cancel</button>
+ *
+ * 3. NEGATIVE ACTIONS (Remove, Delete):
+ *    - Use .btn-danger (outlined red, fills on hover)
+ *    - Pattern: <button class="btn-danger">Remove</button>
+ *
+ * 4. CONFIRM DESTRUCTIVE ACTIONS (Yes Delete, Confirm Remove):
+ *    - Use .btn-danger-primary (filled red with shimmer)
+ *    - Pattern: <button class="btn-danger-primary">Yes, Remove</button>
+ *
+ * SIZING MODIFIERS:
+ *    - .btn-sm (smaller buttons for compact UIs)
+ *    - .btn-lg (larger buttons for emphasis)
+ *    - .btn-block (full-width buttons)
+ *
+ * EXAMPLE USAGE:
+ *    <button class="btn-primary btn-sm">Edit</button>
+ *    <button class="btn-danger btn-sm">Remove</button>
  */
 
 /* Primary Button - Moss gradient (matches WelcomePage design) */
@@ -65,11 +92,11 @@
   transform: none;
 }
 
-/* Secondary Button - Outlined terracotta */
+/* Secondary Button - Outlined (neutral actions, cancel) */
 .btn-secondary {
   background: transparent;
-  border: 2px solid var(--color-primary);
-  color: var(--color-primary);
+  border: 2px solid var(--color-border);
+  color: var(--color-text-secondary);
   padding: 0.75rem 2rem;
   border-radius: var(--radius-md);
   font-weight: 600;
@@ -85,13 +112,14 @@
 }
 
 .btn-secondary:hover {
-  background: var(--color-primary);
-  color: white;
+  background: var(--color-surface-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
 }
 
 .btn-secondary:active {
-  background: var(--color-primary-dark);
-  border-color: var(--color-primary-dark);
+  transform: translateY(0);
+  box-shadow: none;
 }
 
 .btn-secondary:focus-visible {
@@ -103,6 +131,110 @@
   opacity: 0.5;
   cursor: not-allowed;
   transform: none;
+}
+
+/* Danger Button - Outlined red (destructive actions: remove, delete) */
+.btn-danger {
+  background: transparent;
+  border: 2px solid var(--color-error);
+  color: var(--color-error);
+  padding: 0.75rem 2rem;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  font-family: var(--font-display);
+  font-size: var(--text-base);
+  transition: all var(--transition-base);
+  cursor: pointer;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
+.btn-danger:hover {
+  background: var(--color-error);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(200, 90, 79, 0.25);
+}
+
+.btn-danger:active {
+  transform: translateY(0);
+  background: var(--color-error-hover);
+  border-color: var(--color-error-hover);
+}
+
+.btn-danger:focus-visible {
+  outline: 2px solid var(--color-error);
+  outline-offset: 2px;
+}
+
+.btn-danger:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Danger Primary - Filled red (confirm destructive actions) */
+.btn-danger-primary {
+  background: linear-gradient(135deg, var(--color-error) 0%, var(--color-error-hover) 100%);
+  color: white;
+  padding: 0.75rem 2rem;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  font-family: var(--font-display);
+  font-size: var(--text-base);
+  border: none;
+  cursor: pointer;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  box-shadow: 0 4px 16px rgba(200, 90, 79, 0.25);
+  transition: all var(--transition-base);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Shimmer effect for danger-primary */
+.btn-danger-primary::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+  transition: left 0.5s;
+}
+
+.btn-danger-primary:hover::before {
+  left: 100%;
+}
+
+.btn-danger-primary:hover {
+  background: linear-gradient(135deg, var(--color-error-hover) 0%, var(--color-error-dark) 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(200, 90, 79, 0.35);
+}
+
+.btn-danger-primary:active {
+  transform: translateY(0);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-danger-primary:focus-visible {
+  outline: 2px solid var(--color-error);
+  outline-offset: 2px;
+}
+
+.btn-danger-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  background: var(--color-text-tertiary);
 }
 
 /* Button sizing variants */

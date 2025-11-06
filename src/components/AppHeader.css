@@ -1,0 +1,129 @@
+/**
+ * AppHeader Component Styles
+ *
+ * Design System: Amara.day "Calm Momentum"
+ * Provides consistent branding header across all pages
+ *
+ * Variants:
+ * - Hero: Large, prominent header for landing pages
+ * - Compact: Smaller header for authenticated app pages
+ */
+
+/* ============================================
+   BASE STYLES
+   ============================================ */
+
+.app-header {
+  text-align: center;
+  width: 100%;
+}
+
+.app-header-brand {
+  display: inline-block;
+}
+
+.app-header-logo {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  color: var(--moss-700);
+  margin: 0 0 var(--space-xs) 0;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.app-header-tagline {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  color: var(--stone-600);
+  margin: 0;
+  text-transform: uppercase;
+}
+
+/* ============================================
+   HERO VARIANT (WelcomePage)
+   ============================================ */
+
+.app-header--hero {
+  padding: 0;
+  margin-bottom: var(--space-xl);
+}
+
+.app-header--hero .app-header-logo {
+  font-size: clamp(2rem, 6vw, 3.5rem);
+}
+
+.app-header--hero .app-header-tagline {
+  font-size: clamp(0.875rem, 2vw, 1rem);
+}
+
+/* ============================================
+   COMPACT VARIANT (Authenticated Pages)
+   ============================================ */
+
+.app-header--compact {
+  padding: var(--space-lg) var(--space-md) var(--space-md);
+  background: linear-gradient(180deg,
+    var(--stone-0) 0%,
+    var(--stone-50) 100%
+  );
+  border-bottom: 1px solid var(--stone-200);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  backdrop-filter: blur(10px);
+}
+
+.app-header--compact .app-header-logo {
+  font-size: clamp(1.5rem, 4vw, 2rem);
+}
+
+.app-header--compact .app-header-tagline {
+  font-size: clamp(0.625rem, 1.5vw, 0.75rem);
+}
+
+/* ============================================
+   MOBILE OPTIMIZATIONS
+   ============================================ */
+
+@media (max-width: 767px) {
+  .app-header--hero .app-header-logo {
+    font-size: clamp(1.75rem, 9vw, 2.5rem);
+    letter-spacing: 0.1em;
+  }
+
+  .app-header--hero .app-header-tagline {
+    font-size: clamp(0.75rem, 2.5vw, 0.875rem);
+    letter-spacing: 0.15em;
+  }
+
+  .app-header--compact {
+    padding: var(--space-md) var(--space-sm) var(--space-sm);
+  }
+
+  .app-header--compact .app-header-logo {
+    font-size: clamp(1.25rem, 5vw, 1.5rem);
+  }
+
+  .app-header--compact .app-header-tagline {
+    font-size: clamp(0.5rem, 2vw, 0.625rem);
+  }
+}
+
+/* ============================================
+   ACCESSIBILITY
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .app-header {
+    transition: none;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .app-header--compact {
+    border-bottom-width: 2px;
+  }
+}

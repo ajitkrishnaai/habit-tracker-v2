@@ -15,6 +15,7 @@ import { logError } from '../utils/errorHandler';
 import { demoModeService } from '../services/demoMode';
 import { TreeOfLife } from '../components/TreeOfLife';
 import { BotanicalCorners } from '../components/BotanicalCorners';
+import AppHeader from '../components/AppHeader';
 import './WelcomePage.css';
 
 export const WelcomePage = (): JSX.Element => {
@@ -55,10 +56,7 @@ export const WelcomePage = (): JSX.Element => {
       <div className="welcome-container">
         {/* Hero Section */}
         <header className="welcome-hero">
-          <div className="welcome-brand-hero">
-            <h1 className="welcome-logo-hero">AMARA DAY</h1>
-            <p className="welcome-tagline">Daily Eternal</p>
-          </div>
+          <AppHeader variant="hero" />
           <div className="welcome-hero-animation">
             <TreeOfLife />
           </div>

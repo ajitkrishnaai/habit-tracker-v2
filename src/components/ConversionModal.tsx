@@ -1,5 +1,5 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
+import { AuthModal } from './AuthModal';
 import './ConversionModal.css';
 
 /**
@@ -17,6 +17,7 @@ import './ConversionModal.css';
  * - Dismissible via X button, overlay click, or secondary CTA
  * - Accessible with ARIA labels and keyboard navigation
  * - Mobile-responsive with stacked buttons on small screens
+ * - Opens AuthModal for sign-up flow
  */
 
 interface ConversionModalProps {
@@ -25,7 +26,7 @@ interface ConversionModalProps {
 }
 
 export const ConversionModal: React.FC<ConversionModalProps> = ({ trigger, onClose }) => {
-  const navigate = useNavigate();
+  const [showAuthModal, setShowAuthModal] = useState(false);
 
   /**
    * Get title and message based on trigger type (REQ-20 to REQ-22)
@@ -53,11 +54,15 @@ export const ConversionModal: React.FC<ConversionModalProps> = ({ trigger, onClo
   const { title, message } = getTitleAndMessage();
 
   const handleSignInClick = () => {
-    navigate('/');
-    onClose();
+    setShowAuthModal(true);
   };
 
   const handleContinueDemo = () => {
+    onClose();
+  };
+
+  const handleCloseAuthModal = () => {
+    setShowAuthModal(false);
     onClose();
   };
 
@@ -67,6 +72,11 @@ export const ConversionModal: React.FC<ConversionModalProps> = ({ trigger, onClo
       onClose();
     }
   };
+
+  // If auth modal is shown, render it instead of conversion modal
+  if (showAuthModal) {
+    return <AuthModal onClose={handleCloseAuthModal} initialMode="signup" />;
+  }
 
   return (
     <div

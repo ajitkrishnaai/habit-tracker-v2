@@ -72,5 +72,8 @@
      SEMANTIC - Error & Warning
      ============================================ */
   --color-error: #C85A4F; /* Warm red */
+  --color-error-hover: #B54B40; /* Darker warm red for hover */
+  --color-error-dark: #9D3D33; /* Even darker for active states */
+  --color-error-light: #F5E5E3; /* Light background for error messages */
   --color-warning: #D4915A; /* Warm orange */
 }

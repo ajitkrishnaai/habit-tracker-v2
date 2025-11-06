@@ -4,32 +4,106 @@
  * Task 1.22 - Habit Form Modal styling
  */
 
+/* Main page container */
+.manage-habits-page {
+  min-height: 100vh;
+  background-color: var(--color-background);
+  padding: var(--space-xl) var(--space-md);
+}
+
+.manage-habits-page__container {
+  max-width: var(--max-width-content);
+  margin: 0 auto;
+}
+
+/* Loading state */
+.manage-habits-page--loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.manage-habits-page__loading-text {
+  text-align: center;
+  color: var(--color-text-secondary);
+  font-size: var(--text-lg);
+}
+
+/* Error message */
+.manage-habits-page__error {
+  margin-bottom: var(--space-lg);
+  padding: var(--space-md);
+  background-color: var(--color-error-light);
+  border: 1px solid var(--color-error);
+  border-radius: var(--radius-md);
+  color: var(--color-error-dark);
+  font-size: var(--text-sm);
+}
+
+/* Content section */
+.manage-habits-page__content {
+  background-color: var(--color-surface);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--color-border-light);
+}
+
+.manage-habits-page__section-title {
+  font-size: var(--text-2xl);
+  font-family: var(--font-display);
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin: 0 0 var(--space-lg) 0;
+}
+
 /* Habits Grid - Responsive layout */
 .habits-grid {
   display: grid;
-  grid-template-columns: 1fr; /* Mobile: 1 column */
+  grid-template-columns: minmax(0, 1fr); /* Mobile: 1 column with minmax to prevent overflow */
   gap: var(--space-lg);
-  margin-top: var(--space-lg);
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
 }
 
 /* Tablet breakpoint: 2 columns */
 @media (min-width: 768px) {
   .habits-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
-/* Desktop breakpoint: 3 columns */
+/* Desktop breakpoint: 2 columns */
 @media (min-width: 1024px) {
   .habits-grid {
-    grid-template-columns: repeat(2, 1fr); /* Keep at 2 for better card width on wide screens */
+    grid-template-columns: repeat(2, minmax(0, 1fr)); /* Keep at 2 for better card width on wide screens */
   }
 }
 
 /* Desktop large screens: Allow 3 columns if space permits */
 @media (min-width: 1280px) {
   .habits-grid {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* Responsive: Desktop adjustments */
+@media (min-width: 768px) {
+  .manage-habits-page {
+    padding: var(--space-2xl) var(--space-xl);
+  }
+
+  .manage-habits-page__content {
+    padding: var(--space-2xl);
+  }
+}
+
+/* Desktop - constrain width */
+@media (min-width: 1024px) {
+  .manage-habits-page__container {
+    max-width: var(--max-width-content);
   }
 }
 

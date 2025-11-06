@@ -129,14 +129,8 @@ export const ManageHabitsPage = (): JSX.Element => {
 
   if (loading) {
     return (
-      <div style={{
-        minHeight: '100vh',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: '2rem',
-      }}>
-        <div style={{ textAlign: 'center', color: '#6b7280' }}>
+      <div className="manage-habits-page manage-habits-page--loading">
+        <div className="manage-habits-page__loading-text">
           Loading habits...
         </div>
       </div>
@@ -144,43 +138,17 @@ export const ManageHabitsPage = (): JSX.Element => {
   }
 
   return (
-    <div style={{
-      minHeight: '100vh',
-      backgroundColor: '#f9fafb',
-      padding: '2rem 1rem',
-    }}>
-      <div style={{
-        maxWidth: '800px',
-        margin: '0 auto',
-      }}>
+    <div className="manage-habits-page">
+      <div className="manage-habits-page__container">
         {/* Page Header */}
-        <h1 style={{
-          fontSize: '2rem',
-          fontWeight: 'bold',
-          marginBottom: '0.5rem',
-          color: '#111827',
-        }}>
-          Manage Habits
-        </h1>
-
-        <p style={{
-          fontSize: '1rem',
-          color: '#6b7280',
-          marginBottom: '2rem',
-        }}>
-          Add, edit, or remove your tracked habits
-        </p>
+        <header className="page-header">
+          <h1 className="page-title">Manage Habits</h1>
+          <p className="page-subtitle">Add, edit, or remove your tracked habits</p>
+        </header>
 
         {/* Error Display */}
         {error && (
-          <div style={{
-            marginBottom: '1.5rem',
-            padding: '1rem',
-            backgroundColor: '#fee2e2',
-            border: '1px solid #ef4444',
-            borderRadius: '8px',
-            color: '#991b1b',
-          }}>
+          <div className="manage-habits-page__error" role="alert">
             {error}
           </div>
         )}
@@ -233,20 +201,8 @@ export const ManageHabitsPage = (): JSX.Element => {
         )}
 
         {/* Habits List */}
-        <div style={{
-          backgroundColor: 'white',
-          borderRadius: '8px',
-          padding: '1.5rem',
-          boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
-        }}>
-          <h2 style={{
-            fontSize: '1.25rem',
-            fontWeight: '600',
-            marginBottom: '1rem',
-            color: '#111827',
-          }}>
-            Your Habits
-          </h2>
+        <div className="manage-habits-page__content">
+          <h2 className="manage-habits-page__section-title">Your Habits</h2>
 
           {habits.length === 0 ? (
             <EmptyState

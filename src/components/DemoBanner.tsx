@@ -1,46 +1,86 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { AuthModal } from './AuthModal';
 import './DemoBanner.css';
+
+const DISMISSAL_KEY = 'demo-banner-dismissed';
 
 /**
  * DemoBanner Component
  *
- * Displays a persistent banner at the top of protected routes when in demo mode.
- * Reminds users they're trying the app and provides quick access to sign-in.
+ * Displays a dismissible banner at the top of protected routes when in demo mode.
+ * Reminds users to sign in to save their progress.
  *
  * Design (Amara.day Redesign - PRD #0004):
  * - Sticky positioning (stays visible during scroll)
  * - Warm gradient background using design system colors
  * - Accessible with ARIA labels and WCAG AA contrast
- * - Mobile-responsive with full-width CTA on small screens
+ * - Mobile-responsive layout
  * - Smooth slide-down entrance animation
+ * - Dismissible with session-based persistence
+ * - Opens AuthModal for sign-up flow
  */
 export const DemoBanner: React.FC = () => {
-  const navigate = useNavigate();
+  const [isDismissed, setIsDismissed] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
+
+  // Check if banner was dismissed in this session
+  useEffect(() => {
+    const dismissed = sessionStorage.getItem(DISMISSAL_KEY);
+    if (dismissed === 'true') {
+      setIsDismissed(true);
+    }
+  }, []);
 
   const handleSignInClick = () => {
-    navigate('/');
+    setShowAuthModal(true);
   };
 
+  const handleDismiss = () => {
+    setIsDismissed(true);
+    sessionStorage.setItem(DISMISSAL_KEY, 'true');
+  };
+
+  const handleCloseAuthModal = () => {
+    setShowAuthModal(false);
+  };
+
+  // Don't render if dismissed
+  if (isDismissed) {
+    return null;
+  }
+
   return (
-    <div
-      className="demo-banner"
-      role="alert"
-      aria-live="polite"
-    >
-      <div className="demo-banner-content">
-        <span className="demo-banner-icon" aria-hidden="true">🌅</span>
-        <span className="demo-banner-text">
-          You're trying Amara.day. Sign in to sync across devices.
-        </span>
-        <button
-          className="btn-primary demo-banner-button"
-          onClick={handleSignInClick}
-          aria-label="Sign in to save your progress"
-        >
-          Sign In
-        </button>
+    <>
+      <div
+        className="demo-banner"
+        role="alert"
+        aria-live="polite"
+      >
+        <div className="demo-banner-content">
+          <span className="demo-banner-text">
+            <button
+              className="demo-banner-link"
+              onClick={handleSignInClick}
+              aria-label="Sign in to save your progress"
+            >
+              Sign in
+            </button>
+            {' '}to save your progress.
+          </span>
+          <button
+            className="demo-banner-dismiss"
+            onClick={handleDismiss}
+            aria-label="Dismiss banner"
+            type="button"
+          >
+            ×
+          </button>
+        </div>
       </div>
-    </div>
+
+      {showAuthModal && (
+        <AuthModal onClose={handleCloseAuthModal} initialMode="signup" />
+      )}
+    </>
   );
 };

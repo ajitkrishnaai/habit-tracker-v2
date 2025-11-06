@@ -215,21 +215,11 @@ export const HabitForm = ({ editingHabit, onSuccess, onCancel }: HabitFormProps)
             width: '100%',
             padding: '0.75rem',
             fontSize: '1rem',
-            border: `1px solid ${nameError ? '#ef4444' : '#d1d5db'}`,
-            borderRadius: '6px',
+            border: `2px solid ${nameError ? '#ef4444' : 'var(--color-border)'}`,
+            borderRadius: 'var(--radius-md)',
             outline: 'none',
-            backgroundColor: submitting ? '#f3f4f6' : 'white',
-            color: '#111827',
-          }}
-          onFocus={(e) => {
-            if (!nameError) {
-              e.target.style.borderColor = '#2563eb';
-            }
-          }}
-          onBlur={(e) => {
-            if (!nameError) {
-              e.target.style.borderColor = '#d1d5db';
-            }
+            backgroundColor: submitting ? 'var(--color-surface-hover)' : 'var(--color-surface)',
+            color: 'var(--color-text-primary)',
           }}
         />
 
@@ -289,21 +279,11 @@ export const HabitForm = ({ editingHabit, onSuccess, onCancel }: HabitFormProps)
             width: '100%',
             padding: '0.75rem',
             fontSize: '1rem',
-            border: `1px solid ${categoryError ? '#ef4444' : '#d1d5db'}`,
-            borderRadius: '6px',
+            border: `2px solid ${categoryError ? '#ef4444' : 'var(--color-border)'}`,
+            borderRadius: 'var(--radius-md)',
             outline: 'none',
-            backgroundColor: submitting ? '#f3f4f6' : 'white',
-            color: '#111827',
-          }}
-          onFocus={(e) => {
-            if (!categoryError) {
-              e.target.style.borderColor = '#2563eb';
-            }
-          }}
-          onBlur={(e) => {
-            if (!categoryError) {
-              e.target.style.borderColor = '#d1d5db';
-            }
+            backgroundColor: submitting ? 'var(--color-surface-hover)' : 'var(--color-surface)',
+            color: 'var(--color-text-primary)',
           }}
         />
 
@@ -327,27 +307,9 @@ export const HabitForm = ({ editingHabit, onSuccess, onCancel }: HabitFormProps)
         <button
           type="submit"
           disabled={submitting || !name.trim()}
+          className="btn-primary"
           style={{
             flex: 1,
-            padding: '0.75rem 1.5rem',
-            fontSize: '1rem',
-            fontWeight: '600',
-            color: 'white',
-            backgroundColor: submitting || !name.trim() ? '#9ca3af' : '#2563eb',
-            border: 'none',
-            borderRadius: '6px',
-            cursor: submitting || !name.trim() ? 'not-allowed' : 'pointer',
-            transition: 'background-color 0.2s',
-          }}
-          onMouseOver={(e) => {
-            if (!submitting && name.trim()) {
-              e.currentTarget.style.backgroundColor = '#1d4ed8';
-            }
-          }}
-          onMouseOut={(e) => {
-            if (!submitting && name.trim()) {
-              e.currentTarget.style.backgroundColor = '#2563eb';
-            }
           }}
         >
           {submitting ? 'Saving...' : (isEditing ? 'Update Habit' : 'Add Habit')}
@@ -358,27 +320,7 @@ export const HabitForm = ({ editingHabit, onSuccess, onCancel }: HabitFormProps)
             type="button"
             onClick={handleCancelEdit}
             disabled={submitting}
-            style={{
-              padding: '0.75rem 1.5rem',
-              fontSize: '1rem',
-              fontWeight: '600',
-              color: '#374151',
-              backgroundColor: 'white',
-              border: '1px solid #d1d5db',
-              borderRadius: '6px',
-              cursor: submitting ? 'not-allowed' : 'pointer',
-              transition: 'background-color 0.2s',
-            }}
-            onMouseOver={(e) => {
-              if (!submitting) {
-                e.currentTarget.style.backgroundColor = '#f3f4f6';
-              }
-            }}
-            onMouseOut={(e) => {
-              if (!submitting) {
-                e.currentTarget.style.backgroundColor = 'white';
-              }
-            }}
+            className="btn-secondary"
           >
             Cancel
           </button>

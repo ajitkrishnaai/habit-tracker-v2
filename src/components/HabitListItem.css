@@ -5,111 +5,66 @@
 
 .habit-list-item {
   /* Apply base card styles from main.css */
-  background: var(--color-surface);
+  background: var(--color-background);
   border-radius: var(--radius-lg);
   padding: var(--space-lg);
   box-shadow: var(--shadow-sm);
   border: 1px solid var(--color-border-light);
   transition: all var(--transition-base);
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+  margin: 0;
+  overflow: hidden;
 }
 
 .habit-list-item:hover {
-  transform: translateY(-4px);
+  transform: translateY(-2px);
   box-shadow: var(--shadow-md);
-  background: var(--color-background);
+  border-color: var(--color-border);
 }
 
 .habit-list-item__content {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  gap: 1rem;
+  align-items: flex-start;
+  gap: var(--space-md);
   flex-wrap: wrap;
 }
 
 .habit-list-item__info {
-  flex: 1 1 0%;
-  min-width: 200px;
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
 }
 
 .habit-list-item__name {
   font-size: var(--text-lg);
   font-weight: 500;
   color: var(--color-text-primary);
-  margin-bottom: var(--space-xs);
+  margin: 0;
   font-family: var(--font-display);
+  word-wrap: break-word;
 }
 
 .habit-list-item__category {
   display: inline-block;
   font-size: var(--text-xs);
   padding: var(--space-xs) var(--space-sm);
-  background: var(--color-sunset);
+  background: var(--color-warning);
   color: white;
   border-radius: var(--radius-full);
   font-weight: 600;
+  width: fit-content;
 }
 
 .habit-list-item__actions {
   display: flex;
   gap: var(--space-sm);
   flex-shrink: 0;
-}
-
-/* Edit Button - Primary color on hover */
-.habit-list-item__edit-btn {
-  padding: var(--space-sm) var(--space-md);
-  font-size: var(--text-sm);
-  font-weight: 500;
-  color: var(--color-primary);
-  background-color: transparent;
-  border: 1px solid var(--color-primary);
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  transition: all var(--transition-base);
-  min-width: var(--touch-target-min);
-  min-height: var(--touch-target-min);
-  font-family: var(--font-display);
-}
-
-.habit-list-item__edit-btn:hover:not(:disabled) {
-  background-color: var(--color-primary);
-  color: white;
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-sm);
-}
-
-.habit-list-item__edit-btn:disabled {
-  cursor: not-allowed;
-  opacity: 0.5;
-}
-
-/* Delete Button - Error color on hover */
-.habit-list-item__delete-btn {
-  padding: var(--space-sm) var(--space-md);
-  font-size: var(--text-sm);
-  font-weight: 500;
-  color: var(--color-error);
-  background-color: transparent;
-  border: 1px solid var(--color-error);
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  transition: all var(--transition-base);
-  min-width: var(--touch-target-min);
-  min-height: var(--touch-target-min);
-  font-family: var(--font-display);
-}
-
-.habit-list-item__delete-btn:hover:not(:disabled) {
-  background-color: var(--color-error);
-  color: white;
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-sm);
-}
-
-.habit-list-item__delete-btn:disabled {
-  cursor: not-allowed;
-  opacity: 0.5;
+  align-items: flex-start;
 }
 
 /* Confirmation Dialog */
@@ -128,57 +83,6 @@
   display: flex;
   gap: var(--space-sm);
   justify-content: flex-end;
-}
-
-.habit-list-item__cancel-btn {
-  padding: var(--space-sm) var(--space-md);
-  font-size: var(--text-sm);
-  font-weight: 500;
-  color: var(--color-text-secondary);
-  background-color: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  transition: all var(--transition-base);
-  min-width: var(--touch-target-min);
-  min-height: var(--touch-target-min);
-  font-family: var(--font-display);
-}
-
-.habit-list-item__cancel-btn:hover:not(:disabled) {
-  background-color: var(--color-surface-hover);
-}
-
-.habit-list-item__cancel-btn:disabled {
-  cursor: not-allowed;
-  opacity: 0.5;
-}
-
-.habit-list-item__confirm-btn {
-  padding: var(--space-sm) var(--space-md);
-  font-size: var(--text-sm);
-  font-weight: 600;
-  color: white;
-  background-color: var(--color-error);
-  border: none;
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  transition: all var(--transition-base);
-  min-width: var(--touch-target-min);
-  min-height: var(--touch-target-min);
-  font-family: var(--font-display);
-}
-
-.habit-list-item__confirm-btn:hover:not(:disabled) {
-  background-color: var(--color-error-dark);
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-sm);
-}
-
-.habit-list-item__confirm-btn:disabled {
-  cursor: not-allowed;
-  opacity: 0.5;
-  background-color: var(--color-text-tertiary);
 }
 
 /* Error message within card */
@@ -204,8 +108,17 @@
     justify-content: stretch;
   }
 
-  .habit-list-item__edit-btn,
-  .habit-list-item__delete-btn {
+  .habit-list-item__actions .btn-primary,
+  .habit-list-item__actions .btn-danger {
     flex: 1;
+  }
+
+  .habit-list-item__confirm-actions {
+    flex-direction: column-reverse;
+  }
+
+  .habit-list-item__confirm-actions .btn-secondary,
+  .habit-list-item__confirm-actions .btn-danger-primary {
+    width: 100%;
   }
 }

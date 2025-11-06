@@ -1,42 +1,24 @@
-import React, { useState } from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
-import { getUserProfile, logout } from '../services/auth';
-import { AmaraDayLogo } from './branding';
+import React from 'react';
+import { NavLink } from 'react-router-dom';
 import './Navigation.css';
 
 /**
  * Top navigation bar component with main menu items
  * - Fixed/sticky at top on mobile
  * - Highlights active page
- * - Shows user profile with logout option
+ * - Simple inline layout with pipe separators
  * - Accessible with semantic HTML and ARIA labels
  * Updated for Supabase: displays user info from Supabase Auth session
  *
  * Amara.day Redesign (PRD #0004 Phase 2):
- * - Uses AmaraDayLogo component for branding
+ * - Simplified navigation with inline menu items
  * - Warm colors and backdrop blur glassmorphism effect
+ * - Pipe separators between menu items
  */
 const Navigation: React.FC = () => {
-  const navigate = useNavigate();
-  const [showUserMenu, setShowUserMenu] = useState(false);
-  const userProfile = getUserProfile();
-
-  const handleLogout = async () => {
-    try {
-      await logout();
-      navigate('/');
-    } catch (error) {
-      console.error('Logout failed:', error);
-    }
-  };
-
   return (
     <nav className="navigation" role="navigation" aria-label="Main navigation">
       <div className="navigation-container">
-        <div className="navigation-brand">
-          <AmaraDayLogo size={28} layout="horizontal" />
-        </div>
-
         <ul className="navigation-menu">
           <li className="navigation-item">
             <NavLink
@@ -45,9 +27,11 @@ const Navigation: React.FC = () => {
                 isActive ? 'navigation-link navigation-link--active' : 'navigation-link'
               }
             >
-              Daily Log
+              Daily
             </NavLink>
           </li>
+
+          <li className="navigation-separator" aria-hidden="true">|</li>
 
           <li className="navigation-item">
             <NavLink
@@ -60,6 +44,8 @@ const Navigation: React.FC = () => {
             </NavLink>
           </li>
 
+          <li className="navigation-separator" aria-hidden="true">|</li>
+
           <li className="navigation-item">
             <NavLink
               to="/manage-habits"
@@ -67,44 +53,9 @@ const Navigation: React.FC = () => {
                 isActive ? 'navigation-link navigation-link--active' : 'navigation-link'
               }
             >
-              Manage Habits
+              Manage
             </NavLink>
           </li>
-
-          {/* User Profile Menu */}
-          {userProfile && (
-            <li className="navigation-item navigation-user">
-              <button
-                className="navigation-user-button"
-                onClick={() => setShowUserMenu(!showUserMenu)}
-                aria-expanded={showUserMenu}
-                aria-haspopup="true"
-              >
-                {userProfile.picture && (
-                  <img
-                    src={userProfile.picture}
-                    alt={userProfile.name}
-                    className="navigation-user-avatar"
-                  />
-                )}
-                <span className="navigation-user-name">{userProfile.name}</span>
-              </button>
-
-              {showUserMenu && (
-                <div className="navigation-user-menu">
-                  <div className="navigation-user-info">
-                    <div className="navigation-user-email">{userProfile.email}</div>
-                  </div>
-                  <button
-                    className="navigation-user-logout"
-                    onClick={handleLogout}
-                  >
-                    Sign Out
-                  </button>
-                </div>
-              )}
-            </li>
-          )}
         </ul>
       </div>
     </nav>

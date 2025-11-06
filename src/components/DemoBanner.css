@@ -38,21 +38,12 @@
   /* Flexbox layout with gap */
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 12px;
-
-  /* Center content on mobile */
-  justify-content: center;
-  flex-wrap: wrap;
 
   /* Max width for desktop */
   max-width: 800px;
   margin: 0 auto;
-}
-
-.demo-banner-icon {
-  /* Icon styling */
-  font-size: 18px;
-  flex-shrink: 0;
 }
 
 .demo-banner-text {
@@ -60,57 +51,87 @@
   font-size: 14px;
   line-height: 1.4;
   flex: 1 1 auto;
-
-  /* Min width to prevent wrapping on small screens */
-  min-width: 200px;
+  text-align: center;
 }
 
-/* Button uses .btn-primary from buttons.css for consistency */
-.demo-banner-button {
-  /* Prevent text wrapping */
-  white-space: nowrap;
+/* Clickable "Sign in" link styled as inline link */
+.demo-banner-link {
+  /* Reset button styles */
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
 
-  /* Slightly smaller padding for compact banner */
-  padding: 0.5rem 1.5rem;
+  /* Link styling */
+  color: var(--color-primary);
   font-size: 14px;
+  font-weight: 500;
+  text-decoration: underline;
+  cursor: pointer;
+
+  /* Smooth transition */
+  transition: color 150ms ease;
+}
+
+.demo-banner-link:hover,
+.demo-banner-link:focus {
+  color: var(--color-primary-hover);
+  text-decoration: none;
+}
+
+.demo-banner-link:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Dismiss button (X) */
+.demo-banner-dismiss {
+  /* Reset button styles */
+  background: none;
+  border: none;
+  padding: 4px 8px;
+  margin: 0;
+
+  /* Styling */
+  color: var(--color-text-secondary);
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+  flex-shrink: 0;
+
+  /* Smooth transition */
+  transition: color 150ms ease, background-color 150ms ease;
+  border-radius: 4px;
+
+  /* Minimum touch target */
+  min-width: 44px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.demo-banner-dismiss:hover,
+.demo-banner-dismiss:focus {
+  color: var(--color-text-primary);
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.demo-banner-dismiss:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
 }
 
 /* Mobile responsive styles (< 768px) */
 @media (max-width: 767px) {
+  .demo-banner {
+    /* Slightly less padding on mobile */
+    padding: 10px 12px;
+  }
+
   .demo-banner-content {
-    /* Stack vertically on very small screens if needed */
-    flex-direction: row;
-    justify-content: space-between;
-  }
-
-  .demo-banner-text {
-    /* Allow text to take more space */
-    flex: 1 1 auto;
-    min-width: 0;
-  }
-
-  .demo-banner-button {
-    /* Full width button on mobile (REQ-14) */
-    flex: 0 0 auto;
-  }
-}
-
-/* Very small screens (< 480px) */
-@media (max-width: 479px) {
-  .demo-banner-content {
-    /* Stack vertically on very small screens */
-    flex-direction: column;
-    align-items: stretch;
+    /* Keep horizontal layout on mobile */
     gap: 8px;
-  }
-
-  .demo-banner-text {
-    /* Center text on mobile */
-    text-align: center;
-  }
-
-  .demo-banner-button {
-    /* Full width button */
-    width: 100%;
   }
 }
