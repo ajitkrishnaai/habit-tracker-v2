@@ -109,6 +109,7 @@
 
 /* ============================================
    HABIT FORM MODAL (Task 1.22)
+   Uses unified animations from animations.css
    ============================================ */
 
 /* Modal Backdrop - Warm dark semi-transparent overlay */
@@ -123,19 +124,10 @@
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  animation: fade-in 200ms ease-out;
+  animation: modal-fade-in 200ms ease-out;
 }
 
-@keyframes fade-in {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-/* Modal Container - Slides up from bottom */
+/* Modal Container - Slides up from bottom on mobile */
 .habit-form-modal {
   background: var(--color-surface); /* Warm surface */
   border-radius: var(--radius-xl) var(--radius-xl) 0 0; /* Rounded top corners */
@@ -145,19 +137,8 @@
   max-height: 90vh;
   overflow-y: auto;
   box-shadow: var(--shadow-xl);
-  animation: slide-up 300ms ease-out;
+  animation: modal-slide-up 300ms ease-out;
   position: relative;
-}
-
-@keyframes slide-up {
-  from {
-    transform: translateY(100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
 }
 
 /* Modal Header */
@@ -209,17 +190,7 @@
   .habit-form-modal {
     border-radius: var(--radius-xl); /* All corners rounded on desktop */
     max-height: 80vh;
-  }
-
-  @keyframes slide-up {
-    from {
-      transform: translateY(20px) scale(0.95);
-      opacity: 0;
-    }
-    to {
-      transform: translateY(0) scale(1);
-      opacity: 1;
-    }
+    animation: modal-slide-up-desktop 300ms ease-out; /* Use desktop variant */
   }
 }
 

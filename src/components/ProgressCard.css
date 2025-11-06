@@ -22,7 +22,7 @@
   left: 0;
   right: 0;
   height: 4px;
-  background: linear-gradient(90deg, #D4745E 0%, #8B9A7E 100%); /* terracotta to sage */
+  background: linear-gradient(90deg, var(--color-primary) 0%, var(--color-success) 100%); /* primary to success gradient */
   border-radius: var(--radius-lg) var(--radius-lg) 0 0;
 }
 
@@ -190,7 +190,7 @@
 /* Task 1.16: Warm-toned keyword badges */
 .keyword-badge {
   display: inline-block;
-  background: #E89C5A; /* sunset color */
+  background: var(--color-warning); /* warm orange from design system */
   color: white;
   padding: var(--space-xs) var(--space-sm);
   border-radius: var(--radius-full);
@@ -202,7 +202,7 @@
 }
 
 .keyword-badge:hover {
-  background: #D4745E; /* terracotta on hover */
+  background: var(--color-primary); /* primary color on hover */
   transform: scale(1.05);
 }
 

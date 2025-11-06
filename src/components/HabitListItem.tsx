@@ -71,7 +71,7 @@ export const HabitListItem = ({ habit, onEdit, onDelete }: HabitListItemProps): 
   };
 
   return (
-    <div className="habit-list-item">
+    <div className="card habit-list-item">
       {/* Error Display */}
       {error && (
         <div className="habit-list-item__error">

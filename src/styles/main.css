@@ -380,131 +380,10 @@ button:focus-visible {
 }
 
 /* ============================================
-   BUTTON STYLES (Amara.day Design System)
+   BUTTON STYLES
+   All button styles are defined in buttons.css
+   Import that file for button patterns
    ============================================ */
-
-/* Primary Button - Moss gradient for growth/action */
-.button-primary,
-.btn-primary {
-  font-family: var(--font-display);
-  font-weight: 600;
-  padding: 0.75rem 2rem;
-  border-radius: var(--radius-md);
-  border: none;
-  color: #fff;
-  background: linear-gradient(135deg, var(--moss-600) 0%, var(--moss-700) 50%, var(--moss-800) 100%);
-  box-shadow: 0 4px 16px rgba(107, 142, 95, 0.25);
-  min-height: 44px;
-  min-width: 44px;
-  cursor: pointer;
-  outline: none;
-  transition: transform var(--transition-base), box-shadow var(--transition-base), background var(--transition-base);
-  position: relative;
-  overflow: hidden;
-}
-
-.button-primary::before,
-.btn-primary::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
-  transition: left 0.5s;
-}
-
-.button-primary:hover::before,
-.btn-primary:hover::before {
-  left: 100%;
-}
-
-.button-primary:hover:not(:disabled),
-.btn-primary:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(107, 142, 95, 0.35);
-  background: linear-gradient(135deg, var(--moss-400) 0%, var(--moss-600) 50%, var(--moss-700) 100%);
-}
-
-.button-primary:active:not(:disabled),
-.btn-primary:active:not(:disabled) {
-  transform: translateY(0);
-  box-shadow: var(--shadow-sm);
-}
-
-.button-primary:focus-visible,
-.btn-primary:focus-visible {
-  box-shadow: 0 0 0 4px rgba(107,142,95,0.25), var(--shadow-lg);
-}
-
-/* Secondary Button - Outlined */
-.button-secondary,
-.btn-secondary {
-  font-family: var(--font-display);
-  font-weight: 600;
-  padding: 0.75rem 2rem;
-  border-radius: var(--radius-md);
-  background: transparent;
-  color: var(--color-primary);
-  border: 2px solid var(--color-primary);
-  min-height: 44px;
-  min-width: 44px;
-  cursor: pointer;
-  transition: all var(--transition-base);
-}
-
-.button-secondary:hover:not(:disabled),
-.btn-secondary:hover:not(:disabled) {
-  background: var(--color-primary);
-  color: #fff;
-  box-shadow: var(--shadow-sm);
-  transform: translateY(-2px);
-}
-
-.button-secondary:active:not(:disabled),
-.btn-secondary:active:not(:disabled) {
-  transform: translateY(0);
-  box-shadow: var(--shadow-sm);
-}
-
-.button-secondary:focus-visible,
-.btn-secondary:focus-visible {
-  box-shadow: 0 0 0 4px rgba(107,142,95,0.25);
-}
-
-/* Tertiary Button - River accent for flow/links */
-.button-tertiary,
-.btn-tertiary {
-  font-family: var(--font-display);
-  font-weight: 600;
-  padding: 0.75rem 1rem;
-  background: transparent;
-  color: var(--color-accent);
-  border: none;
-  min-height: 44px;
-  min-width: 44px;
-  cursor: pointer;
-  transition: all var(--transition-base);
-  border-radius: var(--radius-md);
-}
-
-.button-tertiary:hover:not(:disabled),
-.btn-tertiary:hover:not(:disabled) {
-  background: var(--river-50);
-  color: var(--color-accent-hover);
-}
-
-.button-tertiary:active:not(:disabled),
-.btn-tertiary:active:not(:disabled) {
-  background: var(--river-100);
-}
-
-.button-tertiary:focus-visible,
-.btn-tertiary:focus-visible {
-  box-shadow: 0 0 0 4px rgba(59, 131, 153, 0.25);
-  outline: none;
-}
 
 /* Task 7.33: Ensure all interactive elements have min 44x44px touch targets on mobile */
 @media (max-width: 767px) {
@@ -618,13 +497,7 @@ textarea::placeholder {
   }
 }
 
-/* Loading spinner */
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
+/* Loading spinner - Animation defined in animations.css */
 .spinner {
   border: 2px solid var(--color-border);
   border-top-color: var(--color-primary);
