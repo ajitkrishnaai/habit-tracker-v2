@@ -24,14 +24,26 @@ describe('Footer', () => {
       expect(footer.tagName).toBe('FOOTER');
     });
 
-    it('should have proper CSS classes', () => {
+    it('should have proper CSS classes (Task 2.14)', () => {
       const { container } = render(<Footer />, { wrapper: Wrapper });
 
       expect(container.querySelector('.footer')).toBeInTheDocument();
       expect(container.querySelector('.footer-container')).toBeInTheDocument();
+      expect(container.querySelector('.footer-branding')).toBeInTheDocument();
       expect(container.querySelector('.footer-nav')).toBeInTheDocument();
       expect(container.querySelector('.footer-links')).toBeInTheDocument();
       expect(container.querySelector('.footer-copyright')).toBeInTheDocument();
+    });
+
+    it('should render Amara.day logo (Task 2.14)', () => {
+      const { container } = render(<Footer />, { wrapper: Wrapper });
+
+      const branding = container.querySelector('.footer-branding');
+      expect(branding).toBeInTheDocument();
+
+      // Logo should be rendered inside branding div
+      const logo = branding?.querySelector('.amara-day-logo');
+      expect(logo).toBeInTheDocument();
     });
   });
 
@@ -83,18 +95,12 @@ describe('Footer', () => {
   });
 
   describe('Copyright Notice', () => {
-    it('should display copyright with current year', () => {
+    it('should display copyright with current year (Task 2.14)', () => {
       render(<Footer />, { wrapper: Wrapper });
 
       const currentYear = new Date().getFullYear();
-      const copyright = screen.getByText(new RegExp(`© ${currentYear} Habit Tracker`));
+      const copyright = screen.getByText(new RegExp(`© ${currentYear} Amara\\.day`));
       expect(copyright).toBeInTheDocument();
-    });
-
-    it('should display data privacy message', () => {
-      render(<Footer />, { wrapper: Wrapper });
-
-      expect(screen.getByText(/Your data stays in your Google Drive/)).toBeInTheDocument();
     });
 
     it('should have copyright paragraph', () => {
@@ -154,14 +160,15 @@ describe('Footer', () => {
       expect(copyright).toBeInTheDocument();
     });
 
-    it('should render navigation before copyright', () => {
+    it('should render branding, navigation, then copyright (Task 2.14)', () => {
       const { container } = render(<Footer />, { wrapper: Wrapper });
 
       const footerContainer = container.querySelector('.footer-container');
       const children = Array.from(footerContainer?.children || []);
 
-      expect(children[0]).toHaveClass('footer-nav');
-      expect(children[1]).toHaveClass('footer-copyright');
+      expect(children[0]).toHaveClass('footer-branding');
+      expect(children[1]).toHaveClass('footer-nav');
+      expect(children[2]).toHaveClass('footer-copyright');
     });
   });
 
@@ -192,19 +199,16 @@ describe('Footer', () => {
   });
 
   describe('Real-World Usage', () => {
-    it('should provide complete footer information', () => {
+    it('should provide complete footer information (Task 2.14)', () => {
       render(<Footer />, { wrapper: Wrapper });
 
       // Legal links
       expect(screen.getByRole('link', { name: /privacy policy/i })).toBeInTheDocument();
       expect(screen.getByRole('link', { name: /terms of service/i })).toBeInTheDocument();
 
-      // Copyright
+      // Copyright with Amara.day branding
       const currentYear = new Date().getFullYear();
-      expect(screen.getByText(new RegExp(`© ${currentYear}`))).toBeInTheDocument();
-
-      // Privacy message
-      expect(screen.getByText(/Your data stays in your Google Drive/)).toBeInTheDocument();
+      expect(screen.getByText(new RegExp(`© ${currentYear} Amara\\.day`))).toBeInTheDocument();
     });
 
     it('should be keyboard navigable', () => {

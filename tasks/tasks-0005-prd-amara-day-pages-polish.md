@@ -352,7 +352,7 @@ Based on PRD: `0005-prd-amara-day-pages-polish.md`
       - Use warm inputs with floating labels (already styled in main.css)
       - Category color picker: Display warm palette swatches (terracotta, sage, sunset, olive, etc.)
 
-- [ ] **2.0 Phase 4: Polish & Delight** (2-3 hours)
+- [x] **2.0 Phase 4: Polish & Delight** (2-3 hours)
   - [x] 2.1 Create LoadingScreen component
     - Create `src/components/LoadingScreen.tsx`:
       - Import `AmaraDayLogo`
@@ -435,7 +435,7 @@ Based on PRD: `0005-prd-amara-day-pages-polish.md`
         - Call `triggerConfetti(canvas)`
         - Set localStorage flag to `true`
       - If true, skip confetti (only show once)
-  - [ ] 2.8 Create streak milestone animations
+  - [x] 2.8 Create streak milestone animations
     - Update `src/components/icons/FlameIcon.tsx` or create new animation component:
       - Small flame (7-day streak):
         - Scale pulse animation: `transform: scale(1) → scale(1.1) → scale(1)`
@@ -454,13 +454,13 @@ Based on PRD: `0005-prd-amara-day-pages-polish.md`
         animation: flame-pulse 600ms ease-out;
       }
       ```
-  - [ ] 2.9 Create toast notification for streak milestones
+  - [x] 2.9 Create toast notification for streak milestones
     - Update `src/components/Toast.tsx` or use existing toast system:
       - When streak milestone reached (7, 14, 30 days):
       - Display toast: "🔥 {X}-day streak! You're on fire!"
       - Auto-dismiss after 3 seconds
       - Use `success` variant (sage green background)
-  - [ ] 2.10 Create daily log completion animation
+  - [x] 2.10 Create daily log completion animation
     - Update `src/pages/DailyLogPage.tsx`:
       - When all habits marked done for the day:
       - Trigger checkmark ripple effect
@@ -478,13 +478,13 @@ Based on PRD: `0005-prd-amara-day-pages-polish.md`
         animation: checkmark-ripple 600ms ease-out;
       }
       ```
-  - [ ] 2.11 Create notes saved feedback (toast)
+  - [x] 2.11 Create notes saved feedback (toast)
     - Update `src/pages/DailyLogPage.tsx` notes save handler:
       - On successful save, trigger toast notification
       - Toast message: "Notes saved ✓"
       - Use `success` variant
       - Auto-dismiss after 3 seconds
-  - [ ] 2.12 Enhance Toast component with warm styling (if not done in PRD #1)
+  - [x] 2.12 Enhance Toast component with warm styling (if not done in PRD #1)
     - Update `src/components/Toast.tsx`:
       - Support variants: `success` (sage green), `error` (warm red), `info` (terracotta)
       - Slide-in animation from top:
@@ -500,7 +500,7 @@ Based on PRD: `0005-prd-amara-day-pages-polish.md`
       - Auto-dismiss functionality (setTimeout)
       - Close button (X icon) for manual dismissal
       - Position: `position: fixed; top: 1rem; left: 50%; transform: translateX(-50%); z-index: 9999;`
-  - [ ] 2.13 Create ToastContext for global toast management
+  - [x] 2.13 Create ToastContext for global toast management
     - Create `src/components/ToastContext.tsx`:
       - Context to manage toast queue (array of toast objects)
       - Provider component wraps app
@@ -511,7 +511,7 @@ Based on PRD: `0005-prd-amara-day-pages-polish.md`
       - Test showToast adds toast to queue
       - Test toast auto-dismissed after duration
       - Test manual dismiss removes toast from queue
-  - [ ] 2.14 Update Footer with Amara.day branding
+  - [x] 2.14 Update Footer with Amara.day branding
     - Update `src/components/Footer.tsx`:
       - Import `AmaraDayLogo` or just `AmaraDayIcon`
       - Render small logo/icon (16px) + "Amara.day" text
