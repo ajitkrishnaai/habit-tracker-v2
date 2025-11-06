@@ -3,19 +3,23 @@
  */
 
 .progress-card {
-  background: white;
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
+  background: linear-gradient(135deg, var(--cloud-50), var(--cloud-100), var(--cloud-200));
+  border: 1px solid var(--stone-300);
+  border-radius: var(--radius-lg);
   padding: 1.25rem;
-  transition: box-shadow 0.2s;
+  box-shadow: var(--shadow-card);
+  transition: transform var(--transition-base), box-shadow var(--transition-base), border-color var(--transition-base);
 }
 
 .progress-card:hover {
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--moss-300);
 }
 
 .progress-card.expanded {
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--moss-400);
 }
 
 /* Header Section */
@@ -118,8 +122,9 @@
 
 /* Pattern Analysis */
 .pattern-analysis {
-  background: var(--secondary-bg);
-  border-radius: 8px;
+  background: linear-gradient(135deg, var(--cloud-100), var(--cloud-200));
+  border: 1px solid var(--stone-300);
+  border-radius: var(--radius-md);
   padding: 1.25rem;
   margin-bottom: 1.5rem;
 }
@@ -157,13 +162,19 @@
 }
 
 .keyword-badge {
-  background: white;
-  color: var(--primary-color);
+  background: var(--cloud-100);
+  color: var(--river-600);
   padding: 0.35rem 0.75rem;
-  border-radius: 16px;
+  border-radius: var(--radius-full);
   font-size: 0.85rem;
   font-weight: 500;
-  border: 1px solid var(--primary-light);
+  border: 1px solid var(--river-300);
+  transition: all var(--transition-fast);
+}
+
+.keyword-badge:hover {
+  background: var(--river-50);
+  border-color: var(--river-400);
 }
 
 .sentiment-summary {
@@ -186,8 +197,9 @@
 
 /* Pattern Analysis Placeholder */
 .pattern-analysis-placeholder {
-  background: var(--secondary-bg);
-  border-radius: 8px;
+  background: linear-gradient(135deg, var(--cloud-100), var(--cloud-200));
+  border: 1px solid var(--stone-300);
+  border-radius: var(--radius-md);
   padding: 1.25rem;
   text-align: center;
   margin-bottom: 1.5rem;

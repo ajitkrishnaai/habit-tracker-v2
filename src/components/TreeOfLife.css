@@ -1,0 +1,51 @@
+/**
+ * TreeOfLife Styles
+ *
+ * Watercolor-style tree with overlapping circles creating soft, organic foliage.
+ * Inspired by botanical watercolor illustrations.
+ */
+
+.tree-of-life-container {
+  width: 100%;
+  max-width: 220px;
+  height: auto;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tree-of-life-svg {
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 2px 6px rgba(74, 55, 40, 0.12));
+}
+
+/* Trunk - stable base */
+.tree-trunk {
+  opacity: 0.95;
+}
+
+/* Branches - structural elements */
+.tree-branches {
+  opacity: 0.9;
+}
+
+/* Foliage - watercolor circles */
+.tree-foliage {
+  /* Circles already have opacity inline for layering effect */
+}
+
+/* Mobile optimization */
+@media (max-width: 767px) {
+  .tree-of-life-container {
+    max-width: 160px;
+  }
+}
+
+/* Larger screens */
+@media (min-width: 768px) {
+  .tree-of-life-container {
+    max-width: 240px;
+  }
+}

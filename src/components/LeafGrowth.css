@@ -1,0 +1,146 @@
+/**
+ * LeafGrowth Animation - Simple & Clear
+ * Stem grows, leaves appear, gentle sway at end
+ */
+
+.leaf-growth-container {
+  width: 100%;
+  max-width: 140px;
+  height: 180px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.leaf-growth-svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* STEM: Grows from bottom to top */
+.plant-stem {
+  stroke-dasharray: 90;
+  stroke-dashoffset: 90;
+  animation: growStem 8s ease-out forwards;
+}
+
+@keyframes growStem {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* LEAVES: Appear one pair at a time as stem grows */
+.leaf {
+  opacity: 0;
+  transform: scale(0);
+  animation: popIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* Bottom leaves appear first */
+.leaf-1-left {
+  animation-delay: 2s;
+}
+
+.leaf-1-right {
+  animation-delay: 2.2s;
+}
+
+/* Second pair */
+.leaf-2-left {
+  animation-delay: 4s;
+}
+
+.leaf-2-right {
+  animation-delay: 4.2s;
+}
+
+/* Third pair */
+.leaf-3-left {
+  animation-delay: 6s;
+}
+
+.leaf-3-right {
+  animation-delay: 6.2s;
+}
+
+/* Top crown */
+.leaf-top-left {
+  animation-delay: 7.5s;
+}
+
+.leaf-top-right {
+  animation-delay: 7.7s;
+}
+
+.leaf-top-center {
+  animation-delay: 7.9s;
+}
+
+@keyframes popIn {
+  0% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.15);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* After growth: gentle swaying */
+.leaf {
+  animation:
+    popIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards,
+    sway 3s ease-in-out 10s infinite;
+  transform-origin: center;
+}
+
+.plant-stem {
+  animation:
+    growStem 8s ease-out forwards,
+    stemSway 4s ease-in-out 10s infinite;
+  transform-origin: 50px 110px;
+}
+
+@keyframes sway {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(1px);
+  }
+}
+
+@keyframes stemSway {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(0.5deg);
+  }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .plant-stem,
+  .leaf {
+    animation: none !important;
+    opacity: 1;
+    transform: none;
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Mobile */
+@media (max-width: 767px) {
+  .leaf-growth-container {
+    max-width: 120px;
+    height: 160px;
+  }
+}

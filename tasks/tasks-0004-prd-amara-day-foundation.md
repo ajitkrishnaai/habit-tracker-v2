@@ -96,6 +96,7 @@ Based on PRD: `0004-prd-amara-day-foundation.md`
     - Add `layout` prop: `"horizontal"` (default), `"vertical"` (stacked)
     - Optional: Add CSS `text-shadow` or `background-clip: text` gradient for depth
     - Add `className` prop for wrapper div
+    - **Note**: Welcome Page uses uppercase "AMARA DAY" text directly (not this logo component). Welcome Page also includes TreeOfLife watercolor illustration (page-specific, not part of core design system). See PRD #0005 FR-1 for full Welcome Page specification.
   - [ ] 1.2 Install Lucide Icons library
     - Run: `npm install lucide-react`
     - Verify installation in `package.json`

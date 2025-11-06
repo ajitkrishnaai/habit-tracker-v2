@@ -75,63 +75,102 @@ Based on PRD: `0005-prd-amara-day-pages-polish.md`
 ## Tasks
 
 - [ ] **1.0 Phase 3: Page Redesigns** (4-5 hours)
-  - [ ] 1.1 Update Welcome Page hero section
+  - [ ] 1.1 Update Welcome Page hero section (FR-1: Full-screen centered with layered depth)
     - Update `src/pages/WelcomePage.tsx`:
-      - Import `AmaraDayLogo` from `@/components/branding`
-      - In hero section, render `<AmaraDayLogo size={80} layout="vertical" />`
-      - Add tagline text: `<p className="hero-tagline">Mindful habits. Lasting change.</p>`
-      - Add subtitle text: `<p className="hero-subtitle">Your daily ritual. Built to last.</p>`
+      - **Branding**: Display "AMARA DAY" in uppercase (clamp 2-3.5rem, DM Sans 600, letter-spacing 0.15em, moss-700 color)
+      - **Tagline**: "Daily Eternal" in uppercase (clamp 0.875-1rem, DM Sans 400, letter-spacing 0.2em, stone-600 color)
+      - **Illustration**: Add TreeOfLife component between branding and subtitle (max-width 280px desktop, 200px mobile)
+      - **Subtitle**: Multi-sentence conversational copy - "A gentle space for daily practice. Not about perfection. About presence. About becoming, one quiet day at a time." (clamp 0.9375-1.125rem, Inter, relaxed line-height, text-secondary)
+      - **Primary CTA**: "Begin Your Practice" button with moss gradient (600→700→800), white text, lift hover, shimmer effect
+      - **Secondary link**: "Have an account? Sign in" (small, river-600 color, underline on hover)
+      - **Scroll indicator**: Animated pill-shaped outline (24×40px) with bouncing dot, fadeInOut animation
     - Update `src/pages/WelcomePage.css`:
       - `.welcome-hero` styles:
-        - `background: linear-gradient(180deg, #FAF8F5 0%, #F5F1EB 100%);`
+        - `min-height: 100vh;` for full-screen hero
+        - `display: flex; flex-direction: column; align-items: center; justify-content: center;`
+        - 3-layer background system:
+          - Base: `linear-gradient(180deg, stone-0 → stone-50 → stone-100)`
+          - Overlay 1: Radial gradients (moss-50, river-50, sand-50 at strategic positions, opacity 0.3)
+          - Overlay 2: White gradient vignette (top/bottom fade, opacity 0.5)
         - `text-align: center;`
-        - `padding: var(--space-3xl) var(--space-md);`
-      - `.hero-brand` styles (wrapper for logo):
-        - `display: flex; flex-direction: column; align-items: center; gap: 1.5rem;`
-        - `margin-bottom: 2rem;`
-      - `.hero-icon` animation:
-        ```css
-        @keyframes gentle-pulse {
-          0%, 100% { transform: scale(1); }
-          50% { transform: scale(1.05); }
-        }
-        animation: gentle-pulse 3s ease-in-out infinite;
-        ```
-      - `.hero-wordmark` styles:
-        - `font-size: var(--text-4xl); font-weight: 800; letter-spacing: var(--tracking-tight);`
-      - `.hero-amara` gradient text:
-        - `background: linear-gradient(135deg, #D4745E 0%, #E89C5A 100%);`
-        - `-webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;`
-      - `.hero-tld` styles:
-        - `color: var(--color-text-secondary); font-weight: 600;`
+        - All content z-index above overlays
+      - `.hero-branding` styles:
+        - Uppercase "AMARA DAY" styling (see branding specs above)
       - `.hero-tagline` styles:
-        - `font-size: var(--text-2xl); color: var(--color-text-primary); font-weight: 600; margin-bottom: 0.5rem;`
+        - Uppercase "Daily Eternal" styling (see tagline specs above)
+      - `.tree-illustration` wrapper:
+        - `max-width: 280px;` (desktop), `200px;` (mobile)
+        - Center alignment, margin between branding and subtitle
       - `.hero-subtitle` styles:
-        - `font-size: var(--text-lg); color: var(--color-text-secondary); font-style: italic;`
-  - [ ] 1.2 Update Welcome Page "How It Works" section
+        - Multi-sentence paragraph styling (see subtitle specs above)
+      - `.cta-primary` button:
+        - Moss gradient background, white text, shimmer hover effect
+      - `.scroll-indicator` animation:
+        - Pill outline (24×40px) with bouncing dot inside
+  - [ ] 1.2 Update Welcome Page "Why It Matters" section (FR-2: Single-column cards with icons)
     - Update `src/pages/WelcomePage.tsx`:
-      - Ensure 3-step cards exist (should already be in current design)
-      - Add step number wrapper: `<div className="welcome-step-number">{stepNumber}</div>`
+      - Section title: "Why It Matters" (display font, text-2xl, centered)
+      - Three feature cards in single-column grid (max-width 900px, centered)
+      - Lucide React icons (Heart, RotateCcw, Sparkles) in circular 80px containers
+      - Card content: Title + body text
+      - Copy tone: Conversational, compassionate ("You're Not Alone", "You Can Begin Again", "You'll See Yourself Clearly")
     - Update `src/pages/WelcomePage.css`:
-      - `.welcome-step-number` styles:
-        - `width: 48px; height: 48px; border-radius: var(--radius-full);`
-        - `background: linear-gradient(135deg, #D4745E 0%, #E89C5A 100%);`
-        - `color: white; font-size: 24px; font-weight: 700;`
-        - `display: flex; align-items: center; justify-content: center;`
-        - `margin: 0 auto var(--space-md);`
-      - `.welcome-step-card` styles (if not exist):
-        - Apply `.card` styles (from main.css)
-        - Add hover lift: `transform: translateY(-2px);` on `:hover`
-  - [ ] 1.3 Update Welcome Page CTA section
+      - `.why-matters-card` styles:
+        - Gradient glass-morphism effect
+        - Background: `linear-gradient(135deg, rgba white variants with decreasing opacity)`
+        - `backdrop-filter: blur(10px)` for frosted glass
+        - No border, rounded corners (radius-xl), warm shadows
+        - Hover: `translateY(-4px) scale(1.01)` with shadow increase
+      - `.why-matters-icon` container:
+        - 80px circular container with moss gradient background (100→50)
+        - Inset highlight shadow
+        - Icons: 40px size, moss-700 color, strokeWidth 1.5
+  - [ ] 1.3 Update Welcome Page "Your Journey" section (FR-3: Progressive timeline cards)
     - Update `src/pages/WelcomePage.tsx`:
-      - Ensure "Try Without Signing In" button uses `.btn-primary` class
-      - Ensure button has larger size: add inline style or class for `padding: 1rem 3rem;`
-      - Style email sign-in form inputs with floating labels (or defer to later)
-      - Add privacy note below form: `<p className="privacy-note">Your data is private and secure.</p>`
+      - Section title: "Your Journey" (display font, centered)
+      - Three timeline cards in responsive grid (auto-fit, min 280px)
+      - **Step number badges: OUTLINED circular design (NOT filled)**
+        - 56px diameter circles, **transparent background**
+        - **2px border in moss-300 color**
+        - Number text: moss-600 color, **font-weight 500 (medium, NOT bold)**
+        - Hover: Border→moss-500, text→moss-700, shadow increase
+        - **Design philosophy: "Whisper" aesthetic - light and minimal, not heavy**
+      - Timeline structure: "Today" → "This Week" → "This Month" progression
+      - Copy tone: Short, poetic sentences. Present tense. ("Just: you showed up", "Quiet. Like muscle memory forming", "Growth whispers. You listen")
     - Update `src/pages/WelcomePage.css`:
-      - `.privacy-note` styles:
-        - `color: var(--color-text-tertiary); font-size: var(--text-sm); margin-top: var(--space-sm);`
-  - [ ] 1.4 Update Daily Log Page header
+      - `.journey-step-badge` styles:
+        - 56px diameter, transparent background
+        - 2px moss-300 border (outlined, not filled)
+        - Number: moss-600, font-weight 500 (medium)
+      - `.journey-card` styles:
+        - Cloud gradient background (50→100→200)
+        - 1px stone-300 border, soft shadow
+        - Hover: `translateY(-4px)` lift + border→moss-300
+  - [ ] 1.4 Add Welcome Page "Metaphor Break" section (FR-4: Italicized quote interlude)
+    - Update `src/pages/WelcomePage.tsx`:
+      - Quote: "Like a tree, growth is quiet. Roots deepen while you sleep. Branches reach when you're not watching."
+      - Display font italic, clamp 1.25-1.75rem, moss-800 color
+    - Update `src/pages/WelcomePage.css`:
+      - Background: moss-50 gradient fade (transparent→moss-50→transparent)
+      - Top/bottom dividers: 1px gradient lines (transparent→moss-300→transparent)
+      - Generous vertical padding (space-3xl)
+      - Max-width 800px, centered
+  - [ ] 1.5 Add Welcome Page secondary CTA section (FR-5: Pricing note)
+    - Update `src/pages/WelcomePage.tsx`:
+      - Centered italic text: "Always free to start. Pay what feels right when AI-powered reflections begin (optional)."
+      - Text-sm, tertiary color
+    - Update `src/pages/WelcomePage.css`:
+      - Padding: space-2xl vertical, max-width 700px
+  - [ ] 1.6 Update Welcome Page responsive behavior (FR-8)
+    - Mobile (≤767px): Reduce hero animation to 200px, tighter padding, full-width CTA (max 320px)
+    - Tablet (768-1023px): Journey cards in 2-column grid, Why cards stay single column
+    - Desktop (1024px+): All sections single column, max-width 900-1200px
+    - Fluid typography: All text uses clamp() for smooth scaling
+  - [ ] 1.7 Add Welcome Page accessibility & motion settings (FR-9)
+    - `prefers-reduced-motion`: Disable all animations (hover lifts, scroll indicator, shimmer)
+    - `prefers-contrast: high`: Increase border widths to 2px
+    - All interactive elements keyboard accessible with visible focus states
+  - [ ] 1.8 Update Daily Log Page header (FR-4)
     - Update `src/pages/DailyLogPage.tsx`:
       - Add page header section:
         ```tsx
@@ -147,7 +186,7 @@ Based on PRD: `0005-prd-amara-day-pages-polish.md`
         - `font-size: var(--text-3xl); font-family: var(--font-display); color: var(--color-text-primary);`
       - `.page-subtitle` styles:
         - `font-size: var(--text-lg); color: var(--color-text-secondary);`
-  - [ ] 1.5 Update Daily Log date navigator
+  - [ ] 1.9 Update Daily Log date navigator (FR-5)
     - Update `src/components/DateNavigator.tsx` or `src/pages/DailyLogPage.css`:
       - Active date pill styles:
         - `background: var(--color-primary); color: white; border-radius: var(--radius-full); padding: var(--space-sm) var(--space-md);`
@@ -164,7 +203,7 @@ Based on PRD: `0005-prd-amara-day-pages-polish.md`
           transform: translateX(10px);
         }
         ```
-  - [ ] 1.6 Update Daily Log habit cards
+  - [ ] 1.10 Update Daily Log habit cards (FR-6)
     - Update `src/pages/DailyLogPage.css` or `src/components/HabitListItem.tsx` styles:
       - Apply `.card` base styles
       - Add category badge styles:
@@ -185,7 +224,7 @@ Based on PRD: `0005-prd-amara-day-pages-polish.md`
         }
         ```
       - Add checkmark fade-in when toggle ON (use existing checkmark or create new)
-  - [ ] 1.7 Update Daily Log notes section
+  - [ ] 1.11 Update Daily Log notes section (FR-7)
     - Update `src/pages/DailyLogPage.tsx`:
       - Increase textarea rows or min-height
       - Add floating label if not already present
@@ -196,7 +235,7 @@ Based on PRD: `0005-prd-amara-day-pages-polish.md`
         - `min-height: 120px;`
       - `.notes-char-count` styles:
         - `color: var(--color-text-tertiary); font-size: var(--text-sm); text-align: right; display: block; margin-top: var(--space-xs);`
-  - [ ] 1.8 Update Progress Page header
+  - [ ] 1.12 Update Progress Page header (FR-8)
     - Update `src/pages/ProgressPage.tsx`:
       - Add page header:
         ```tsx
@@ -207,14 +246,14 @@ Based on PRD: `0005-prd-amara-day-pages-polish.md`
         ```
     - Update `src/pages/ProgressPage.css`:
       - Use same `.page-header`, `.page-title`, `.page-subtitle` styles as Daily Log
-  - [ ] 1.9 Update Progress Card with gradient border
+  - [ ] 1.13 Update Progress Card with gradient border (FR-9)
     - Update `src/components/ProgressCard.tsx` or `.css`:
       - Add gradient top border:
         - `border-top: 4px solid;`
         - `border-image: linear-gradient(90deg, #D4745E 0%, #8B9A7E 100%) 1;`
       - Apply warm surface background and shadow (already in `.card`)
       - Add hover lift (already in `.card:hover`)
-  - [ ] 1.10 Create warm-toned stat icons (SVG components)
+  - [ ] 1.14 Create warm-toned stat icons (SVG components) (FR-10)
     - Create `src/components/icons/FlameIcon.tsx`:
       - SVG flame icon with warm gradient (terracotta to sunset)
       - Accept `size` prop (default 24px)
@@ -228,12 +267,12 @@ Based on PRD: `0005-prd-amara-day-pages-polish.md`
       - Accept `size` prop
       - Use for completion percentage display
     - Create `src/components/icons/index.ts` barrel export
-  - [ ] 1.11 Update Progress Page stat display
+  - [ ] 1.15 Update Progress Page stat display
     - Update `src/components/ProgressCard.tsx`:
       - Import stat icons (FlameIcon, TrophyIcon, ChartIcon)
       - Render icons next to corresponding stats
       - Apply larger font to numbers: `font-family: var(--font-display); font-size: var(--text-2xl);`
-  - [ ] 1.12 Update Progress Page pattern analysis
+  - [ ] 1.16 Update Progress Page pattern analysis (FR-11)
     - Update `src/pages/ProgressPage.tsx` or `src/components/ProgressCard.tsx`:
       - Style keyword badges:
         - `.keyword-badge` class:
@@ -243,7 +282,7 @@ Based on PRD: `0005-prd-amara-day-pages-polish.md`
       - Highlight correlation text:
         - Wrap correlation text in `<span className="correlation-highlight">`
         - `background: var(--color-surface); padding: var(--space-xs) var(--space-sm); border-radius: var(--radius-sm);`
-  - [ ] 1.13 Update Progress Page charts (if using chart library)
+  - [ ] 1.17 Update Progress Page charts (if using chart library) (FR-12)
     - If using Chart.js, Recharts, or similar:
       - Update chart color schemes to warm palette:
         - Bar charts: Terracotta gradient (#D4745E to #E89676)
@@ -251,7 +290,7 @@ Based on PRD: `0005-prd-amara-day-pages-polish.md`
         - Sparklines: Sunset orange (#E89C5A)
       - Ensure colors meet WCAG AA contrast on backgrounds
     - If no chart library, note: "Charts will use warm colors per design system"
-  - [ ] 1.14 Update Manage Habits Page with responsive grid
+  - [ ] 1.18 Update Manage Habits Page with responsive grid (FR-13)
     - Update `src/pages/ManageHabitsPage.tsx`:
       - Wrap habit cards in grid container: `<div className="habits-grid">{habitCards}</div>`
     - Update `src/pages/ManageHabitsPage.css`:
@@ -261,14 +300,14 @@ Based on PRD: `0005-prd-amara-day-pages-polish.md`
         - `gap: var(--space-lg);`
         - `@media (min-width: 768px)`: `grid-template-columns: repeat(2, 1fr);` /* Tablet: 2 columns */
         - `@media (min-width: 1024px)`: `grid-template-columns: repeat(3, 1fr);` /* Desktop: 3 columns (or 2, adjust as needed) */
-  - [ ] 1.15 Update Manage Habits habit cards
+  - [ ] 1.19 Update Manage Habits habit cards (FR-14)
     - Update habit card styles in `ManageHabitsPage.css` or component:
       - Apply `.card` base styles
       - Style edit/delete buttons:
         - Edit button: `color: var(--color-primary);` on hover
         - Delete button: `color: var(--color-error);` on hover
       - Add hover lift (already in `.card:hover`)
-  - [ ] 1.16 Create FloatingActionButton component for "Add Habit"
+  - [ ] 1.20 Create FloatingActionButton component for "Add Habit" (FR-15)
     - Create `src/components/FloatingActionButton.tsx`:
       - Circular button: `width: 64px; height: 64px; border-radius: var(--radius-full);`
       - Position: `position: fixed; bottom: 2rem; right: 2rem; z-index: 50;`
@@ -288,12 +327,12 @@ Based on PRD: `0005-prd-amara-day-pages-polish.md`
       - Test FAB renders with plus icon
       - Test onClick handler called when clicked
       - Test hover animation (via snapshot or class check)
-  - [ ] 1.17 Integrate FAB into Manage Habits Page
+  - [ ] 1.21 Integrate FAB into Manage Habits Page
     - Update `src/pages/ManageHabitsPage.tsx`:
       - Import `FloatingActionButton`
       - Render `<FloatingActionButton onClick={openHabitFormModal} />` at bottom of page
       - Ensure FAB appears above all content (z-index)
-  - [ ] 1.18 Update Habit Form Modal styling
+  - [ ] 1.22 Update Habit Form Modal styling (FR-16)
     - Update `src/components/HabitForm.tsx` or modal wrapper:
       - Add slide-up animation:
         ```css

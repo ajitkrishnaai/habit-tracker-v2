@@ -76,6 +76,8 @@ This PRD covers the foundational redesign of Habit Tracker V2 to **Amara.day**, 
 - **FR-1.5**: Support `variant` prop: `"full-color"`, `"monochrome"`
 - **FR-1.6**: Optional: Add CSS text gradient or drop shadow for depth
 
+**Note**: Welcome Page branding uses uppercase "AMARA DAY" text directly (not logo component). See PRD #0005 (FR-1) for full Welcome Page specification including watercolor tree illustration (TreeOfLife component) which is page-specific, not part of the core design system.
+
 **FR-2**: Integrate Lucide Icons library
 - **FR-2.1**: Install `lucide-react` package: `npm install lucide-react`
 - **FR-2.2**: Create icon wrapper component `src/components/Icon.tsx` for consistent sizing and coloring

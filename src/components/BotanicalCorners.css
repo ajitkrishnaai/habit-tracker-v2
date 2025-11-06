@@ -1,0 +1,50 @@
+/**
+ * BotanicalCorners Styles
+ * Delicate corner decorations, non-intrusive
+ */
+
+.botanical-corner {
+  position: fixed;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.75;
+}
+
+.botanical-top-right {
+  top: -20px;
+  right: -20px;
+  width: 450px;
+  height: 400px;
+}
+
+.botanical-bottom-left {
+  bottom: -20px;
+  left: -20px;
+  width: 450px;
+  height: 400px;
+}
+
+/* Mobile: Keep substantial size */
+@media (max-width: 767px) {
+  .botanical-top-right,
+  .botanical-bottom-left {
+    width: 300px;
+    height: 260px;
+  }
+}
+
+/* Tablet: Medium size */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .botanical-top-right,
+  .botanical-bottom-left {
+    width: 250px;
+    height: 200px;
+  }
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .botanical-corner {
+    opacity: 0.5;
+  }
+}

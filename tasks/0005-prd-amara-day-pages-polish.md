@@ -70,24 +70,79 @@ This PRD covers the **second phase** of the Amara.day redesign, applying the des
 
 #### 4.1.1 Welcome Page Redesign
 
-**FR-1**: Update `src/pages/WelcomePage.tsx` and `WelcomePage.css` with hero section
-- **FR-1.1**: Display large Amara.day text logo (48px font size) centered
-- **FR-1.2**: Add tagline in large text: "Mindful habits. Lasting change."
-- **FR-1.3**: Add subtitle in italic: "Your daily ritual. Built to last."
-- **FR-1.4**: Apply gradient background: `linear-gradient(180deg, #FAF8F5 0%, #F5F1EB 100%)`
-- **FR-1.5**: Optional: Add gentle fade-in animation to logo on page load
-- **FR-1.6**: Center-align hero content with generous padding (`var(--space-3xl)`)
+**FR-1**: Hero Section - Full-screen centered with layered depth
+- **FR-1.1**: Branding: Display "AMARA DAY" in uppercase (clamp 2-3.5rem, DM Sans 600, letter-spacing 0.15em, moss-700 color)
+- **FR-1.2**: Tagline: "Daily Eternal" in uppercase (clamp 0.875-1rem, DM Sans 400, letter-spacing 0.2em, stone-600 color)
+- **FR-1.3**: Watercolor tree illustration between branding and subtitle (TreeOfLife component, max-width 280px desktop, 200px mobile)
+- **FR-1.4**: Subtitle: "A gentle space for daily practice. Not about perfection. About presence. About becoming, one quiet day at a time." (clamp 0.9375-1.125rem, Inter body font, relaxed line-height, text-secondary color)
+- **FR-1.5**: Primary CTA button: "Begin Your Practice" with moss gradient (600→700→800), white text, lift hover animation, shimmer effect on hover
+- **FR-1.6**: Secondary link: "Have an account? Sign in" (small text, river-600 color link with underline on hover)
+- **FR-1.7**: Background: 3-layer gradient system:
+  - Base: `linear-gradient(180deg, stone-0 → stone-50 → stone-100)`
+  - Overlay 1: Radial gradients (moss-50, river-50, sand-50 at strategic positions, opacity 0.3)
+  - Overlay 2: White gradient vignette (top/bottom fade, opacity 0.5)
+- **FR-1.8**: Scroll indicator: Animated pill-shaped outline (24×40px) with bouncing dot inside, fadeInOut animation
+- **FR-1.9**: Layout: min-height 100vh, flexbox centered, z-index layering for depth, all content above overlays
 
-**FR-2**: Update "How It Works" section
-- **FR-2.1**: Add circular gradient badges for step numbers (48px, terracotta gradient, white text)
-- **FR-2.2**: Apply warm card styling to step cards (surface background, soft shadow)
-- **FR-2.3**: Add subtle hover lift to step cards (`translateY(-2px)`)
+**FR-2**: "Why It Matters" Section - Single-column cards with icons
+- **FR-2.1**: Section title: "Why It Matters" (display font, text-2xl, centered)
+- **FR-2.2**: Three feature cards in single-column grid (max-width 900px, centered)
+- **FR-2.3**: Card styling: Gradient glass-morphism effect
+  - Background: `linear-gradient(135deg, rgba white variants with decreasing opacity)`
+  - `backdrop-filter: blur(10px)` for frosted glass effect
+  - No border, rounded corners (radius-xl), warm shadows
+- **FR-2.4**: Icon treatment: Lucide React icons (Heart, RotateCcw, Sparkles) in circular 80px containers
+  - Container: moss gradient background (100→50), circular with inset highlight shadow
+  - Icons: 40px size, moss-700 color, strokeWidth 1.5
+- **FR-2.5**: Card content: Title (display font, text-xl, 600 weight) + body text (base size, secondary color)
+- **FR-2.6**: Hover animation: `translateY(-4px) scale(1.01)` with shadow increase
+- **FR-2.7**: Copy tone: Conversational, compassionate ("You're Not Alone", "You Can Begin Again", "You'll See Yourself Clearly")
 
-**FR-3**: Update CTA (Call-to-Action) section
-- **FR-3.1**: Style "Try Without Signing In" button with primary button styles from PRD #1
-- **FR-3.2**: Add larger size variant for hero CTA (e.g., `padding: 1rem 3rem`)
-- **FR-3.3**: Style email sign-in form with warm inputs and floating labels
-- **FR-3.4**: Add privacy note in warm gray text below form
+**FR-3**: "Your Journey" Section - Progressive timeline cards
+- **FR-3.1**: Section title: "Your Journey" (display font, centered)
+- **FR-3.2**: Three timeline cards in responsive grid (auto-fit, min 280px)
+- **FR-3.3**: Step number badges: **Outlined circular design** (NOT filled)
+  - 56px diameter circles, transparent background
+  - 2px border in moss-300 color
+  - Number text: moss-600 color, font-weight 500 (medium, NOT bold)
+  - Hover: Border→moss-500, text→moss-700, shadow increase
+  - Design philosophy: "Whisper" aesthetic - light and minimal, not heavy
+- **FR-3.4**: Card styling: Cloud gradient background (50→100→200), 1px stone-300 border, soft shadow
+- **FR-3.5**: Hover animation: `translateY(-4px)` lift + border changes to moss-300
+- **FR-3.6**: Timeline structure: "Today" → "This Week" → "This Month" progression
+- **FR-3.7**: Copy tone: Short, poetic sentences. Present tense. No fluff. ("Just: you showed up", "Quiet. Like muscle memory forming", "Growth whispers. You listen")
+
+**FR-4**: "Metaphor Break" Section - Italicized quote interlude
+- **FR-4.1**: Background: moss-50 gradient fade (transparent→moss-50→transparent) with horizontal divider lines
+- **FR-4.2**: Quote styling: Display font italic, clamp 1.25-1.75rem, moss-800 color, centered, max-width 800px
+- **FR-4.3**: Content: Tree metaphor - "Like a tree, growth is quiet. Roots deepen while you sleep. Branches reach when you're not watching."
+- **FR-4.4**: Top/bottom dividers: 1px gradient lines (transparent→moss-300→transparent)
+- **FR-4.5**: Generous vertical padding (space-3xl)
+
+**FR-5**: Secondary CTA Section - Pricing note
+- **FR-5.1**: Centered italic text (text-sm, tertiary color): "Always free to start. Pay what feels right when AI-powered reflections begin (optional)."
+- **FR-5.2**: Padding: space-2xl vertical, max-width 700px
+
+**FR-6**: Footer - Simple links and attribution
+- **FR-6.1**: Top border: 1px solid stone-300
+- **FR-6.2**: Content: Privacy link • Open Source link • "Built with care"
+- **FR-6.3**: Link styling: river-600 color, underline on hover
+- **FR-6.4**: Text: small (text-sm), tertiary color, centered
+
+**FR-7**: BotanicalCorners decorative component
+- **FR-7.1**: Subtle corner decorations (existing component, already implemented)
+- **FR-7.2**: Adds organic visual interest without competing with content
+
+**FR-8**: Responsive behavior
+- **FR-8.1**: Mobile (≤767px): Reduce hero animation to 200px, tighter padding, full-width CTA (max 320px)
+- **FR-8.2**: Tablet (768-1023px): Journey cards in 2-column grid, Why cards stay single column
+- **FR-8.3**: Desktop (1024px+): All sections single column for better readability, max-width 900-1200px
+- **FR-8.4**: Fluid typography: All text uses clamp() for smooth scaling across viewports
+
+**FR-9**: Accessibility & motion
+- **FR-9.1**: `prefers-reduced-motion`: Disable all animations (hover lifts, scroll indicator, shimmer effects)
+- **FR-9.2**: `prefers-contrast: high`: Increase border widths to 2px
+- **FR-9.3**: All interactive elements keyboard accessible with visible focus states
 
 #### 4.1.2 Daily Log Page Redesign
 
@@ -470,77 +525,103 @@ This PRD covers the **second phase** of the Amara.day redesign, applying the des
 
 ### 14.1 Page Redesigns (Phase 3)
 
-**AC-1**: Welcome page displays Amara.day hero with large logo, tagline, subtitle, and gradient background
+**AC-1**: Welcome page hero section (full-screen, 100vh min-height):
+  - "AMARA DAY" branding in uppercase with "Daily Eternal" tagline
+  - Watercolor tree illustration (TreeOfLife component) centered between branding and subtitle
+  - Multi-sentence subtitle in conversational tone
+  - "Begin Your Practice" CTA button with moss gradient and shimmer hover effect
+  - 3-layer background system (base gradient + radial overlays + vignette)
+  - Animated scroll indicator (pill with bouncing dot)
 
-**AC-2**: "How It Works" step cards have circular gradient badges, warm backgrounds, and hover lift
+**AC-2**: "Why It Matters" section displays:
+  - Three single-column cards with glass-morphism gradient backgrounds
+  - Lucide React icons (Heart, RotateCcw, Sparkles) in circular moss-gradient containers (80px)
+  - Card hover animation: lift + scale with shadow increase
+  - Compassionate, conversational copy tone
 
-**AC-3**: Daily Log page has warm header, pill-shaped active date, and colorful habit cards
+**AC-3**: "Your Journey" section displays:
+  - Three timeline cards with **outlined circular badges** (56px, transparent bg, 2px moss-300 border, font-weight 500)
+  - Badge hover strengthens border and text color
+  - Cloud gradient card backgrounds (not white)
+  - Card hover: `translateY(-4px)` lift + moss-300 border
+  - Short, poetic copy in present tense
 
-**AC-4**: Habit cards on Daily Log pulse and show checkmark animation when toggled ON
+**AC-4**: "Metaphor Break" section displays:
+  - Centered italicized tree quote in display font
+  - moss-50 background fade with gradient divider lines top/bottom
+  - Large responsive text (clamp 1.25-1.75rem)
 
-**AC-5**: Progress page has gradient-bordered cards, warm stat icons (flame, trophy, chart), and colorful visualizations
+**AC-5**: Footer displays Privacy/Open Source links with river-600 color and stone-300 top border
 
-**AC-6**: Manage Habits page uses responsive grid layout (1/2/3 columns)
+**AC-6**: All sections use fluid typography (clamp) and respect `prefers-reduced-motion`
 
-**AC-7**: Floating Action Button (FAB) appears on Manage Habits page with gradient, shadow, and hover animation (scale + rotate)
+**AC-7**: Daily Log page has warm header, pill-shaped active date, and colorful habit cards
 
-**AC-8**: Habit form modal slides up from bottom with warm styling and backdrop overlay
+**AC-8**: Habit cards on Daily Log pulse and show checkmark animation when toggled ON
+
+**AC-9**: Progress page has gradient-bordered cards, warm stat icons (flame, trophy, chart), and colorful visualizations
+
+**AC-10**: Manage Habits page uses responsive grid layout (1/2/3 columns)
+
+**AC-11**: Floating Action Button (FAB) appears on Manage Habits page with gradient, shadow, and hover animation (scale + rotate)
+
+**AC-12**: Habit form modal slides up from bottom with warm styling and backdrop overlay
 
 ### 14.2 Polish & Delight (Phase 4)
 
-**AC-9**: LoadingScreen component displays Amara.day branding with pulse animation
+**AC-13**: LoadingScreen component displays Amara.day branding with pulse animation
 
-**AC-10**: Skeleton screens use warm gradient shimmer animation
+**AC-14**: Skeleton screens use warm gradient shimmer animation
 
-**AC-11**: Empty states display appropriate Lucide icon (200px) with encouraging copy and CTA button
+**AC-15**: Empty states display appropriate Lucide icon (200px) with encouraging copy and CTA button
 
-**AC-12**: Confetti animation triggers on first habit creation with warm-colored particles
+**AC-16**: Confetti animation triggers on first habit creation with warm-colored particles
 
-**AC-13**: Streak milestone animations display for 7, 14, 30-day streaks with flame icon and toast notification
+**AC-17**: Streak milestone animations display for 7, 14, 30-day streaks with flame icon and toast notification
 
-**AC-14**: Daily log completion animation (checkmark ripple) triggers when all habits marked done
+**AC-18**: Daily log completion animation (checkmark ripple) triggers when all habits marked done
 
-**AC-15**: Toast notifications slide in from top, auto-dismiss after 3 seconds, and support success/error/info variants
+**AC-19**: Toast notifications slide in from top, auto-dismiss after 3 seconds, and support success/error/info variants
 
-**AC-16**: Footer displays Amara.day wordmark, Privacy/Terms links, and dynamic copyright year in warm colors
+**AC-20**: Footer displays Amara.day wordmark, Privacy/Terms links, and dynamic copyright year in warm colors
 
 ### 14.3 Visual Regression Testing
 
-**AC-17**: Playwright screenshot comparison test file created (`e2e/visual-regression.spec.ts`)
+**AC-21**: Playwright screenshot comparison test file created (`e2e/visual-regression.spec.ts`)
 
-**AC-18**: Baseline screenshots captured for all pages
+**AC-22**: Baseline screenshots captured for all pages
 
-**AC-19**: `npm run test:e2e:visual` script runs visual regression tests
+**AC-23**: `npm run test:e2e:visual` script runs visual regression tests
 
-**AC-20**: `VISUAL_TESTING.md` documentation created with workflow instructions
+**AC-24**: `VISUAL_TESTING.md` documentation created with workflow instructions
 
 ### 14.4 Performance & Accessibility (All Phases)
 
-**AC-21**: Lighthouse Performance score ≥ 90
+**AC-25**: Lighthouse Performance score ≥ 90
 
-**AC-22**: Lighthouse Accessibility score ≥ 95
+**AC-26**: Lighthouse Accessibility score ≥ 95
 
-**AC-23**: First Contentful Paint < 1.5 seconds on 4G throttling
+**AC-27**: First Contentful Paint < 1.5 seconds on 4G throttling
 
-**AC-24**: Confetti animation runs at 30+ FPS (smooth, no lag)
+**AC-28**: Confetti animation runs at 30+ FPS (smooth, no lag)
 
-**AC-25**: axe-core reports 0 violations
+**AC-29**: axe-core reports 0 violations
 
-**AC-26**: All interactive elements keyboard-navigable (Tab, Enter, Space)
+**AC-30**: All interactive elements keyboard-navigable (Tab, Enter, Space)
 
 ### 14.5 Cross-Browser Compatibility (All Phases)
 
-**AC-27**: All features work correctly in Chrome (latest), Safari (macOS + iOS), Firefox (latest)
+**AC-31**: All features work correctly in Chrome (latest), Safari (macOS + iOS), Firefox (latest)
 
-**AC-28**: Animations run smoothly in all tested browsers
+**AC-32**: Animations run smoothly in all tested browsers
 
 ### 14.6 Conversion & Engagement (Post-Launch Tracking)
 
-**AC-29**: Demo → Signup conversion rate increased by 15-20% (measured 2 weeks post-launch)
+**AC-33**: Demo → Signup conversion rate increased by 15-20% (measured 2 weeks post-launch)
 
-**AC-30**: Session duration increased by 10% (measured 2 weeks post-launch)
+**AC-34**: Session duration increased by 10% (measured 2 weeks post-launch)
 
-**AC-31**: Habits logged per user per week maintained or increased by 5%
+**AC-35**: Habits logged per user per week maintained or increased by 5%
 
 ---
 

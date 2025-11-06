@@ -48,9 +48,10 @@
   display: inline-block;
   width: 52px;
   height: 28px;
-  background-color: var(--color-border);
+  background: linear-gradient(135deg, var(--stone-400) 0%, var(--stone-300) 100%);
+  border: 1px solid var(--stone-400);
   border-radius: var(--radius-full);
-  transition: background-color var(--transition-normal);
+  transition: background var(--transition-base), border-color var(--transition-base), box-shadow var(--transition-base);
 }
 
 /* The sliding thumb/circle */
@@ -66,18 +67,20 @@
   transition: transform var(--transition-normal);
 }
 
-/* OFF state - gray background */
+/* OFF state - gray gradient background */
 .toggle-switch--off .toggle-switch__slider {
-  background-color: var(--color-border);
+  background: linear-gradient(135deg, var(--stone-400) 0%, var(--stone-300) 100%);
+  border-color: var(--stone-400);
 }
 
 .toggle-switch--off .toggle-switch__thumb {
   transform: translateX(0);
 }
 
-/* ON state - primary color background, thumb slides right */
+/* ON state - Moss gradient background, thumb slides right */
 .toggle-switch--on .toggle-switch__slider {
-  background-color: var(--color-success);
+  background: linear-gradient(135deg, var(--moss-600) 0%, var(--moss-700) 50%, var(--moss-800) 100%);
+  box-shadow: 0 2px 8px rgba(107, 142, 95, 0.25);
 }
 
 .toggle-switch--on .toggle-switch__thumb {

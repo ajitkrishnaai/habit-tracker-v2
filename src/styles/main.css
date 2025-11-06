@@ -1,80 +1,236 @@
-/* CSS Variables - Tasks 7.30-7.37 */
+/**
+ * Amara.day Design System
+ * Version 2.0 - Complete Token Scales
+ *
+ * Color Usage Ratios:
+ * - Stone/Cloud: 70% (backgrounds, surfaces, text, borders)
+ * - Moss: 20% (primary actions, selections)
+ * - River: 8% (progress, links, tertiary actions)
+ * - Sun: 2% (celebration moments ONLY)
+ */
 :root {
-  /* Colors - Neutral grays with blue accent (Task 7.37) */
-  /* Task 7.40: WCAG AA compliant colors */
-  --color-primary: #2563eb; /* Blue accent - 5.14:1 ✓ */
-  --color-primary-hover: #1d4ed8;
-  --color-accent: #2563eb; /* Alias for consistency */
-  --color-accent-dark: #1d4ed8;
-  --color-success: #059669; /* Changed from #10b981 for better contrast */
-  --color-error: #dc2626;   /* Changed from #ef4444 (3.94:1) to darker red (5.36:1 ✓) */
-  --color-warning: #d97706; /* Darkened from #f59e0b for better contrast */
+  /* ============================================
+     MOSS SCALE (Primary - Growth, Action, Selection)
+     Usage: 20% of UI
+     ============================================ */
+  --moss-10: #F5F7F4;
+  --moss-50: #E8EDE5;
+  --moss-100: #D4DED0;
+  --moss-200: #B8CAAF;
+  --moss-300: #9BB58E;
+  --moss-400: #8BA87D;
+  --moss-500: #7A9B6C;
+  --moss-600: #6B8E5F;
+  --moss-700: #567347;
+  --moss-800: #4A6342;
+  --moss-900: #3F5A3C;
 
-  /* Neutrals (Task 7.37: ample white space, minimal palette) */
-  /* Task 7.40: Adjusted for WCAG AA contrast compliance */
-  --color-background: #ffffff;
-  --color-surface: #f9fafb;
-  --color-border: #e5e7eb;
-  --color-text-primary: #111827;   /* 17.79:1 ✓ AAA */
-  --color-text-secondary: #6b7280; /* 5.74:1 ✓ AA */
-  --color-text-tertiary: #6b7280;  /* Changed from #9ca3af (3.36:1 fail) to match secondary for AA compliance */
+  /* ============================================
+     RIVER SCALE (Accent - Progress, Flow, Links)
+     Usage: 8% of UI
+     ============================================ */
+  --river-10: #F0F7F9;
+  --river-50: #E0EFF3;
+  --river-100: #C7E3EB;
+  --river-200: #9BCFDD;
+  --river-300: #6FB9CB;
+  --river-400: #5AA8BC;
+  --river-500: #4897AD;
+  --river-600: #3B8399;
+  --river-700: #2F6A7A;
+  --river-800: #27596A;
+  --river-900: #1F4756;
 
-  /* Spacing */
-  --spacing-xs: 0.25rem; /* 4px */
-  --spacing-sm: 0.5rem; /* 8px */
-  --spacing-md: 1rem; /* 16px */
-  --spacing-lg: 1.5rem; /* 24px */
-  --spacing-xl: 2rem; /* 32px */
-  --spacing-2xl: 3rem; /* 48px */
+  /* ============================================
+     SUN SCALE (Highlight - Success, Celebration)
+     Usage: 2% of UI - SPARINGLY, meaningful moments only
+     ============================================ */
+  --sun-10: #FFFCF5;
+  --sun-50: #FFF9E8;
+  --sun-100: #FEF3D1;
+  --sun-200: #FDEDBA;
+  --sun-300: #F9E29A;
+  --sun-400: #F5D686;
+  --sun-500: #E8C06B;
 
-  /* Typography */
-  --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  /* ============================================
+     STONE SCALE (Neutral - Backgrounds, Borders, Text)
+     Usage: 70% of UI
+     ============================================ */
+  --stone-0: #FEF9EC;
+  --stone-50: #FDF7E5;
+  --stone-100: #FCF4DC;
+  --stone-200: #F5EFD4;
+  --stone-300: #EBE0C3;
+  --stone-400: #D9C89A;
+  --stone-500: #B5A686;
+  --stone-600: #8B8D7F;
+  --stone-700: #5A5C4E;
+  --stone-800: #3A3C31;
+  --stone-900: #2F3529;
+  --stone-1000: #1A1C14;
+
+  /* ============================================
+     CLOUD SCALE (Elevation - Surfaces, Overlays)
+     ============================================ */
+  --cloud-0: #FFFFFF;
+  --cloud-50: #FEFDFB;
+  --cloud-100: #FDFCF9;
+  --cloud-200: #FBFAF6;
+  --cloud-300: #F9F8F3;
+  --cloud-400: #F7F5EF;
+  --cloud-500: #F5F3EC;
+
+  /* ============================================
+     SEMANTIC TOKENS - Use these in your code
+     ============================================ */
+
+  /* Primary (Moss) - 20% of UI */
+  --color-primary: var(--moss-600);
+  --color-primary-hover: var(--moss-700);
+  --color-primary-light: var(--moss-400);
+  --color-primary-dark: var(--moss-800);
+
+  /* Accent (River) - 8% of UI */
+  --color-accent: var(--river-600);
+  --color-accent-hover: var(--river-700);
+  --color-accent-light: var(--river-400);
+  --color-accent-dark: var(--river-700); /* Legacy alias */
+
+  /* Highlight (Sun) - 2% of UI - Use sparingly! */
+  --color-success: var(--sun-400);
+  --color-celebration: var(--sun-300);
+
+  /* States */
+  --color-error: #C85A4F;
+  --color-warning: #D4915A;
+
+  /* Surfaces (Stone/Cloud) - 70% of UI */
+  --color-background: var(--stone-0);
+  --color-surface: var(--stone-50);
+  --color-surface-hover: var(--stone-100);
+  --color-surface-elevated: var(--cloud-100);
+
+  /* Borders */
+  --color-border: var(--stone-400);
+  --color-border-light: var(--stone-300);
+  --color-border-subtle: var(--stone-200);
+
+  /* Text */
+  --color-text-primary: var(--stone-900);
+  --color-text-secondary: var(--stone-700);
+  --color-text-tertiary: var(--stone-600);
+
+  /* ============================================
+     TYPOGRAPHY
+     ============================================ */
+
+  /* Font Families */
+  --font-display: 'DM Sans', ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Inter, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+  --font-body: 'Inter', ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+
+  /* Legacy alias */
+  --font-family: var(--font-body);
+
+  /* Type Scale (Major Third: 1.25 ratio - 12, 15, 19, 24, 30, 38, 48) */
+  --text-xs: 12px;
+  --text-sm: 15px;
+  --text-base: 19px;
+  --text-lg: 24px;
+  --text-xl: 30px;
+  --text-2xl: 38px;
+  --text-3xl: 48px;
+  --text-4xl: 60px;
+
+  /* Legacy font-size aliases */
   --font-size-xs: 0.75rem; /* 12px */
-  --font-size-sm: 0.875rem; /* 14px */
+  --font-size-sm: 0.9375rem; /* 15px */
   --font-size-base: 1rem; /* 16px - prevents iOS zoom */
-  --font-size-lg: 1.125rem; /* 18px */
-  --font-size-xl: 1.25rem; /* 20px */
-  --font-size-2xl: 1.5rem; /* 24px */
-  --font-size-3xl: 1.875rem; /* 30px */
+  --font-size-lg: 1.5rem; /* 24px */
+  --font-size-xl: 1.875rem; /* 30px */
+  --font-size-2xl: 2.375rem; /* 38px */
+  --font-size-3xl: 3rem; /* 48px */
 
-  /* Line heights */
-  --line-height-tight: 1.25;
-  --line-height-normal: 1.5;
-  --line-height-relaxed: 1.75;
+  /* Line Heights */
+  --leading-tight: 1.2;
+  --leading-snug: 1.375;
+  --leading-normal: 1.6;
+  --leading-relaxed: 1.8;
 
-  /* Border radius */
-  --border-radius: 0.5rem;
-  --border-radius-sm: 0.25rem;
-  --border-radius-lg: 0.75rem;
-  --border-radius-xl: 1rem;
-  --border-radius-full: 9999px;
   /* Legacy aliases */
-  --radius-sm: 0.25rem;
-  --radius-md: 0.5rem;
-  --radius-lg: 0.75rem;
-  --radius-xl: 1rem;
+  --line-height-tight: var(--leading-tight);
+  --line-height-normal: var(--leading-normal);
+  --line-height-relaxed: var(--leading-relaxed);
+
+  /* Letter Spacing */
+  --tracking-tight: -0.03em;
+  --tracking-normal: -0.01em;
+  --tracking-wide: 0.02em;
+
+  /* ============================================
+     SPACING (8pt grid)
+     ============================================ */
+  --space-xs: 8px;
+  --space-sm: 12px;
+  --space-md: 20px;
+  --space-lg: 32px;
+  --space-xl: 48px;
+  --space-2xl: 64px;
+  --space-3xl: 96px;
+
+  /* Legacy spacing aliases */
+  --spacing-xs: 0.5rem; /* 8px */
+  --spacing-sm: 0.75rem; /* 12px */
+  --spacing-md: 1.25rem; /* 20px */
+  --spacing-lg: 2rem; /* 32px */
+  --spacing-xl: 3rem; /* 48px */
+  --spacing-2xl: 4rem; /* 64px */
+
+  /* ============================================
+     BORDER RADIUS
+     ============================================ */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
   --radius-full: 9999px;
 
-  /* Shadows */
-  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+  /* Legacy aliases */
+  --border-radius: var(--radius-md);
+  --border-radius-sm: var(--radius-sm);
+  --border-radius-lg: var(--radius-lg);
+  --border-radius-xl: var(--radius-xl);
+  --border-radius-full: var(--radius-full);
 
-  /* Touch targets */
+  /* ============================================
+     SHADOWS (y=8, blur=24 per principles)
+     ============================================ */
+  --shadow-sm: 0 4px 12px rgba(58,54,49,0.08);
+  --shadow-md: 0 8px 24px rgba(58,54,49,0.12);
+  --shadow-lg: 0 12px 32px rgba(58,54,49,0.16);
+  --shadow-xl: 0 20px 48px rgba(58,54,49,0.20);
+  --shadow-card: 0 8px 24px rgba(217, 200, 154, 0.12);
+
+  /* ============================================
+     MOTION (Natural easing - NOT Material Design)
+     ============================================ */
+  --easing-natural: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --transition-fast: 150ms var(--easing-natural);
+  --transition-base: 220ms var(--easing-natural);
+  --transition-slow: 350ms var(--easing-natural);
+  --transition-ritual: 600ms var(--easing-natural);
+
+  /* Legacy aliases */
+  --transition-normal: var(--transition-base);
+
+  /* ============================================
+     LAYOUT
+     ============================================ */
   --touch-target-min: 44px;
-
-  /* Transitions */
-  --transition-fast: 150ms ease-in-out;
-  --transition-normal: 250ms ease-in-out;
-  --transition-slow: 350ms ease-in-out;
-
-  /* Layout (Task 7.32: max 800px centered) */
   --max-width: 800px;
   --max-width-content: 800px;
   --nav-height: 60px;
-
-  /* Breakpoints */
   --breakpoint-mobile: 320px;
   --breakpoint-tablet: 768px;
   --breakpoint-desktop: 1024px;
@@ -101,7 +257,15 @@ body {
   font-size: var(--font-size-base);
   line-height: var(--line-height-normal);
   color: var(--color-text-primary);
-  background-color: var(--color-background);
+  /* Warm, organic background gradient (Stone scale) */
+  background: linear-gradient(165deg,
+    var(--stone-0) 0%,
+    var(--stone-50) 25%,
+    var(--stone-0) 50%,
+    var(--stone-100) 75%,
+    var(--stone-50) 100%
+  );
+  background-attachment: fixed;
   min-height: 100vh;
 }
 
@@ -171,6 +335,133 @@ button:disabled {
 button:focus-visible {
   outline: 2px solid var(--color-primary);
   outline-offset: 2px;
+}
+
+/* ============================================
+   BUTTON STYLES (Amara.day Design System)
+   ============================================ */
+
+/* Primary Button - Moss gradient for growth/action */
+.button-primary,
+.btn-primary {
+  font-family: var(--font-display);
+  font-weight: 600;
+  padding: 0.75rem 2rem;
+  border-radius: var(--radius-md);
+  border: none;
+  color: #fff;
+  background: linear-gradient(135deg, var(--moss-600) 0%, var(--moss-700) 50%, var(--moss-800) 100%);
+  box-shadow: 0 4px 16px rgba(107, 142, 95, 0.25);
+  min-height: 44px;
+  min-width: 44px;
+  cursor: pointer;
+  outline: none;
+  transition: transform var(--transition-base), box-shadow var(--transition-base), background var(--transition-base);
+  position: relative;
+  overflow: hidden;
+}
+
+.button-primary::before,
+.btn-primary::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+  transition: left 0.5s;
+}
+
+.button-primary:hover::before,
+.btn-primary:hover::before {
+  left: 100%;
+}
+
+.button-primary:hover:not(:disabled),
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(107, 142, 95, 0.35);
+  background: linear-gradient(135deg, var(--moss-400) 0%, var(--moss-600) 50%, var(--moss-700) 100%);
+}
+
+.button-primary:active:not(:disabled),
+.btn-primary:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: var(--shadow-sm);
+}
+
+.button-primary:focus-visible,
+.btn-primary:focus-visible {
+  box-shadow: 0 0 0 4px rgba(107,142,95,0.25), var(--shadow-lg);
+}
+
+/* Secondary Button - Outlined */
+.button-secondary,
+.btn-secondary {
+  font-family: var(--font-display);
+  font-weight: 600;
+  padding: 0.75rem 2rem;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--color-primary);
+  border: 2px solid var(--color-primary);
+  min-height: 44px;
+  min-width: 44px;
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.button-secondary:hover:not(:disabled),
+.btn-secondary:hover:not(:disabled) {
+  background: var(--color-primary);
+  color: #fff;
+  box-shadow: var(--shadow-sm);
+  transform: translateY(-2px);
+}
+
+.button-secondary:active:not(:disabled),
+.btn-secondary:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: var(--shadow-sm);
+}
+
+.button-secondary:focus-visible,
+.btn-secondary:focus-visible {
+  box-shadow: 0 0 0 4px rgba(107,142,95,0.25);
+}
+
+/* Tertiary Button - River accent for flow/links */
+.button-tertiary,
+.btn-tertiary {
+  font-family: var(--font-display);
+  font-weight: 600;
+  padding: 0.75rem 1rem;
+  background: transparent;
+  color: var(--color-accent);
+  border: none;
+  min-height: 44px;
+  min-width: 44px;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  border-radius: var(--radius-md);
+}
+
+.button-tertiary:hover:not(:disabled),
+.btn-tertiary:hover:not(:disabled) {
+  background: var(--river-50);
+  color: var(--color-accent-hover);
+}
+
+.button-tertiary:active:not(:disabled),
+.btn-tertiary:active:not(:disabled) {
+  background: var(--river-100);
+}
+
+.button-tertiary:focus-visible,
+.btn-tertiary:focus-visible {
+  box-shadow: 0 0 0 4px rgba(59, 131, 153, 0.25);
+  outline: none;
 }
 
 /* Task 7.33: Ensure all interactive elements have min 44x44px touch targets on mobile */
