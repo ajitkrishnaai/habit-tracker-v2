@@ -39,3 +39,15 @@ playwright/.cache/
 # Temporary files
 *.tmp
 .temp/
+
+# Markdown files (planning, tasks, PRDs, internal docs)
+# Ignore all markdown files by default
+*.md
+
+# Whitelist essential documentation
+!README.md
+!CLAUDE.md
+!SUPABASE_SETUP.md
+!E2E_TESTING_GUIDE.md
+!.github/SECRETS_SETUP.md
+!e2e/README.md
