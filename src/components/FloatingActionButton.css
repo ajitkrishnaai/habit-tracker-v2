@@ -17,8 +17,8 @@
   border: none;
   padding: 0;
 
-  /* Warm gradient background (terracotta to sunset) */
-  background: linear-gradient(135deg, #D4745E 0%, #E89C5A 100%);
+  /* Green gradient background (moss/sage green) */
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
 
   /* Shadow */
   box-shadow: var(--shadow-xl);
@@ -45,7 +45,7 @@
 /* Hover animation - scale and rotate */
 .fab:hover {
   transform: scale(1.1) rotate(90deg);
-  box-shadow: 0 20px 60px rgba(212, 116, 94, 0.4);
+  box-shadow: 0 20px 60px rgba(107, 142, 95, 0.4);
 }
 
 /* Active state - pressed down */
@@ -56,7 +56,7 @@
 
 /* Focus state for keyboard navigation */
 .fab:focus-visible {
-  outline: 3px solid rgba(212, 116, 94, 0.5);
+  outline: 3px solid rgba(107, 142, 95, 0.5);
   outline-offset: 4px;
 }
 

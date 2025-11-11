@@ -59,6 +59,11 @@ export const ProgressPage: React.FC = () => {
       const allHabits = await storageService.getHabits();
       const activeHabits = allHabits.filter((habit: Habit) => habit.status === 'active');
 
+      // Sort habits alphabetically by name (case-insensitive)
+      activeHabits.sort((a, b) =>
+        a.name.toLowerCase().localeCompare(b.name.toLowerCase())
+      );
+
       // Fetch logs for each habit
       const habitsData: HabitWithLogs[] = await Promise.all(
         activeHabits.map(async (habit: Habit) => {

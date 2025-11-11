@@ -23,6 +23,7 @@ export const HabitListItem = ({ habit, onEdit, onDelete }: HabitListItemProps): 
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const habitNameId = `habit-name-${habit.habit_id}`;
 
   const handleEditClick = () => {
     onEdit(habit);
@@ -71,49 +72,80 @@ export const HabitListItem = ({ habit, onEdit, onDelete }: HabitListItemProps): 
   };
 
   return (
-    <div className="card habit-list-item">
+    <li
+      className={`card card--compact habit-list-item ${
+        showConfirmDelete ? 'habit-list-item--confirm' : ''
+      }`}
+    >
       {/* Error Display */}
       {error && (
-        <div className="habit-list-item__error">
+        <div className="habit-list-item__error" role="alert">
           {error}
         </div>
       )}
 
       {/* Habit Display or Confirmation Dialog */}
       {!showConfirmDelete ? (
-        <div className="habit-list-item__content">
-          {/* Habit Info */}
+        <>
           <div className="habit-list-item__info">
-            <div className="habit-list-item__name">
+            <span id={habitNameId} className="habit-list-item__name">
               {habit.name}
-            </div>
-
+            </span>
             {habit.category && (
-              <span className="habit-list-item__category">
-                {habit.category}
-              </span>
+              <span className="badge badge--warning">{habit.category}</span>
             )}
           </div>
-
-          {/* Action Buttons */}
-          <div className="habit-list-item__actions">
+          <div className="habit-list-item__actions" aria-label={`${habit.name} actions`}>
             <button
               onClick={handleEditClick}
               disabled={deleting}
-              className="btn-primary btn-sm"
+              className="habit-list-item__icon-btn"
+              aria-label="Edit"
+              aria-describedby={habitNameId}
+              title="Edit"
+              type="button"
             >
-              Edit
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" />
+              </svg>
             </button>
 
             <button
               onClick={handleRemoveClick}
               disabled={deleting}
-              className="btn-danger btn-sm"
+              className="habit-list-item__icon-btn habit-list-item__icon-btn--danger"
+              aria-label="Remove"
+              aria-describedby={habitNameId}
+              title="Remove"
+              type="button"
             >
-              Remove
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <polyline points="3 6 5 6 21 6" />
+                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+              </svg>
             </button>
           </div>
-        </div>
+        </>
       ) : (
         /* Confirmation Dialog */
         <div className="habit-list-item__confirm">
@@ -126,6 +158,7 @@ export const HabitListItem = ({ habit, onEdit, onDelete }: HabitListItemProps): 
               onClick={handleCancelDelete}
               disabled={deleting}
               className="btn-secondary btn-sm"
+              type="button"
             >
               Cancel
             </button>
@@ -134,12 +167,13 @@ export const HabitListItem = ({ habit, onEdit, onDelete }: HabitListItemProps): 
               onClick={handleConfirmDelete}
               disabled={deleting}
               className="btn-danger-primary btn-sm"
+              type="button"
             >
               {deleting ? 'Removing...' : 'Yes, Remove'}
             </button>
           </div>
         </div>
       )}
-    </div>
+    </li>
   );
 };

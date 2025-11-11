@@ -8,7 +8,7 @@
 .manage-habits-page {
   min-height: 100vh;
   background-color: var(--color-background);
-  padding: var(--space-xl) var(--space-md);
+  padding: 0;
 }
 
 .manage-habits-page__container {
@@ -40,63 +40,21 @@
   font-size: var(--text-sm);
 }
 
-/* Content section */
-.manage-habits-page__content {
-  background-color: var(--color-surface);
-  border-radius: var(--radius-lg);
-  padding: var(--space-xl);
-  box-shadow: var(--shadow-sm);
-  border: 1px solid var(--color-border-light);
-}
-
-.manage-habits-page__section-title {
-  font-size: var(--text-2xl);
-  font-family: var(--font-display);
-  font-weight: 600;
-  color: var(--color-text-primary);
-  margin: 0 0 var(--space-lg) 0;
-}
-
-/* Habits Grid - Responsive layout */
-.habits-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr); /* Mobile: 1 column with minmax to prevent overflow */
-  gap: var(--space-lg);
-  width: 100%;
+/* Habits List - Matches daily log page list layout */
+.habits-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
   margin: 0;
   padding: 0;
-  overflow: hidden;
-}
-
-/* Tablet breakpoint: 2 columns */
-@media (min-width: 768px) {
-  .habits-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-/* Desktop breakpoint: 2 columns */
-@media (min-width: 1024px) {
-  .habits-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr)); /* Keep at 2 for better card width on wide screens */
-  }
-}
-
-/* Desktop large screens: Allow 3 columns if space permits */
-@media (min-width: 1280px) {
-  .habits-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
+  width: 100%;
 }
 
 /* Responsive: Desktop adjustments */
 @media (min-width: 768px) {
   .manage-habits-page {
     padding: var(--space-2xl) var(--space-xl);
-  }
-
-  .manage-habits-page__content {
-    padding: var(--space-2xl);
   }
 }
 

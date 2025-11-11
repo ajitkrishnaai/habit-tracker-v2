@@ -1,0 +1,252 @@
+/**
+ * ReflectionModal Styles
+ *
+ * Full-screen modal for habit reflection with warm, inviting design
+ * Uses global modal base styles and animations from main.css and animations.css
+ */
+
+/* Overlay - extends .modal-backdrop from main.css */
+.reflection-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 1000;
+  animation: modal-fade-in 0.3s ease-out;
+}
+
+/* Modal Container - extends .modal from main.css */
+.reflection-modal {
+  background-color: var(--color-background);
+  width: 100%;
+  max-height: 90vh;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  padding: var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  animation: modal-slide-up 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow-y: auto;
+  box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.15);
+}
+
+/* Header */
+.reflection-modal__header {
+  text-align: center;
+  padding-bottom: var(--space-md);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.reflection-modal__saved-indicator {
+  font-size: var(--text-sm);
+  color: var(--color-text-tertiary);
+  margin: 0 0 var(--space-xs) 0;
+  font-weight: 400;
+}
+
+.reflection-modal__title {
+  font-size: var(--text-2xl);
+  font-family: var(--font-display);
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin: 0;
+  letter-spacing: var(--tracking-tight);
+}
+
+/* Changes Summary - Compact with Icons */
+.reflection-modal__changes {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.reflection-modal__habit-group {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-sm);
+  line-height: 1.6;
+}
+
+.reflection-modal__icon {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  margin-top: 2px; /* Align with text baseline */
+}
+
+.reflection-modal__icon--done {
+  color: var(--color-primary-hover); /* Sage green */
+}
+
+.reflection-modal__icon--not-done {
+  color: var(--color-error); /* Terracotta */
+}
+
+.reflection-modal__habit-list {
+  font-size: var(--text-base);
+  color: var(--color-text-primary);
+  line-height: 1.6;
+}
+
+/* Notes Input */
+.reflection-modal__notes {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.reflection-modal__notes-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.reflection-modal__notes-label {
+  font-size: var(--text-base);
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.reflection-modal__notes-counter {
+  font-size: var(--text-sm);
+  color: var(--color-text-tertiary);
+}
+
+.reflection-modal__notes-textarea {
+  width: 100%;
+  padding: var(--space-md);
+  font-family: var(--font-family);
+  font-size: var(--text-base);
+  color: var(--color-text-primary);
+  background-color: var(--color-surface);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-md);
+  resize: vertical;
+  min-height: 120px;
+  transition: border-color var(--transition-fast);
+  line-height: 1.6;
+}
+
+.reflection-modal__notes-textarea:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.reflection-modal__notes-textarea::placeholder {
+  color: var(--color-text-tertiary);
+  font-style: italic;
+}
+
+/* Actions */
+.reflection-modal__actions {
+  display: flex;
+  gap: var(--space-md);
+  padding-top: var(--space-md);
+}
+
+.reflection-modal__btn {
+  flex: 1;
+  min-height: var(--touch-target-min);
+  padding: var(--space-md);
+  font-size: var(--text-base);
+  font-weight: 600;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.reflection-modal__btn--primary {
+  background-color: var(--color-primary);
+  color: var(--color-background);
+}
+
+.reflection-modal__btn--primary:hover {
+  background-color: var(--color-primary-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.reflection-modal__btn--primary:active {
+  transform: translateY(0);
+}
+
+.reflection-modal__btn--primary:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.reflection-modal__btn--primary:disabled {
+  opacity: 0.8;
+  cursor: not-allowed;
+}
+
+.reflection-modal__btn--saving {
+  background-color: var(--color-primary-hover);
+}
+
+/* Spinner - uses global .animate-spin class */
+.reflection-modal__spinner {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: var(--radius-full);
+  margin-right: var(--space-xs);
+  /* Animation applied via class in JSX: .animate-spin */
+}
+
+.reflection-modal__btn--secondary {
+  background-color: transparent;
+  color: var(--color-text-secondary);
+  border: 2px solid var(--color-border);
+}
+
+.reflection-modal__btn--secondary:hover {
+  background-color: var(--color-surface);
+  border-color: var(--color-text-secondary);
+}
+
+.reflection-modal__btn--secondary:focus-visible {
+  outline: 2px solid var(--color-text-secondary);
+  outline-offset: 2px;
+}
+
+.reflection-modal__btn--secondary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Tablet and Desktop */
+@media (min-width: 768px) {
+  .reflection-modal-overlay {
+    align-items: center;
+  }
+
+  .reflection-modal {
+    width: 100%;
+    max-width: 600px;
+    max-height: 85vh;
+    border-radius: var(--radius-lg);
+    padding: var(--space-xl);
+    animation: modal-slide-up-desktop 0.3s ease-out;
+  }
+
+  .reflection-modal__title {
+    font-size: var(--text-3xl);
+  }
+
+  .reflection-modal__habit-list {
+    font-size: var(--text-lg);
+  }
+
+  .reflection-modal__notes-textarea {
+    min-height: 140px;
+  }
+}

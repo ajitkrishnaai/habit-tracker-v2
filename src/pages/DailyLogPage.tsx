@@ -10,10 +10,11 @@
  * - Unsaved changes detection
  */
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { DateNavigator } from '../components/DateNavigator';
 import { ToggleSwitch } from '../components/ToggleSwitch';
 import { EmptyState } from '../components/EmptyState';
+import { ReflectionModal } from '../components/ReflectionModal';
 import { storageService } from '../services/storage';
 import { syncService } from '../services/syncService';
 import { supabaseDataService } from '../services/supabaseDataService';
@@ -38,14 +39,23 @@ interface HabitLogState {
   status: 'done' | 'not_done' | 'no_data';
 }
 
+export interface PendingChange {
+  habitId: string;
+  habitName: string;
+  category?: string;
+  newStatus: 'done' | 'not_done';
+  previousStatus: 'done' | 'not_done' | 'no_data';
+}
+
 export const DailyLogPage: React.FC = () => {
   const [currentDate, setCurrentDate] = useState<Date>(getTodayAtMidnight());
   const [habitLogs, setHabitLogs] = useState<HabitLogState[]>([]);
-  const [notes, setNotes] = useState<string>('');
+  const [pendingChanges, setPendingChanges] = useState<Map<string, PendingChange>>(new Map());
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [syncing, setSyncing] = useState<boolean>(false);
-  const [hasUnsavedNotes, setHasUnsavedNotes] = useState<boolean>(false);
+  const [showReflectionModal, setShowReflectionModal] = useState<boolean>(false);
+  const [isSaving, setIsSaving] = useState<boolean>(false);
 
   // Demo mode state (Task 3.5 - REQ-16, REQ-30)
   const [showConversionModal, setShowConversionModal] = useState(false);
@@ -54,17 +64,15 @@ export const DailyLogPage: React.FC = () => {
   const [toastMessage, setToastMessage] = useState('');
   const [showMigrationToast, setShowMigrationToast] = useState(false);
 
-  const initialNotesRef = useRef<string>('');
+  // Computed: check if there are unsaved changes
+  const hasUnsavedChanges = pendingChanges.size > 0;
 
   // Load habits and logs for the selected date
   useEffect(() => {
     loadDataForDate(currentDate);
+    // Clear pending changes when date changes
+    setPendingChanges(new Map());
   }, [currentDate]);
-
-  // Track unsaved notes
-  useEffect(() => {
-    setHasUnsavedNotes(notes !== initialNotesRef.current);
-  }, [notes]);
 
   // Check for migration success toast (Task 3.5 - REQ-50)
   useEffect(() => {
@@ -92,8 +100,6 @@ export const DailyLogPage: React.FC = () => {
 
       if (activeHabits.length === 0) {
         setHabitLogs([]);
-        setNotes('');
-        initialNotesRef.current = '';
         setLoading(false);
         return;
       }
@@ -113,14 +119,12 @@ export const DailyLogPage: React.FC = () => {
         };
       });
 
+      // Sort habits alphabetically by name (case-insensitive)
+      habitLogStates.sort((a, b) =>
+        a.habit.name.toLowerCase().localeCompare(b.habit.name.toLowerCase())
+      );
+
       setHabitLogs(habitLogStates);
-
-      // Set notes from the first log entry that has notes
-      const logWithNotes = logsForDate.find((log) => log.notes);
-      const notesValue = logWithNotes?.notes || '';
-      setNotes(notesValue);
-      initialNotesRef.current = notesValue;
-
       setLoading(false);
     } catch (err) {
       console.error('Error loading data for date:', err);
@@ -130,12 +134,12 @@ export const DailyLogPage: React.FC = () => {
   };
 
   /**
-   * Handle date change with unsaved notes warning
+   * Handle date change with unsaved changes warning
    */
   const handleDateChange = (newDate: Date) => {
-    if (hasUnsavedNotes) {
+    if (hasUnsavedChanges) {
       const confirmed = window.confirm(
-        'You have unsaved notes. Are you sure you want to change the date? Your notes will be lost.'
+        'You have unsaved changes. Are you sure you want to change the date? Your changes will be lost.'
       );
       if (!confirmed) return;
     }
@@ -144,187 +148,130 @@ export const DailyLogPage: React.FC = () => {
   };
 
   /**
-   * Handle toggle change for a habit
+   * Handle toggle change for a habit (pending state only - no save yet)
    */
-  const handleToggleChange = async (habitId: string, newStatus: boolean) => {
+  const handleToggleChange = (habitId: string, newStatus: boolean) => {
+    // Find the habit
+    const habitLog = habitLogs.find((hl) => hl.habit.habit_id === habitId);
+    if (!habitLog) return;
+
+    const status: 'done' | 'not_done' = newStatus ? 'done' : 'not_done';
+
+    // Update UI optimistically
+    setHabitLogs((prev) =>
+      prev.map((hl) =>
+        hl.habit.habit_id === habitId ? { ...hl, status } : hl
+      )
+    );
+
+    // Track pending change
+    setPendingChanges((prev) => {
+      const newPending = new Map(prev);
+      newPending.set(habitId, {
+        habitId,
+        habitName: habitLog.habit.name,
+        category: habitLog.habit.category,
+        newStatus: status,
+        previousStatus: habitLog.logEntry?.status || 'no_data',
+      });
+      return newPending;
+    });
+  };
+
+  /**
+   * Handle "Save Changes" button click - show brief animation then modal
+   */
+  const handleSaveChangesClick = () => {
+    if (!hasUnsavedChanges) return;
+
+    // Show "Saving..." state briefly
+    setIsSaving(true);
+
+    // After brief animation, show reflection modal
+    setTimeout(() => {
+      setIsSaving(false);
+      setShowReflectionModal(true);
+    }, 600);
+  };
+
+  /**
+   * Save all pending changes with optional reflection notes
+   */
+  const handleSaveWithReflection = async (reflectionNotes?: string) => {
     try {
-      // Optimistic update
-      setHabitLogs((prev) =>
-        prev.map((hl) =>
-          hl.habit.habit_id === habitId
-            ? { ...hl, status: newStatus ? 'done' : 'not_done' }
-            : hl
-        )
-      );
-
-      // Find the habit log
-      const habitLog = habitLogs.find((hl) => hl.habit.habit_id === habitId);
-      if (!habitLog) return;
-
+      setError(null);
       const dateString = formatDateISO(currentDate);
       const timestamp = getCurrentTimestamp();
-      const status = newStatus ? 'done' : 'not_done';
 
-      // Create or update log entry
-      const logEntry: LogEntry = habitLog.logEntry
-        ? {
-            ...habitLog.logEntry,
-            status,
-            timestamp,
-            notes: notes || undefined,
-          }
-        : {
-            log_id: generateUUID(),
-            habit_id: habitId,
-            date: dateString,
-            status,
-            timestamp,
-            notes: notes || undefined,
-          };
-
-      // Save to local storage (IndexedDB)
-      await storageService.saveLog(logEntry);
-
-      // Also save to Supabase if online
-      try {
-        // Check if log exists in Supabase by fetching logs for this habit/date
-        const existingLogs = await supabaseDataService.getLogs(logEntry.habit_id, logEntry.date);
-        const logExistsInSupabase = existingLogs.some(l => l.log_id === logEntry.log_id ||
-                                                            (l.habit_id === logEntry.habit_id && l.date === logEntry.date));
-
-        if (logExistsInSupabase) {
-          // Update existing log in Supabase
-          // Get the full log object to pass all required fields
-          const existingLog = existingLogs.find(l => l.log_id === logEntry.log_id ||
-                                                      (l.habit_id === logEntry.habit_id && l.date === logEntry.date));
-          if (existingLog) {
-            await supabaseDataService.updateLog({
-              ...existingLog,
-              status: logEntry.status,
-              notes: logEntry.notes || null,
-            });
-          }
-        } else {
-          // Create new log in Supabase
-          await supabaseDataService.createLog({
-            log_id: logEntry.log_id,
-            habit_id: logEntry.habit_id,
-            date: logEntry.date,
-            status: logEntry.status,
-            notes: logEntry.notes || null,
-          });
+      // Validate notes if provided
+      if (reflectionNotes) {
+        const validation = validateNotes(reflectionNotes);
+        if (!validation.isValid) {
+          setError(validation.error || 'Invalid notes');
+          return;
         }
-      } catch (supabaseError) {
-        console.error('Supabase sync error:', supabaseError);
-        // Don't block user - IndexedDB save succeeded
       }
 
-      // Update state with new log entry
-      setHabitLogs((prev) =>
-        prev.map((hl) =>
-          hl.habit.habit_id === habitId ? { ...hl, logEntry, status } : hl
-        )
-      );
-
-      // Trigger background sync for queued operations
-      triggerSync();
-    } catch (err) {
-      console.error('Error saving log entry:', err);
-      setError('Failed to save. Changes will sync when possible.');
-
-      // Revert optimistic update on error
-      await loadDataForDate(currentDate);
-    }
-  };
-
-  /**
-   * Handle notes change
-   */
-  const handleNotesChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const newNotes = e.target.value;
-
-    // Validate notes length
-    const validation = validateNotes(newNotes);
-    if (!validation.isValid) {
-      setError(validation.error || 'Invalid notes');
-      return;
-    }
-
-    setNotes(newNotes);
-    setError(null);
-  };
-
-  /**
-   * Save notes to all logged habits for this date
-   */
-  const handleNotesSave = async () => {
-    try {
-      const dateString = formatDateISO(currentDate);
-      const timestamp = getCurrentTimestamp();
-
-      // Update all log entries for this date with the notes
+      // Save each pending change
       const updatedLogs: LogEntry[] = [];
 
-      for (const habitLog of habitLogs) {
-        if (habitLog.status !== 'no_data') {
-          const logEntry: LogEntry = habitLog.logEntry
-            ? {
-                ...habitLog.logEntry,
-                notes: notes || undefined,
-                timestamp,
-              }
-            : {
-                log_id: generateUUID(),
-                habit_id: habitLog.habit.habit_id,
-                date: dateString,
-                status: habitLog.status,
-                timestamp,
-                notes: notes || undefined,
-              };
+      for (const [habitId, change] of pendingChanges.entries()) {
+        const habitLog = habitLogs.find((hl) => hl.habit.habit_id === habitId);
+        if (!habitLog) continue;
 
-          updatedLogs.push(logEntry);
+        // Create or update log entry
+        const logEntry: LogEntry = habitLog.logEntry
+          ? {
+              ...habitLog.logEntry,
+              status: change.newStatus,
+              timestamp,
+              notes: reflectionNotes || undefined,
+            }
+          : {
+              log_id: generateUUID(),
+              habit_id: habitId,
+              date: dateString,
+              status: change.newStatus,
+              timestamp,
+              notes: reflectionNotes || undefined,
+            };
 
-          // Save to IndexedDB
-          await storageService.saveLog(logEntry);
+        updatedLogs.push(logEntry);
 
-          // Also save to Supabase
-          try {
-            // Check if log exists in Supabase
-            const existingLogs = await supabaseDataService.getLogs(logEntry.habit_id, logEntry.date);
-            const logExistsInSupabase = existingLogs.some(l => l.log_id === logEntry.log_id ||
-                                                                (l.habit_id === logEntry.habit_id && l.date === logEntry.date));
+        // Save to IndexedDB
+        await storageService.saveLog(logEntry);
 
-            if (logExistsInSupabase) {
-              // Update existing log
-              // Get the full log object to pass all required fields
-              const existingLog = existingLogs.find(l => l.log_id === logEntry.log_id ||
-                                                          (l.habit_id === logEntry.habit_id && l.date === logEntry.date));
-              if (existingLog) {
-                await supabaseDataService.updateLog({
-                  ...existingLog,
-                  status: logEntry.status,
-                  notes: logEntry.notes || null,
-                });
-              }
-            } else {
-              // Create new log
-              await supabaseDataService.createLog({
-                log_id: logEntry.log_id,
-                habit_id: logEntry.habit_id,
-                date: logEntry.date,
+        // Save to Supabase
+        try {
+          const existingLogs = await supabaseDataService.getLogs(logEntry.habit_id, logEntry.date);
+          const logExistsInSupabase = existingLogs.some(
+            (l) => l.log_id === logEntry.log_id || (l.habit_id === logEntry.habit_id && l.date === logEntry.date)
+          );
+
+          if (logExistsInSupabase) {
+            const existingLog = existingLogs.find(
+              (l) => l.log_id === logEntry.log_id || (l.habit_id === logEntry.habit_id && l.date === logEntry.date)
+            );
+            if (existingLog) {
+              await supabaseDataService.updateLog({
+                ...existingLog,
                 status: logEntry.status,
                 notes: logEntry.notes || null,
               });
             }
-          } catch (supabaseError) {
-            console.error('Supabase sync error for log:', supabaseError);
-            // Don't block user - IndexedDB save succeeded
+          } else {
+            await supabaseDataService.createLog({
+              log_id: logEntry.log_id,
+              habit_id: logEntry.habit_id,
+              date: logEntry.date,
+              status: logEntry.status,
+              notes: logEntry.notes || null,
+            });
           }
+        } catch (supabaseError) {
+          console.error('Supabase sync error:', supabaseError);
         }
       }
-
-      initialNotesRef.current = notes;
-      setHasUnsavedNotes(false);
 
       // Update state
       setHabitLogs((prev) =>
@@ -334,21 +281,25 @@ export const DailyLogPage: React.FC = () => {
         })
       );
 
-      // Trigger background sync for queued operations
+      // Clear pending changes
+      setPendingChanges(new Map());
+
+      // Close modal
+      setShowReflectionModal(false);
+
+      // Trigger background sync
       triggerSync();
 
       // Demo mode tracking (Task 3.5 - REQ-16, REQ-30)
       if (demoModeService.isDemoMode()) {
         demoModeService.trackLogCompleted();
 
-        // Check for milestone toast
         const milestoneMsg = demoModeService.getMilestoneMessage();
         if (milestoneMsg) {
           setToastMessage(milestoneMsg);
           setShowToast(true);
         }
 
-        // Check for conversion trigger
         const trigger = demoModeService.shouldShowConversionModal();
         if (trigger) {
           setShowConversionModal(true);
@@ -357,8 +308,8 @@ export const DailyLogPage: React.FC = () => {
         }
       }
     } catch (err) {
-      console.error('Error saving notes:', err);
-      setError('Failed to save notes. Please try again.');
+      console.error('Error saving changes:', err);
+      setError('Failed to save changes. Please try again.');
     }
   };
 
@@ -407,7 +358,7 @@ export const DailyLogPage: React.FC = () => {
     <div className="daily-log-page">
       {/* Page Header */}
       <header className="page-header">
-        <h1 className="page-title">Today's Habits</h1>
+        <h1 className="page-title">Daily Tracker</h1>
         <p className="page-subtitle">Track your mindful practice</p>
       </header>
 
@@ -428,21 +379,20 @@ export const DailyLogPage: React.FC = () => {
       {/* Sync indicator */}
       {syncing && (
         <div className="daily-log-page__sync-indicator">
-          <span className="daily-log-page__sync-spinner" aria-hidden="true" />
+          <span className="daily-log-page__sync-spinner animate-spin" aria-hidden="true" />
           <span>Syncing...</span>
         </div>
       )}
 
       {/* Habits list */}
       <div className="daily-log-page__habits">
-        <h2 className="daily-log-page__section-title">Today's Habits</h2>
         <ul className="daily-log-page__habits-list">
           {habitLogs.map(({ habit, status }) => (
-            <li key={habit.habit_id} className="card daily-log-page__habit-item">
+            <li key={habit.habit_id} className="card card--compact daily-log-page__habit-item">
               <div className="daily-log-page__habit-info">
                 <span className="daily-log-page__habit-name">{habit.name}</span>
                 {habit.category && (
-                  <span className="daily-log-page__habit-category">{habit.category}</span>
+                  <span className="badge badge--warning">{habit.category}</span>
                 )}
               </div>
               <ToggleSwitch
@@ -456,36 +406,35 @@ export const DailyLogPage: React.FC = () => {
         </ul>
       </div>
 
-      {/* Shared notes - Task 7.45: Ensure textarea has associated label */}
-      <div className="daily-log-page__notes">
-        <div className="daily-log-page__notes-header">
-          <label htmlFor="daily-notes" className="daily-log-page__section-title">
-            Notes
-          </label>
-          <span className="daily-log-page__notes-counter">
-            {notes.length} / 5000
-          </span>
-        </div>
-        <textarea
-          id="daily-notes"
-          className="daily-log-page__notes-textarea"
-          placeholder="Add notes about your day (optional)..."
-          value={notes}
-          onChange={handleNotesChange}
-          maxLength={5000}
-          rows={4}
-          aria-label="Daily notes for all habits"
-        />
-        {hasUnsavedNotes && (
+      {/* Save Changes Button - fixed to bottom */}
+      {hasUnsavedChanges && (
+        <div className="daily-log-page__save-changes-container animate-slide-up-bounce">
           <button
             type="button"
-            className="daily-log-page__notes-save-btn"
-            onClick={handleNotesSave}
+            className={`daily-log-page__save-changes-btn animate-button-pulse ${isSaving ? 'daily-log-page__save-changes-btn--saving' : ''}`}
+            onClick={handleSaveChangesClick}
+            disabled={isSaving}
           >
-            Save Notes
+            {isSaving ? (
+              <>
+                <span className="daily-log-page__save-spinner animate-spin" aria-hidden="true" />
+                Saving...
+              </>
+            ) : (
+              'Save Changes'
+            )}
           </button>
-        )}
-      </div>
+        </div>
+      )}
+
+      {/* Reflection Modal */}
+      {showReflectionModal && (
+        <ReflectionModal
+          pendingChanges={pendingChanges}
+          onSave={handleSaveWithReflection}
+          onSkip={() => handleSaveWithReflection(undefined)}
+        />
+      )}
 
       {/* Demo Mode Modals and Toasts (Task 3.5) */}
       {showConversionModal && (

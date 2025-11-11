@@ -12,6 +12,7 @@
 import {
   formatDateDisplay,
   getPreviousDate,
+  getNextDate,
   getTodayAtMidnight,
   canNavigateToPreviousDay,
   isTodayDate,
@@ -41,10 +42,13 @@ export const DateNavigator: React.FC<DateNavigatorProps> = ({
     onDateChange(previousDay);
   };
 
-  const handleToday = () => {
+  const handleNextDay = () => {
     if (isCurrentDateToday || disabled) return;
+    const nextDay = getNextDate(currentDate);
+    // Don't go beyond today
     const today = getTodayAtMidnight();
-    onDateChange(today);
+    if (nextDay > today) return;
+    onDateChange(nextDay);
   };
 
   return (
@@ -80,15 +84,37 @@ export const DateNavigator: React.FC<DateNavigatorProps> = ({
         <span className="date-navigator__date">{formatDateDisplay(currentDate)}</span>
       </div>
 
-      <button
-        type="button"
-        className="date-navigator__btn date-navigator__btn--today"
-        onClick={handleToday}
-        disabled={isCurrentDateToday || disabled}
-        aria-label="Go to today"
-      >
-        <span className="date-navigator__btn-text">Today</span>
-      </button>
+      {/* Show "Next" button when not viewing today, or invisible placeholder to maintain spacing */}
+      {!isCurrentDateToday ? (
+        <button
+          type="button"
+          className="date-navigator__btn date-navigator__btn--next"
+          onClick={handleNextDay}
+          disabled={disabled}
+          aria-label="Go to next day"
+        >
+          <svg
+            className="date-navigator__icon"
+            width="20"
+            height="20"
+            viewBox="0 0 20 20"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true"
+          >
+            <path
+              d="M7.5 5L12.5 10L7.5 15"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+          <span className="date-navigator__btn-text">Next</span>
+        </button>
+      ) : (
+        <div className="date-navigator__btn date-navigator__btn--placeholder" aria-hidden="true" />
+      )}
     </div>
   );
 };
