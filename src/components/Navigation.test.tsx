@@ -22,17 +22,15 @@ describe('Navigation', () => {
       expect(nav).toBeInTheDocument();
     });
 
-    it('should render Amara.day logo', () => {
+    it('should render navigation container', () => {
       const { container } = render(
         <MemoryRouter>
           <Navigation />
         </MemoryRouter>
       );
 
-      const logo = container.querySelector('.amara-day-logo');
-      expect(logo).toBeInTheDocument();
-      expect(logo).toHaveTextContent('Amara');
-      expect(logo).toHaveTextContent('.day');
+      const navContainer = container.querySelector('.navigation-container');
+      expect(navContainer).toBeInTheDocument();
     });
 
     it('should render all three navigation links', () => {
@@ -42,9 +40,9 @@ describe('Navigation', () => {
         </MemoryRouter>
       );
 
-      expect(screen.getByRole('link', { name: /daily log/i })).toBeInTheDocument();
-      expect(screen.getByRole('link', { name: /progress/i })).toBeInTheDocument();
-      expect(screen.getByRole('link', { name: /manage habits/i })).toBeInTheDocument();
+      expect(screen.getByRole('link', { name: /^daily$/i })).toBeInTheDocument();
+      expect(screen.getByRole('link', { name: /^progress$/i })).toBeInTheDocument();
+      expect(screen.getByRole('link', { name: /^manage$/i })).toBeInTheDocument();
     });
 
     it('should render links in a list structure', () => {
@@ -59,19 +57,20 @@ describe('Navigation', () => {
       expect(list.className).toContain('navigation-menu');
 
       const items = screen.getAllByRole('listitem');
+      // Only 3 navigation links are accessible list items (separators are aria-hidden)
       expect(items).toHaveLength(3);
     });
   });
 
   describe('Navigation Links', () => {
-    it('should have correct href for Daily Log link', () => {
+    it('should have correct href for Daily link', () => {
       render(
         <MemoryRouter>
           <Navigation />
         </MemoryRouter>
       );
 
-      const link = screen.getByRole('link', { name: /daily log/i });
+      const link = screen.getByRole('link', { name: /^daily$/i });
       expect(link).toHaveAttribute('href', '/daily-log');
     });
 
@@ -86,14 +85,14 @@ describe('Navigation', () => {
       expect(link).toHaveAttribute('href', '/progress');
     });
 
-    it('should have correct href for Manage Habits link', () => {
+    it('should have correct href for Manage link', () => {
       render(
         <MemoryRouter>
           <Navigation />
         </MemoryRouter>
       );
 
-      const link = screen.getByRole('link', { name: /manage habits/i });
+      const link = screen.getByRole('link', { name: /^manage$/i });
       expect(link).toHaveAttribute('href', '/manage-habits');
     });
 
@@ -112,16 +111,16 @@ describe('Navigation', () => {
   });
 
   describe('Active State Highlighting', () => {
-    it('should highlight Daily Log link when on /daily-log route', () => {
+    it('should highlight Daily link when on /daily-log route', () => {
       render(
         <MemoryRouter initialEntries={['/daily-log']}>
           <Navigation />
         </MemoryRouter>
       );
 
-      const dailyLogLink = screen.getByRole('link', { name: /daily log/i });
+      const dailyLogLink = screen.getByRole('link', { name: /^daily$/i });
       const progressLink = screen.getByRole('link', { name: /progress/i });
-      const manageLink = screen.getByRole('link', { name: /manage habits/i });
+      const manageLink = screen.getByRole('link', { name: /^manage$/i });
 
       expect(dailyLogLink.className).toContain('navigation-link--active');
       expect(progressLink.className).not.toContain('navigation-link--active');
@@ -135,25 +134,25 @@ describe('Navigation', () => {
         </MemoryRouter>
       );
 
-      const dailyLogLink = screen.getByRole('link', { name: /daily log/i });
+      const dailyLogLink = screen.getByRole('link', { name: /^daily$/i });
       const progressLink = screen.getByRole('link', { name: /progress/i });
-      const manageLink = screen.getByRole('link', { name: /manage habits/i });
+      const manageLink = screen.getByRole('link', { name: /^manage$/i });
 
       expect(dailyLogLink.className).not.toContain('navigation-link--active');
       expect(progressLink.className).toContain('navigation-link--active');
       expect(manageLink.className).not.toContain('navigation-link--active');
     });
 
-    it('should highlight Manage Habits link when on /manage-habits route', () => {
+    it('should highlight Manage link when on /manage-habits route', () => {
       render(
         <MemoryRouter initialEntries={['/manage-habits']}>
           <Navigation />
         </MemoryRouter>
       );
 
-      const dailyLogLink = screen.getByRole('link', { name: /daily log/i });
+      const dailyLogLink = screen.getByRole('link', { name: /^daily$/i });
       const progressLink = screen.getByRole('link', { name: /progress/i });
-      const manageLink = screen.getByRole('link', { name: /manage habits/i });
+      const manageLink = screen.getByRole('link', { name: /^manage$/i });
 
       expect(dailyLogLink.className).not.toContain('navigation-link--active');
       expect(progressLink.className).not.toContain('navigation-link--active');
@@ -200,28 +199,15 @@ describe('Navigation', () => {
       expect(navContainer).toBeInTheDocument();
     });
 
-    it('should apply navigation-brand class to brand container', () => {
+    it('should have navigation-container class', () => {
       const { container } = render(
         <MemoryRouter>
           <Navigation />
         </MemoryRouter>
       );
 
-      const brand = container.querySelector('.navigation-brand');
-      expect(brand).toBeInTheDocument();
-    });
-
-    it('should display AmaraDayLogo in navigation brand', () => {
-      const { container } = render(
-        <MemoryRouter>
-          <Navigation />
-        </MemoryRouter>
-      );
-
-      const logo = container.querySelector('.amara-day-logo');
-      expect(logo).toBeInTheDocument();
-      expect(logo).toHaveTextContent('Amara');
-      expect(logo).toHaveTextContent('.day');
+      const navContainer = container.querySelector('.navigation-container');
+      expect(navContainer).toBeInTheDocument();
     });
 
     it('should apply navigation-item class to list items', () => {
@@ -299,14 +285,14 @@ describe('Navigation', () => {
         </MemoryRouter>
       );
 
-      const dailyLogLink = screen.getByRole('link', { name: /daily log/i });
+      const dailyLogLink = screen.getByRole('link', { name: /^daily$/i });
       const progressLink = screen.getByRole('link', { name: /progress/i });
-      const manageLink = screen.getByRole('link', { name: /manage habits/i });
+      const manageLink = screen.getByRole('link', { name: /^manage$/i });
 
       // Check that link text is descriptive
-      expect(dailyLogLink.textContent).toBe('Daily Log');
+      expect(dailyLogLink.textContent).toBe('Daily');
       expect(progressLink.textContent).toBe('Progress');
-      expect(manageLink.textContent).toBe('Manage Habits');
+      expect(manageLink.textContent).toBe('Manage');
     });
   });
 

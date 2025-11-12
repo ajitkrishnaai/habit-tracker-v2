@@ -227,10 +227,9 @@ describe('HabitListItem', () => {
       const removeButton = screen.getByRole('button', { name: /^remove$/i });
 
       // Check buttons have appropriate CSS classes for touch targets
-      expect(editButton).toHaveClass('btn-primary');
-      expect(editButton).toHaveClass('btn-sm');
-      expect(removeButton).toHaveClass('btn-danger');
-      expect(removeButton).toHaveClass('btn-sm');
+      expect(editButton).toHaveClass('habit-list-item__icon-btn');
+      expect(removeButton).toHaveClass('habit-list-item__icon-btn');
+      expect(removeButton).toHaveClass('habit-list-item__icon-btn--danger');
 
       // Buttons should be in the document and clickable (functional test)
       expect(editButton).toBeInTheDocument();

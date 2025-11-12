@@ -35,27 +35,41 @@ describe('DateNavigator', () => {
     expect(prevButton).not.toBeDisabled();
   });
 
-  it('should render today button', () => {
+  it('should render placeholder when viewing today (no next button)', () => {
     render(<DateNavigator {...defaultProps} />);
 
-    const todayButton = screen.getByLabelText('Go to today');
-    expect(todayButton).toBeInTheDocument();
+    // When viewing today, there should be no "next" button, just a placeholder for spacing
+    expect(screen.queryByLabelText('Go to next day')).not.toBeInTheDocument();
+    // The placeholder div should exist for layout purposes
+    const placeholder = document.querySelector('.date-navigator__btn--placeholder');
+    expect(placeholder).toBeInTheDocument();
   });
 
-  it('should disable today button when already on today', () => {
-    render(<DateNavigator {...defaultProps} currentDate={today} />);
-
-    const todayButton = screen.getByLabelText('Go to today');
-    expect(todayButton).toBeDisabled();
-  });
-
-  it('should enable today button when not on today', () => {
+  it('should show next button when not viewing today', () => {
     const yesterday = new Date(today);
     yesterday.setDate(yesterday.getDate() - 1);
     render(<DateNavigator {...defaultProps} currentDate={yesterday} />);
 
-    const todayButton = screen.getByLabelText('Go to today');
-    expect(todayButton).not.toBeDisabled();
+    // When viewing a past date, the next button should be visible
+    const nextButton = screen.getByLabelText('Go to next day');
+    expect(nextButton).toBeInTheDocument();
+    expect(nextButton).not.toBeDisabled();
+  });
+
+  it('should call onDateChange when next button clicked', async () => {
+    const user = userEvent.setup();
+    const onDateChange = vi.fn();
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+    render(<DateNavigator {...defaultProps} currentDate={yesterday} onDateChange={onDateChange} />);
+
+    const nextButton = screen.getByLabelText('Go to next day');
+    await user.click(nextButton);
+
+    expect(onDateChange).toHaveBeenCalledTimes(1);
+    const newDate = onDateChange.mock.calls[0][0];
+    // Should advance one day forward
+    expect(newDate.getDate()).toBe(today.getDate());
   });
 
   it('should call onDateChange when previous button clicked', async () => {
@@ -72,7 +86,7 @@ describe('DateNavigator', () => {
     expect(newDate.getDate()).toBe(today.getDate() - 1);
   });
 
-  it('should call onDateChange when today button clicked', async () => {
+  it('should advance day by day with next button', async () => {
     const user = userEvent.setup();
     const onDateChange = vi.fn();
     const threeDaysAgo = new Date(today);
@@ -80,14 +94,13 @@ describe('DateNavigator', () => {
 
     render(<DateNavigator {...defaultProps} currentDate={threeDaysAgo} onDateChange={onDateChange} />);
 
-    const todayButton = screen.getByLabelText('Go to today');
-    await user.click(todayButton);
+    const nextButton = screen.getByLabelText('Go to next day');
+    await user.click(nextButton);
 
     expect(onDateChange).toHaveBeenCalledTimes(1);
     const newDate = onDateChange.mock.calls[0][0];
-    // Should be today's date at midnight
-    expect(newDate.getHours()).toBe(0);
-    expect(newDate.getMinutes()).toBe(0);
+    // Should advance by one day (from 3 days ago to 2 days ago)
+    expect(newDate.getDate()).toBe(threeDaysAgo.getDate() + 1);
   });
 
   it('should disable previous button when at 5-day limit', () => {
@@ -109,13 +122,15 @@ describe('DateNavigator', () => {
   });
 
   it('should disable all buttons when disabled prop is true', () => {
-    render(<DateNavigator {...defaultProps} disabled={true} />);
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+    render(<DateNavigator {...defaultProps} currentDate={yesterday} disabled={true} />);
 
     const prevButton = screen.getByLabelText('Go to previous day');
-    const todayButton = screen.getByLabelText('Go to today');
+    const nextButton = screen.getByLabelText('Go to next day');
 
     expect(prevButton).toBeDisabled();
-    expect(todayButton).toBeDisabled();
+    expect(nextButton).toBeDisabled();
   });
 
   it('should not call onDateChange when disabled', async () => {
@@ -148,15 +163,17 @@ describe('DateNavigator', () => {
   });
 
   it('should have minimum touch targets for buttons', () => {
-    render(<DateNavigator {...defaultProps} />);
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+    render(<DateNavigator {...defaultProps} currentDate={yesterday} />);
 
     const prevButton = screen.getByLabelText('Go to previous day');
-    const todayButton = screen.getByLabelText('Go to today');
+    const nextButton = screen.getByLabelText('Go to next day');
 
     // Check that buttons have classes which apply CSS variables for min dimensions
     // The actual CSS variable value (44px) is defined in main.css
     expect(prevButton).toHaveClass('date-navigator__btn');
-    expect(todayButton).toHaveClass('date-navigator__btn');
+    expect(nextButton).toHaveClass('date-navigator__btn');
   });
 
   it('should be keyboard accessible', async () => {
@@ -171,9 +188,9 @@ describe('DateNavigator', () => {
     await user.tab();
     expect(screen.getByLabelText('Go to previous day')).toHaveFocus();
 
-    // Tab to today button
+    // Tab to next button
     await user.tab();
-    expect(screen.getByLabelText('Go to today')).toHaveFocus();
+    expect(screen.getByLabelText('Go to next day')).toHaveFocus();
 
     // Activate with Enter
     await user.keyboard('{Enter}');
