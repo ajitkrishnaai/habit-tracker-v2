@@ -35,8 +35,9 @@ export const ManageHabitsPage = (): JSX.Element => {
   // Confetti canvas ref (Task 2.6 - REQ for first habit creation)
   const confettiCanvasRef = useRef<HTMLCanvasElement | null>(null);
 
-  // Load habits on component mount
+  // Scroll to top and load habits on component mount
   useEffect(() => {
+    window.scrollTo(0, 0);
     loadHabits();
   }, []);
 
@@ -50,6 +51,12 @@ export const ManageHabitsPage = (): JSX.Element => {
 
       // Get only active habits
       const activeHabits = await storageService.getHabits(true);
+
+      // Sort habits alphabetically by name (case-insensitive)
+      activeHabits.sort((a, b) =>
+        a.name.toLowerCase().localeCompare(b.name.toLowerCase())
+      );
+
       setHabits(activeHabits);
     } catch (err) {
       logError('ManageHabitsPage:loadHabits', err);
@@ -143,7 +150,6 @@ export const ManageHabitsPage = (): JSX.Element => {
         {/* Page Header */}
         <header className="page-header">
           <h1 className="page-title">Manage Habits</h1>
-          <p className="page-subtitle">Add, edit, or remove your tracked habits</p>
         </header>
 
         {/* Error Display */}
@@ -201,30 +207,26 @@ export const ManageHabitsPage = (): JSX.Element => {
         )}
 
         {/* Habits List */}
-        <div className="manage-habits-page__content">
-          <h2 className="manage-habits-page__section-title">Your Habits</h2>
-
-          {habits.length === 0 ? (
-            <EmptyState
-              iconName="Sunrise"
-              title="Your habit garden awaits"
-              message="Plant your first habit!"
-              actionText="Add Habit"
-              onAction={handleOpenHabitForm}
-            />
-          ) : (
-            <div className="habits-grid">
-              {habits.map((habit) => (
-                <HabitListItem
-                  key={habit.habit_id}
-                  habit={habit}
-                  onEdit={handleEditHabit}
-                  onDelete={handleHabitDeleted}
-                />
-              ))}
-            </div>
-          )}
-        </div>
+        {habits.length === 0 ? (
+          <EmptyState
+            iconName="Sunrise"
+            title="Your habit garden awaits"
+            message="Plant your first habit!"
+            actionText="Add Habit"
+            onAction={handleOpenHabitForm}
+          />
+        ) : (
+          <ul className="habits-list">
+            {habits.map((habit) => (
+              <HabitListItem
+                key={habit.habit_id}
+                habit={habit}
+                onEdit={handleEditHabit}
+                onDelete={handleHabitDeleted}
+              />
+            ))}
+          </ul>
+        )}
 
         {/* Demo Mode Modals and Toasts (Task 3.4) */}
         {showConversionModal && (

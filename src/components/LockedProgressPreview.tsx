@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Lock } from 'lucide-react';
 import './LockedProgressPreview.css';
 
 /**
@@ -13,6 +14,7 @@ import './LockedProgressPreview.css';
  * - Centered content card with feature list
  * - Sign-in CTA button
  * - Accessible and mobile-responsive
+ * - Matches Amara.day warm minimalism design
  */
 export const LockedProgressPreview: React.FC = () => {
   const navigate = useNavigate();
@@ -38,8 +40,10 @@ export const LockedProgressPreview: React.FC = () => {
 
       {/* Centered content card */}
       <div className="locked-progress-content">
-        {/* Lock icon */}
-        <div className="locked-progress-icon" aria-hidden="true">🔒</div>
+        {/* Lock icon - using lucide-react for brand consistency */}
+        <div className="locked-progress-icon" aria-hidden="true">
+          <Lock size={48} strokeWidth={1.5} />
+        </div>
 
         {/* Title */}
         <h2 className="locked-progress-title">
@@ -59,7 +63,7 @@ export const LockedProgressPreview: React.FC = () => {
 
         {/* Sign-in button */}
         <button
-          className="locked-progress-button"
+          className="btn-primary locked-progress-button"
           onClick={handleSignInClick}
         >
           Sign In to Unlock

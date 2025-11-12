@@ -38,8 +38,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({ onClose, initialMode = 'si
       // Close modal and navigate to daily log
       onClose();
       navigate('/daily-log');
-    } catch (err: any) {
-      setError(err.message || 'Authentication failed. Please try again.');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Authentication failed. Please try again.');
     } finally {
       setLoading(false);
     }

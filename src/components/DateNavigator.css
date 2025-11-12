@@ -8,11 +8,11 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--spacing-md);
-  padding: var(--spacing-md);
-  background-color: var(--color-surface);
+  gap: var(--spacing-xs);
+  padding: var(--spacing-xs) 0;
+  background-color: transparent;
   border-radius: var(--radius-lg);
-  margin-bottom: var(--spacing-lg);
+  margin-bottom: var(--spacing-md);
 }
 
 /* Navigation buttons - Task 1.9 */
@@ -26,10 +26,10 @@
   min-width: var(--touch-target-min);
   min-height: var(--touch-target-min);
 
-  padding: var(--spacing-sm) var(--spacing-md);
+  padding: var(--spacing-xs);
 
-  background-color: var(--color-surface-hover);
-  color: var(--color-primary);
+  background-color: transparent;
+  color: var(--color-text-secondary);
   border: none;
   border-radius: var(--radius-md);
 
@@ -66,22 +66,27 @@
   display: none;
 }
 
+/* Invisible placeholder to maintain spacing when right button is hidden */
+.date-navigator__btn--placeholder {
+  visibility: hidden;
+  pointer-events: none;
+}
+
 /* Current date display - Task 1.9: Pill styling */
 .date-navigator__current {
   flex: 1;
   text-align: center;
-  padding: var(--spacing-xs) var(--spacing-sm);
+  padding: 0;
 }
 
 .date-navigator__date {
   display: inline-block;
-  font-size: var(--font-size-lg);
-  font-weight: 600;
-  color: white;
-  background: var(--color-primary);
-  padding: var(--space-sm) var(--space-md);
-  border-radius: var(--radius-full);
+  font-size: var(--font-size-sm);
+  font-weight: 400;
+  color: var(--color-text-secondary);
+  /* Prevent wrapping - keep date on one line */
   white-space: nowrap;
+  text-align: center;
   transition: opacity 200ms ease-in-out, transform 200ms ease-in-out;
 }
 
@@ -94,11 +99,11 @@
 /* Tablet and desktop - show button text, larger layout */
 @media (min-width: 768px) {
   .date-navigator {
-    padding: var(--spacing-lg);
+    padding: var(--spacing-xs) 0;
   }
 
   .date-navigator__btn {
-    padding: var(--spacing-sm) var(--spacing-lg);
+    padding: var(--spacing-xs) var(--spacing-sm);
   }
 
   .date-navigator__btn-text {
@@ -106,7 +111,9 @@
   }
 
   .date-navigator__date {
-    font-size: var(--font-size-xl);
+    font-size: var(--font-size-base);
+    /* On larger screens, prevent wrapping for cleaner look */
+    white-space: nowrap;
   }
 }
 

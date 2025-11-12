@@ -304,9 +304,10 @@ describe('Layout', () => {
         </MemoryRouter>
       );
 
-      // Should have: OfflineIndicator -> nav -> main -> footer
+      // Should have: OfflineIndicator -> AppHeader -> Navigation -> main -> Footer
+      // (UserInfo returns null when not authenticated, so it's not counted)
       const layout = container.querySelector('.layout');
-      expect(layout?.children).toHaveLength(4);
+      expect(layout?.children).toHaveLength(5);
     });
 
     it('should allow keyboard navigation through all sections', () => {

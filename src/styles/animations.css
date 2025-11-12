@@ -137,6 +137,70 @@
   animation: fade-out 200ms ease-in;
 }
 
+/* ============================================
+   CARD & BUTTON FEEDBACK ANIMATIONS
+   Used across multiple pages for user feedback
+   ============================================ */
+
+/* Card pulse - Used when completing habits or toggling items */
+@keyframes card-pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+  100% { transform: scale(1); }
+}
+
+/* Button entrance - Slides up with bounce (Save Changes button) */
+@keyframes slideUpBounce {
+  0% {
+    transform: translateY(120px);
+    opacity: 0;
+  }
+  60% {
+    transform: translateY(-8px);
+  }
+  80% {
+    transform: translateY(4px);
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Button pulse - Gentle pulse for CTA buttons */
+@keyframes buttonPulse {
+  0%, 100% {
+    box-shadow: 0 6px 20px rgba(107, 142, 95, 0.4);
+  }
+  50% {
+    box-shadow: 0 6px 24px rgba(107, 142, 95, 0.6);
+  }
+}
+
+/* ============================================
+   UTILITY ANIMATION CLASSES
+   Apply these classes to any element for instant animations
+   ============================================ */
+
+/* Card animations */
+.animate-card-pulse {
+  animation: card-pulse 400ms ease-out;
+}
+
+/* Button animations */
+.animate-slide-up-bounce {
+  animation: slideUpBounce 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.animate-button-pulse {
+  animation: buttonPulse 2s ease-in-out infinite;
+}
+
+/* Spinner - applies to any element */
+.animate-spin {
+  animation: spin 0.6s linear infinite;
+}
+
 /* Reduced motion preference - disable all animations */
 @media (prefers-reduced-motion: reduce) {
   .flame--milestone,
@@ -145,7 +209,11 @@
   .flame--large-milestone,
   .checkmark--complete,
   .toast-enter,
-  .toast-exit {
-    animation: none;
+  .toast-exit,
+  .animate-card-pulse,
+  .animate-slide-up-bounce,
+  .animate-button-pulse,
+  .animate-spin {
+    animation: none !important;
   }
 }
