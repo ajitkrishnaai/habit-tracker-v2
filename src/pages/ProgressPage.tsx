@@ -93,20 +93,33 @@ export const ProgressPage: React.FC = () => {
     );
   }
 
-  // Demo mode locked preview (Task 3.6 - REQ-35 to REQ-38, AC-8)
+  // Demo mode: Show conversion modal OR locked preview (Task 3.1 - Fix priority)
+  // Show conversion modal FIRST if it should appear, then locked preview after dismissal
   if (isDemo && !isLoading) {
+    // If conversion modal should show, render it as the primary UI
+    if (showConversionModal) {
+      return (
+        <div className="progress-page">
+          <header className="page-header">
+            <h1 className="page-title">Progress</h1>
+          </header>
+          {/* Show locked preview in background (blurred via modal overlay) */}
+          <LockedProgressPreview />
+          <ConversionModal
+            trigger={conversionTrigger}
+            onClose={() => setShowConversionModal(false)}
+          />
+        </div>
+      );
+    }
+
+    // After modal dismissal, show locked preview
     return (
       <div className="progress-page">
         <header className="page-header">
           <h1 className="page-title">Progress</h1>
         </header>
         <LockedProgressPreview />
-        {showConversionModal && (
-          <ConversionModal
-            trigger={conversionTrigger}
-            onClose={() => setShowConversionModal(false)}
-          />
-        )}
       </div>
     );
   }

@@ -214,13 +214,26 @@ class DemoModeService {
    */
   trackHabitAdded(): void {
     const metrics = this.getDemoMetrics();
-    if (!metrics) return;
+    if (!metrics) {
+      console.warn('[DemoMode] trackHabitAdded called but no metrics found - initialization may be missing');
+      return;
+    }
 
+    const newTotal = metrics.demo_habits_added + 1;
     this.updateDemoMetrics({
-      demo_habits_added: metrics.demo_habits_added + 1,
+      demo_habits_added: newTotal,
     });
 
-    console.log(`[DemoMode] Habit added (total: ${metrics.demo_habits_added + 1})`);
+    console.log(`[DemoMode] ✓ Habit added (total: ${newTotal})`);
+
+    // Log milestone proximity
+    if (newTotal === 1) {
+      console.log('[DemoMode] → First habit milestone reached');
+    } else if (newTotal === 2) {
+      console.log('[DemoMode] → One more habit to reach 3-habit milestone');
+    } else if (newTotal === 3) {
+      console.log('[DemoMode] → Three habits milestone reached - conversion trigger available');
+    }
   }
 
   /**
@@ -229,13 +242,21 @@ class DemoModeService {
    */
   trackLogCompleted(): void {
     const metrics = this.getDemoMetrics();
-    if (!metrics) return;
+    if (!metrics) {
+      console.warn('[DemoMode] trackLogCompleted called but no metrics found - initialization may be missing');
+      return;
+    }
 
+    const newTotal = metrics.demo_logs_completed + 1;
     this.updateDemoMetrics({
-      demo_logs_completed: metrics.demo_logs_completed + 1,
+      demo_logs_completed: newTotal,
     });
 
-    console.log(`[DemoMode] Log completed (total: ${metrics.demo_logs_completed + 1})`);
+    console.log(`[DemoMode] ✓ Log completed (total: ${newTotal})`);
+
+    if (newTotal === 1) {
+      console.log('[DemoMode] → First log milestone reached - conversion trigger available');
+    }
   }
 
   /**
@@ -244,13 +265,21 @@ class DemoModeService {
    */
   trackProgressVisit(): void {
     const metrics = this.getDemoMetrics();
-    if (!metrics) return;
+    if (!metrics) {
+      console.warn('[DemoMode] trackProgressVisit called but no metrics found - initialization may be missing');
+      return;
+    }
 
+    const newTotal = metrics.demo_progress_visits + 1;
     this.updateDemoMetrics({
-      demo_progress_visits: metrics.demo_progress_visits + 1,
+      demo_progress_visits: newTotal,
     });
 
-    console.log(`[DemoMode] Progress page visited (total: ${metrics.demo_progress_visits + 1})`);
+    console.log(`[DemoMode] ✓ Progress page visited (total: ${newTotal})`);
+
+    if (newTotal === 1) {
+      console.log('[DemoMode] → First progress visit - conversion trigger available');
+    }
   }
 
   /**
@@ -265,24 +294,34 @@ class DemoModeService {
    */
   shouldShowConversionModal(): ConversionTrigger | null {
     const metrics = this.getDemoMetrics();
-    if (!metrics) return null;
+    if (!metrics) {
+      console.warn('[DemoMode] shouldShowConversionModal called but no metrics found');
+      return null;
+    }
 
     // Only show modal once per session
-    if (metrics.demo_conversion_shown) return null;
+    if (metrics.demo_conversion_shown) {
+      console.log('[DemoMode] Conversion modal already shown this session');
+      return null;
+    }
 
     // Check triggers in priority order
     if (metrics.demo_habits_added >= 3) {
+      console.log('[DemoMode] 🎯 Conversion trigger: habits_threshold (3+ habits)');
       return 'habits_threshold';
     }
 
     if (metrics.demo_logs_completed >= 1) {
+      console.log('[DemoMode] 🎯 Conversion trigger: first_log');
       return 'first_log';
     }
 
     if (metrics.demo_progress_visits >= 1) {
+      console.log('[DemoMode] 🎯 Conversion trigger: progress_page');
       return 'progress_page';
     }
 
+    console.log('[DemoMode] No conversion trigger met yet');
     return null;
   }
 
@@ -312,25 +351,32 @@ class DemoModeService {
    */
   getMilestoneMessage(): string | null {
     const metrics = this.getDemoMetrics();
-    if (!metrics) return null;
+    if (!metrics) {
+      console.warn('[DemoMode] getMilestoneMessage called but no metrics found');
+      return null;
+    }
 
     // Get list of already-shown milestones
     const shownMilestones = this.getShownMilestones();
+    console.log('[DemoMode] Checking milestones - habits:', metrics.demo_habits_added, 'logs:', metrics.demo_logs_completed, 'shown:', shownMilestones);
 
     // Check for first habit milestone
     if (metrics.demo_habits_added === 1 && !shownMilestones.includes('first_habit')) {
+      console.log('[DemoMode] 🎉 Milestone: first_habit');
       this.markMilestoneShown('first_habit');
       return '✓ Great start! Add 2 more to build your routine.';
     }
 
     // Check for 3 habits milestone
     if (metrics.demo_habits_added === 3 && !shownMilestones.includes('three_habits')) {
+      console.log('[DemoMode] 🎉 Milestone: three_habits');
       this.markMilestoneShown('three_habits');
       return "🎉 You've added 3 habits! Come back tomorrow to start your streak.";
     }
 
     // Check for first log milestone
     if (metrics.demo_logs_completed === 1 && !shownMilestones.includes('first_log')) {
+      console.log('[DemoMode] 🎉 Milestone: first_log');
       this.markMilestoneShown('first_log');
       return '🎉 First log complete! Come back tomorrow to build your streak.';
     }
@@ -338,10 +384,12 @@ class DemoModeService {
     // Check for 3 days in demo milestone
     const daysInDemo = this.getDaysInDemo();
     if (daysInDemo >= 3 && !shownMilestones.includes('three_days')) {
+      console.log('[DemoMode] 🎉 Milestone: three_days');
       this.markMilestoneShown('three_days');
       return "📈 You're building momentum! Sign in to unlock streak tracking.";
     }
 
+    console.log('[DemoMode] No new milestones reached');
     return null;
   }
 

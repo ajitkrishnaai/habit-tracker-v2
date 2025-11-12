@@ -3,6 +3,7 @@ import { AuthModal } from './AuthModal';
 import './DemoBanner.css';
 
 const DISMISSAL_KEY = 'demo-banner-dismissed';
+const DISMISSAL_COUNT_KEY = 'demo-banner-dismissal-count';
 
 /**
  * DemoBanner Component
@@ -16,8 +17,11 @@ const DISMISSAL_KEY = 'demo-banner-dismissed';
  * - Accessible with ARIA labels and WCAG AA contrast
  * - Mobile-responsive layout
  * - Smooth slide-down entrance animation
- * - Dismissible with session-based persistence
+ * - Dismissible with session-based persistence (but re-shows after 2 dismissals)
  * - Opens AuthModal for sign-up flow
+ *
+ * Task 2.2: Improved dismissal logic - banner re-shows after 2-3 dismissals
+ * to gently remind users without being annoying
  */
 export const DemoBanner: React.FC = () => {
   const [isDismissed, setIsDismissed] = useState(false);
@@ -26,8 +30,15 @@ export const DemoBanner: React.FC = () => {
   // Check if banner was dismissed in this session
   useEffect(() => {
     const dismissed = sessionStorage.getItem(DISMISSAL_KEY);
-    if (dismissed === 'true') {
+    const dismissalCount = parseInt(sessionStorage.getItem(DISMISSAL_COUNT_KEY) || '0', 10);
+
+    // After 3 dismissals, always show banner (user clearly needs reminding)
+    if (dismissed === 'true' && dismissalCount < 3) {
       setIsDismissed(true);
+    } else {
+      // Reset dismissal if count reached threshold
+      sessionStorage.removeItem(DISMISSAL_KEY);
+      console.log('[DemoBanner] Re-showing after', dismissalCount, 'dismissals');
     }
   }, []);
 
@@ -38,6 +49,12 @@ export const DemoBanner: React.FC = () => {
   const handleDismiss = () => {
     setIsDismissed(true);
     sessionStorage.setItem(DISMISSAL_KEY, 'true');
+
+    // Track dismissal count (Task 2.2)
+    const currentCount = parseInt(sessionStorage.getItem(DISMISSAL_COUNT_KEY) || '0', 10);
+    const newCount = currentCount + 1;
+    sessionStorage.setItem(DISMISSAL_COUNT_KEY, newCount.toString());
+    console.log('[DemoBanner] Dismissed (count:', newCount, '/3)');
   };
 
   const handleCloseAuthModal = () => {

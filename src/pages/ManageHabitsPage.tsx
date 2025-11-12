@@ -238,6 +238,7 @@ export const ManageHabitsPage = (): JSX.Element => {
         {showToast && (
           <Toast
             message={toastMessage}
+            duration={5000}
             onClose={() => setShowToast(false)}
           />
         )}

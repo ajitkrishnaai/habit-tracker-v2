@@ -46,10 +46,20 @@ export const ProtectedRoute = ({ children }: ProtectedRouteProps): JSX.Element =
   }
 
   // Get demo metrics to check if user is in demo mode
-  const demoMetrics = demoModeService.getDemoMetrics();
+  let demoMetrics = demoModeService.getDemoMetrics();
 
-  // Redirect to welcome if not authenticated AND not in demo mode
+  // Auto-initialize demo metrics for unauthenticated users (Task 2.1)
+  // This ensures all unauthenticated users have tracking metrics, not just those
+  // who clicked "Begin Your Practice" on the welcome page
   if (!authenticated && !demoMetrics) {
+    console.log('[ProtectedRoute] Auto-initializing demo mode for unauthenticated user');
+    demoModeService.initializeDemoMode();
+    demoMetrics = demoModeService.getDemoMetrics(); // Refresh after initialization
+  }
+
+  // This should never happen after auto-initialization, but keeping as safety check
+  if (!authenticated && !demoMetrics) {
+    console.error('[ProtectedRoute] Failed to initialize demo mode, redirecting to welcome');
     return <Navigate to="/" replace state={{ from: location }} />;
   }
 

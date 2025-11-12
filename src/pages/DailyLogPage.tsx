@@ -446,6 +446,7 @@ export const DailyLogPage: React.FC = () => {
       {showToast && (
         <Toast
           message={toastMessage}
+          duration={5000}
           onClose={() => setShowToast(false)}
         />
       )}

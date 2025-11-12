@@ -32,7 +32,8 @@ export const ReflectionModal: React.FC<ReflectionModalProps> = ({
     // Save the changes
     await onSave(notes.trim() || undefined);
 
-    // Brief animation delay before navigation
+    // Navigate to progress page after brief animation (intentional UX)
+    // The progress page will handle showing conversion modal if needed
     setTimeout(() => {
       navigate('/progress');
     }, 800);
@@ -40,6 +41,7 @@ export const ReflectionModal: React.FC<ReflectionModalProps> = ({
 
   const handleSkip = () => {
     onSkip();
+    // Navigate to progress page (intentional UX)
     navigate('/progress');
   };
 

@@ -9,9 +9,20 @@ import { render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import { ProtectedRoute } from './ProtectedRoute';
 import * as auth from '../services/auth';
+import { demoModeService } from '../services/demoMode';
 
 // Mock the auth service
 vi.mock('../services/auth');
+
+// Mock the demoMode service
+vi.mock('../services/demoMode', () => ({
+  demoModeService: {
+    getDemoMetrics: vi.fn(() => null), // Default: no metrics
+    initializeDemoMode: vi.fn(),
+    shouldExpireDemo: vi.fn(() => false),
+    clearDemoData: vi.fn(),
+  },
+}));
 
 // Mock child components
 vi.mock('./Layout', () => ({
@@ -204,8 +215,19 @@ describe('ProtectedRoute', () => {
   });
 
   describe('Unauthenticated User Flow', () => {
-    it('should redirect to welcome page when not authenticated', async () => {
+    it('should allow access with auto-initialized demo metrics', async () => {
       vi.mocked(auth.isAuthenticated).mockReturnValue(false);
+      // Simulate auto-initialization behavior
+      vi.mocked(demoModeService.getDemoMetrics)
+        .mockReturnValueOnce(null) // First call returns null
+        .mockReturnValue({ // After initializeDemoMode, returns metrics
+          demo_start_date: new Date().toISOString(),
+          demo_habits_added: 0,
+          demo_logs_completed: 0,
+          demo_last_visit: new Date().toISOString(),
+          demo_progress_visits: 0,
+          demo_conversion_shown: false,
+        });
 
       render(
         <MemoryRouter initialEntries={['/protected']}>
@@ -223,15 +245,25 @@ describe('ProtectedRoute', () => {
         </MemoryRouter>
       );
 
+      // Should auto-initialize and show protected content
       await waitFor(() => {
-        expect(screen.getByTestId('welcome-page')).toBeInTheDocument();
+        expect(demoModeService.initializeDemoMode).toHaveBeenCalled();
+        expect(screen.getByTestId('protected-content')).toBeInTheDocument();
       });
-
-      expect(screen.queryByTestId('protected-content')).not.toBeInTheDocument();
     });
 
-    it('should not render children when not authenticated', async () => {
+    it('should render children in demo mode after auto-init', async () => {
       vi.mocked(auth.isAuthenticated).mockReturnValue(false);
+      vi.mocked(demoModeService.getDemoMetrics)
+        .mockReturnValueOnce(null)
+        .mockReturnValue({
+          demo_start_date: new Date().toISOString(),
+          demo_habits_added: 0,
+          demo_logs_completed: 0,
+          demo_last_visit: new Date().toISOString(),
+          demo_progress_visits: 0,
+          demo_conversion_shown: false,
+        });
 
       render(
         <MemoryRouter initialEntries={['/protected']}>
@@ -250,12 +282,22 @@ describe('ProtectedRoute', () => {
       );
 
       await waitFor(() => {
-        expect(screen.queryByTestId('protected-content')).not.toBeInTheDocument();
+        expect(screen.getByTestId('protected-content')).toBeInTheDocument();
       });
     });
 
-    it('should not render Layout when not authenticated', async () => {
+    it('should render Layout in demo mode after auto-init', async () => {
       vi.mocked(auth.isAuthenticated).mockReturnValue(false);
+      vi.mocked(demoModeService.getDemoMetrics)
+        .mockReturnValueOnce(null)
+        .mockReturnValue({
+          demo_start_date: new Date().toISOString(),
+          demo_habits_added: 0,
+          demo_logs_completed: 0,
+          demo_last_visit: new Date().toISOString(),
+          demo_progress_visits: 0,
+          demo_conversion_shown: false,
+        });
 
       render(
         <MemoryRouter initialEntries={['/protected']}>
@@ -274,12 +316,22 @@ describe('ProtectedRoute', () => {
       );
 
       await waitFor(() => {
-        expect(screen.queryByTestId('mock-layout')).not.toBeInTheDocument();
+        expect(screen.getByTestId('mock-layout')).toBeInTheDocument();
       });
     });
 
-    it('should redirect with replace navigation', async () => {
+    it('should wrap demo mode content with Layout', async () => {
       vi.mocked(auth.isAuthenticated).mockReturnValue(false);
+      vi.mocked(demoModeService.getDemoMetrics)
+        .mockReturnValueOnce(null)
+        .mockReturnValue({
+          demo_start_date: new Date().toISOString(),
+          demo_habits_added: 0,
+          demo_logs_completed: 0,
+          demo_last_visit: new Date().toISOString(),
+          demo_progress_visits: 0,
+          demo_conversion_shown: false,
+        });
 
       render(
         <MemoryRouter initialEntries={['/protected']}>
@@ -289,7 +341,7 @@ describe('ProtectedRoute', () => {
               path="/protected"
               element={
                 <ProtectedRoute>
-                  <div>Protected Content</div>
+                  <div data-testid="content">Protected Content</div>
                 </ProtectedRoute>
               }
             />
@@ -297,9 +349,11 @@ describe('ProtectedRoute', () => {
         </MemoryRouter>
       );
 
-      // Should redirect to welcome page
+      // Should show protected content wrapped in Layout
       await waitFor(() => {
-        expect(screen.getByTestId('welcome')).toBeInTheDocument();
+        const layout = screen.getByTestId('mock-layout');
+        const content = screen.getByTestId('content');
+        expect(layout).toContainElement(content);
       });
     });
   });
@@ -429,8 +483,18 @@ describe('ProtectedRoute', () => {
       expect(container).toBeInTheDocument();
     });
 
-    it('should handle unauthenticated state correctly', async () => {
+    it('should handle unauthenticated state with auto-init correctly', async () => {
       vi.mocked(auth.isAuthenticated).mockReturnValue(false);
+      vi.mocked(demoModeService.getDemoMetrics)
+        .mockReturnValueOnce(null)
+        .mockReturnValue({
+          demo_start_date: new Date().toISOString(),
+          demo_habits_added: 0,
+          demo_logs_completed: 0,
+          demo_last_visit: new Date().toISOString(),
+          demo_progress_visits: 0,
+          demo_conversion_shown: false,
+        });
 
       render(
         <MemoryRouter initialEntries={['/protected']}>
@@ -448,11 +512,12 @@ describe('ProtectedRoute', () => {
         </MemoryRouter>
       );
 
+      // Should auto-initialize and show content in demo mode
       await waitFor(() => {
-        expect(screen.getByTestId('welcome')).toBeInTheDocument();
+        expect(screen.getByTestId('content')).toBeInTheDocument();
       });
 
-      expect(screen.queryByTestId('content')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('welcome')).not.toBeInTheDocument();
     });
   });
 
