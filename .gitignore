@@ -52,3 +52,4 @@ playwright/.cache/
 !.github/SECRETS_SETUP.md
 !e2e/README.md
 !docs/AI_REFLECTION_SETUP.md
+!tasks/tasks-0006-ai-reflection-coach.md
