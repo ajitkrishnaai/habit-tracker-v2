@@ -215,6 +215,7 @@ export const login = async (): Promise<void> => {
 
 /**
  * Logout user and clear all authentication state
+ * Also clears IndexedDB to prevent data leakage between users
  */
 export const logout = async (): Promise<void> => {
   try {
@@ -228,6 +229,25 @@ export const logout = async (): Promise<void> => {
     // Clear local state
     currentSession = null;
     currentUser = null;
+
+    // Clear IndexedDB to prevent cross-user data leakage on shared devices
+    try {
+      const { storageService } = await import('./storage');
+      await storageService.clearAll();
+      console.log('[Auth] Cleared IndexedDB on logout');
+    } catch (storageError) {
+      console.error('[Auth] Failed to clear IndexedDB on logout:', storageError);
+      // Non-blocking - logout still successful
+    }
+
+    // Clear demo mode data if any exists
+    try {
+      await demoModeService.clearDemoData();
+      console.log('[Auth] Cleared demo data on logout');
+    } catch (demoError) {
+      console.error('[Auth] Failed to clear demo data on logout:', demoError);
+      // Non-blocking - logout still successful
+    }
 
     console.log('[Auth] User logged out');
   } catch (error) {

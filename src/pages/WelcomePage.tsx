@@ -42,12 +42,17 @@ export const WelcomePage = (): JSX.Element => {
     init();
   }, [navigate]);
 
-  const handleBeginPractice = () => {
+  const handleBeginPractice = async () => {
     setLoading(true);
-    // Initialize demo mode
-    demoModeService.initializeDemoMode();
-    // Navigate to daily log
-    navigate('/daily-log');
+    try {
+      // Initialize demo mode (now async - clears IndexedDB for new sessions)
+      await demoModeService.initializeDemoMode();
+      // Navigate to daily log
+      navigate('/daily-log');
+    } catch (err) {
+      logError('WelcomePage:handleBeginPractice', err);
+      setLoading(false);
+    }
   };
 
   return (
