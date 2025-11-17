@@ -5,7 +5,7 @@
  * This is the main habit management interface.
  */
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { storageService } from '../services/storage';
 import { parseError, formatErrorMessage, logError } from '../utils/errorHandler';
@@ -34,6 +34,15 @@ export const ManageHabitsPage = (): JSX.Element => {
   // Confetti canvas ref (Task 2.6 - REQ for first habit creation)
   const confettiCanvasRef = useRef<HTMLCanvasElement | null>(null);
 
+  // Handler to open habit form (memoized for useEffect dependency)
+  const handleOpenHabitForm = useCallback(() => {
+    // Open form in add mode (not editing)
+    setEditingHabit(null);
+    setShowHabitForm(true);
+    // Scroll to top to show form
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
+
   // Scroll to top and load habits on component mount
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -48,7 +57,7 @@ export const ManageHabitsPage = (): JSX.Element => {
       // Clear the URL parameter after opening the form
       setSearchParams({});
     }
-  }, [searchParams, loading]);
+  }, [searchParams, loading, setSearchParams, handleOpenHabitForm]);
 
   const loadHabits = async () => {
     try {
@@ -116,14 +125,6 @@ export const ManageHabitsPage = (): JSX.Element => {
   const handleEditHabit = (habit: Habit) => {
     // Set habit to edit mode and show form
     setEditingHabit(habit);
-    setShowHabitForm(true);
-    // Scroll to top to show form
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
-  const handleOpenHabitForm = () => {
-    // Open form in add mode (not editing)
-    setEditingHabit(null);
     setShowHabitForm(true);
     // Scroll to top to show form
     window.scrollTo({ top: 0, behavior: 'smooth' });
