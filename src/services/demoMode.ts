@@ -97,14 +97,31 @@ class DemoModeService {
    * Initializes demo mode by creating default metrics in localStorage
    * Called when user clicks "Begin Your Practice" button on Welcome page
    *
-   * Important: ALWAYS clears IndexedDB to ensure fresh start.
-   * This function is only called when user explicitly clicks "Begin Your Practice"
-   * from the landing page, which indicates intent to start a new demo session.
+   * Important: This function is now IDEMPOTENT.
+   * - If demo metrics already exist → user is resuming an existing session → preserve data
+   * - If no metrics exist → user is starting a new session → clear IndexedDB and initialize
+   *
+   * This prevents data loss when users navigate back to welcome page via logo click.
    */
   async initializeDemoMode(): Promise<void> {
     const now = new Date().toISOString();
 
-    // Always clear IndexedDB when starting a new demo session from Welcome page
+    // Check if there's an existing demo session
+    const existingMetrics = this.getDemoMetrics();
+
+    if (existingMetrics) {
+      // User is returning to an existing demo session - preserve their data
+      console.log('[DemoMode] Resuming existing demo session (data preserved)');
+
+      // Just update last_visit timestamp to track activity
+      this.updateDemoMetrics({
+        demo_last_visit: now,
+      });
+
+      return; // Early exit - do not clear data!
+    }
+
+    // No existing metrics - this is a NEW demo session
     console.log('[DemoMode] Initializing new demo session - clearing all data');
     try {
       const { storageService } = await import('./storage');
@@ -115,7 +132,7 @@ class DemoModeService {
       // Non-blocking - continue initialization
     }
 
-    // Initialize fresh metrics
+    // Initialize fresh metrics for new session
     const metrics: DemoMetrics = {
       demo_start_date: now,
       demo_habits_added: 0,

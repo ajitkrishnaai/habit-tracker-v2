@@ -14,7 +14,6 @@ import { storageService } from '../services/storage';
 import { demoModeService } from '../services/demoMode';
 import { ProgressCard } from '../components/ProgressCard';
 import { EmptyState } from '../components/EmptyState';
-import { LockedProgressPreview } from '../components/LockedProgressPreview';
 import LoadingSpinner from '../components/LoadingSpinner';
 
 interface HabitWithLogs {
@@ -79,18 +78,6 @@ export const ProgressPage: React.FC = () => {
           <h1 className="page-title">Progress</h1>
         </header>
         <LoadingSpinner text="Loading your progress..." />
-      </div>
-    );
-  }
-
-  // Demo mode locked preview (Task 3.6 - REQ-35 to REQ-38, AC-8)
-  if (isDemo && !isLoading) {
-    return (
-      <div className="progress-page">
-        <header className="page-header">
-          <h1 className="page-title">Progress</h1>
-        </header>
-        <LockedProgressPreview />
       </div>
     );
   }

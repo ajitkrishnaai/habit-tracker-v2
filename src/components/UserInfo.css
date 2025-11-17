@@ -2,7 +2,7 @@
  * UserInfo Component Styles
  *
  * Displays logged-in user's email in a subtle, centered format
- * below the main navigation.
+ * below the main navigation with a sign-out button.
  */
 
 .user-info {
@@ -23,6 +23,38 @@
 .user-info-email {
   font-weight: 500;
   color: var(--stone-700);
+}
+
+.user-info-signout {
+  /* Reset button styles */
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+
+  /* Link-like styling */
+  font-size: inherit;
+  font-style: inherit;
+  font-family: inherit;
+  color: var(--stone-600);
+  text-decoration: underline;
+  transition: color 0.2s ease;
+}
+
+.user-info-signout:hover:not(:disabled) {
+  color: var(--stone-900);
+}
+
+.user-info-signout:focus-visible {
+  outline: 2px solid var(--stone-700);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.user-info-signout:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
 }
 
 /* Mobile optimizations */
