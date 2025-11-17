@@ -53,4 +53,7 @@ playwright/.cache/
 !e2e/README.md
 !docs/AI_REFLECTION_SETUP.md
 !tasks/tasks-0006-ai-reflection-coach.md
+
+# Supabase
 supabase/functions/.env
+supabase/.branches/

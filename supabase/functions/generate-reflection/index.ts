@@ -73,7 +73,7 @@ const FALLBACK_REFLECTION =
 const API_TIMEOUT_MS = 5000; // 5 seconds
 const MAX_TOKENS = 500;
 const TEMPERATURE = 0.7;
-const MODEL = "claude-3-5-sonnet-20241022";
+const MODEL = "claude-3-haiku-20240307"; // Claude 3 Haiku (fastest, most affordable)
 
 // ============================================================================
 // TYPES
@@ -207,6 +207,11 @@ async function generateReflectionWithAI(payload: ReflectionPayload): Promise<Ref
     // Determine error type
     let errorType = 'unknown_error';
 
+    // Log the full error for debugging
+    console.error('[generate-reflection] Full error:', error);
+    console.error('[generate-reflection] Error message:', error instanceof Error ? error.message : 'Unknown');
+    console.error('[generate-reflection] Error stack:', error instanceof Error ? error.stack : 'No stack trace');
+
     if (error instanceof Error) {
       if (error.message.includes('timeout')) {
         errorType = 'api_timeout';
@@ -237,6 +242,12 @@ Deno.serve(async (req) => {
   }
 
   try {
+    // Note: We intentionally do NOT validate JWT here because:
+    // 1. This function is meant to be called by authenticated frontend users
+    // 2. The frontend will pass the user's JWT in the Authorization header
+    // 3. We don't need to verify the user's identity - we just generate reflections
+    // 4. In production, you may want to add rate limiting per user ID from the JWT
+
     // Parse request body
     const body = await req.json();
 

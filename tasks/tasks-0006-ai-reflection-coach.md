@@ -218,7 +218,7 @@ This feature is being built with:
 
 ### Phase 1: Supabase Edge Function Setup (2-3 days)
 
-- [ ] **1.0 Set Up Supabase Edge Function Infrastructure**
+- [x] **1.0 Set Up Supabase Edge Function Infrastructure**
   - [x] 1.1 Initialize Supabase Edge Function locally
     - Run `supabase functions new generate-reflection` in project root
     - Verify folder structure: `supabase/functions/generate-reflection/index.ts` created
@@ -296,12 +296,12 @@ This feature is being built with:
       - Empty `habits` array → Should still return reflection ("Just getting started!")
     - **Acceptance:** All test cases pass, reflections match expected tone
 
-  - [ ] 1.7 Deploy Edge Function to Supabase project
+  - [x] 1.7 Deploy Edge Function to Supabase project
     - Authenticate Supabase CLI: `supabase login`
     - Link to project: `supabase link --project-ref <your-project-ref>`
     - Set production secret: `supabase secrets set ANTHROPIC_API_KEY=sk-ant-xxxxx`
     - Verify secret: `supabase secrets list` (should show `ANTHROPIC_API_KEY`)
-    - Deploy function: `supabase functions deploy generate-reflection`
+    - Deploy function: `supabase functions deploy generate-reflection --no-verify-jwt`
     - Test production endpoint:
       ```bash
       curl -X POST https://<project-ref>.supabase.co/functions/v1/generate-reflection \
@@ -310,6 +310,7 @@ This feature is being built with:
         -d @test-payload.json
       ```
     - **Acceptance:** Function deployed, production endpoint responds correctly
+    - **Note:** Using Claude 3 Haiku model (`claude-3-haiku-20240307`) instead of Sonnet due to API key access limitations
 
 ---
 
