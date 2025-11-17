@@ -26,6 +26,24 @@ vi.mock('./auth', () => ({
 vi.mock('./syncService', () => ({
   syncService: {
     fullSync: vi.fn(),
+    syncFromRemote: vi.fn().mockResolvedValue(undefined),
+  },
+}));
+
+// Mock storageService for migration tests
+vi.mock('./storage', () => ({
+  storageService: {
+    getHabits: vi.fn().mockResolvedValue([]),
+    getLogs: vi.fn().mockResolvedValue([]),
+    clearAll: vi.fn().mockResolvedValue(undefined),
+  },
+}));
+
+// Mock supabaseDataService for migration tests
+vi.mock('./supabaseDataService', () => ({
+  supabaseDataService: {
+    createHabit: vi.fn().mockResolvedValue(undefined),
+    createLog: vi.fn().mockResolvedValue(undefined),
   },
 }));
 
@@ -75,8 +93,8 @@ describe('DemoModeService - Core Functions', () => {
   });
 
   describe('initializeDemoMode()', () => {
-    it('should initialize demo metrics with default values', () => {
-      demoModeService.initializeDemoMode();
+    it('should initialize demo metrics with default values', async () => {
+      await demoModeService.initializeDemoMode();
 
       const metrics = getMockDemoMetrics();
       expect(metrics).not.toBeNull();
@@ -88,9 +106,9 @@ describe('DemoModeService - Core Functions', () => {
       expect(metrics?.demo_last_visit).toBeDefined();
     });
 
-    it('should set demo_start_date to current time', () => {
+    it('should set demo_start_date to current time', async () => {
       const beforeInit = new Date();
-      demoModeService.initializeDemoMode();
+      await demoModeService.initializeDemoMode();
       const afterInit = new Date();
 
       const metrics = getMockDemoMetrics();
@@ -100,8 +118,8 @@ describe('DemoModeService - Core Functions', () => {
       expect(startDate.getTime()).toBeLessThanOrEqual(afterInit.getTime());
     });
 
-    it('should set demo_last_visit equal to demo_start_date', () => {
-      demoModeService.initializeDemoMode();
+    it('should set demo_last_visit equal to demo_start_date', async () => {
+      await demoModeService.initializeDemoMode();
 
       const metrics = getMockDemoMetrics();
       expect(metrics?.demo_last_visit).toBe(metrics?.demo_start_date);
@@ -924,15 +942,20 @@ describe('DemoModeService - Data Migration', () => {
   });
 
   describe('migrateDemoData()', () => {
-    it('should call syncService.fullSync()', async () => {
+    it('should call syncService.syncFromRemote() to pull data after upload', async () => {
       setMockDemoMetrics({ demo_habits_added: 3 });
 
-      // Import the mocked syncService
+      // Import the mocked services
       const { syncService } = await import('./syncService');
+      const { storageService } = await import('./storage');
+
+      // Mock empty data in IndexedDB
+      vi.mocked(storageService.getHabits).mockResolvedValue([]);
+      vi.mocked(storageService.getLogs).mockResolvedValue([]);
 
       await demoModeService.migrateDemoData();
 
-      expect(syncService.fullSync).toHaveBeenCalledTimes(1);
+      expect(syncService.syncFromRemote).toHaveBeenCalledTimes(1);
     });
 
     it('should clear demo data after successful sync', async () => {
@@ -942,9 +965,14 @@ describe('DemoModeService - Data Migration', () => {
         JSON.stringify(['first_habit'])
       );
 
-      // Import the mocked syncService
+      // Import the mocked services
       const { syncService } = await import('./syncService');
-      vi.mocked(syncService.fullSync).mockResolvedValueOnce(undefined);
+      const { storageService } = await import('./storage');
+
+      // Mock empty data in IndexedDB
+      vi.mocked(storageService.getHabits).mockResolvedValue([]);
+      vi.mocked(storageService.getLogs).mockResolvedValue([]);
+      vi.mocked(syncService.syncFromRemote).mockResolvedValueOnce(undefined);
 
       await demoModeService.migrateDemoData();
 
@@ -956,29 +984,42 @@ describe('DemoModeService - Data Migration', () => {
     it('should propagate errors if sync fails', async () => {
       setMockDemoMetrics({ demo_habits_added: 3 });
 
-      // Import the mocked syncService
+      // Import the mocked services
       const { syncService } = await import('./syncService');
+      const { storageService } = await import('./storage');
+
+      // Mock empty data in IndexedDB
+      vi.mocked(storageService.getHabits).mockResolvedValue([]);
+      vi.mocked(storageService.getLogs).mockResolvedValue([]);
+
       const syncError = new Error('Network error');
-      vi.mocked(syncService.fullSync).mockRejectedValueOnce(syncError);
+      vi.mocked(syncService.syncFromRemote).mockRejectedValueOnce(syncError);
 
       await expect(demoModeService.migrateDemoData()).rejects.toThrow('Network error');
     });
 
-    it('should NOT clear demo data if sync fails', async () => {
+    it('should clear demo data in Step 2 even if Step 3 (syncFromRemote) fails', async () => {
       setMockDemoMetrics({ demo_habits_added: 5 });
 
-      // Import the mocked syncService
+      // Import the mocked services
       const { syncService } = await import('./syncService');
-      vi.mocked(syncService.fullSync).mockRejectedValueOnce(new Error('Sync failed'));
+      const { storageService } = await import('./storage');
+
+      // Mock empty data in IndexedDB
+      vi.mocked(storageService.getHabits).mockResolvedValue([]);
+      vi.mocked(storageService.getLogs).mockResolvedValue([]);
+
+      vi.mocked(syncService.syncFromRemote).mockRejectedValueOnce(new Error('Sync failed'));
 
       try {
         await demoModeService.migrateDemoData();
       } catch (error) {
-        // Expected to fail
+        // Expected to fail at Step 3
       }
 
-      // Demo data should still exist (allow retry)
-      expect(localStorage.getItem('habitTracker_demoMetrics')).not.toBeNull();
+      // Demo data was cleared in Step 2, before Step 3 failed
+      // Note: This means users cannot retry migration if Step 3 fails
+      expect(localStorage.getItem('habitTracker_demoMetrics')).toBeNull();
     });
 
     it('should log appropriate messages during migration', async () => {
@@ -987,16 +1028,19 @@ describe('DemoModeService - Data Migration', () => {
       // Spy on console.log
       const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
 
-      // Import the mocked syncService
+      // Import the mocked services
       const { syncService } = await import('./syncService');
-      vi.mocked(syncService.fullSync).mockResolvedValueOnce(undefined);
+      const { storageService } = await import('./storage');
+
+      // Mock empty data in IndexedDB
+      vi.mocked(storageService.getHabits).mockResolvedValue([]);
+      vi.mocked(storageService.getLogs).mockResolvedValue([]);
+      vi.mocked(syncService.syncFromRemote).mockResolvedValueOnce(undefined);
 
       await demoModeService.migrateDemoData();
 
       expect(consoleSpy).toHaveBeenCalledWith('[DemoMode] Starting data migration...');
-      expect(consoleSpy).toHaveBeenCalledWith(
-        '[DemoMode] Migration complete, clearing demo metrics'
-      );
+      expect(consoleSpy).toHaveBeenCalledWith('[DemoMode] Migration complete!');
 
       consoleSpy.mockRestore();
     });
@@ -1007,10 +1051,16 @@ describe('DemoModeService - Data Migration', () => {
       // Spy on console.error
       const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
-      // Import the mocked syncService
+      // Import the mocked services
       const { syncService } = await import('./syncService');
+      const { storageService } = await import('./storage');
+
+      // Mock empty data in IndexedDB
+      vi.mocked(storageService.getHabits).mockResolvedValue([]);
+      vi.mocked(storageService.getLogs).mockResolvedValue([]);
+
       const syncError = new Error('Network timeout');
-      vi.mocked(syncService.fullSync).mockRejectedValueOnce(syncError);
+      vi.mocked(syncService.syncFromRemote).mockRejectedValueOnce(syncError);
 
       try {
         await demoModeService.migrateDemoData();
@@ -1019,7 +1069,7 @@ describe('DemoModeService - Data Migration', () => {
       }
 
       expect(consoleErrorSpy).toHaveBeenCalledWith(
-        '[DemoMode] Migration failed:',
+        '[DemoMode] Migration failed at some step:',
         syncError
       );
 

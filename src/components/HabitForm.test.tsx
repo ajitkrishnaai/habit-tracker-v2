@@ -10,11 +10,17 @@ import userEvent from '@testing-library/user-event';
 import { HabitForm } from './HabitForm';
 import { storageService } from '../services/storage';
 import { syncService } from '../services/syncService';
+import { demoModeService } from '../services/demoMode';
 import type { Habit } from '../types/habit';
 
 // Mock services
 vi.mock('../services/storage');
 vi.mock('../services/syncService');
+vi.mock('../services/demoMode', () => ({
+  demoModeService: {
+    isDemoMode: vi.fn(),
+  },
+}));
 vi.mock('../utils/uuid', () => ({
   generateUUID: () => 'test-uuid-123',
 }));
@@ -26,6 +32,8 @@ describe('HabitForm', () => {
     vi.mocked(storageService.getHabits).mockResolvedValue([]);
     vi.mocked(storageService.saveHabit).mockResolvedValue();
     vi.mocked(syncService.syncToRemote).mockResolvedValue();
+    // Default: user is authenticated (NOT in demo mode)
+    vi.mocked(demoModeService.isDemoMode).mockReturnValue(false);
   });
 
   describe('Adding a new habit', () => {
