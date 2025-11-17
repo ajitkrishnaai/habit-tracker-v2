@@ -1,0 +1,31 @@
+{
+  "date": "2025-11-16",
+  "time_of_day": "evening",
+  "note_text": "I feel great after my meditation and my long walk. It really helped me clear my head after a stressful week.",
+  "habits": [
+    {
+      "name": "Meditation",
+      "status": "done",
+      "streak_days": 4,
+      "completed_last_7_days": 6,
+      "completed_last_30_days": 20,
+      "category": "Mindfulness"
+    },
+    {
+      "name": "Long walk",
+      "status": "done",
+      "streak_days": 2,
+      "completed_last_7_days": 5,
+      "completed_last_30_days": 18,
+      "category": "Movement"
+    }
+  ],
+  "recent_summary": {
+    "days_tracked_last_7": 6,
+    "days_tracked_last_30": 24,
+    "notable_observations": [
+      "User often mentions feeling calmer on days with meditation.",
+      "User often mentions clearer thinking on days with movement."
+    ]
+  }
+}
