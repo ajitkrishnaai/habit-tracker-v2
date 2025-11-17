@@ -226,7 +226,7 @@ This feature is being built with:
     - Add import map for npm packages: `{ "imports": { "@anthropic-ai/sdk": "npm:@anthropic-ai/sdk@^0.30.0" } }`
     - **Acceptance:** Edge function scaffold exists, Deno config valid
 
-  - [ ] 1.2 Configure local environment for Edge Function development
+  - [x] 1.2 Configure local environment for Edge Function development
     - Install Supabase CLI if not present: `brew install supabase/tap/supabase` (macOS)
     - Start local Supabase: `supabase start` (this may take a few minutes on first run)
     - Verify local services running: `supabase status` (should show Functions URL)
