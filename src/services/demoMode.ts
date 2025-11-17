@@ -95,10 +95,44 @@ class DemoModeService {
 
   /**
    * Initializes demo mode by creating default metrics in localStorage
-   * Called when user clicks "Try Without Signing In" button
+   * Called when user clicks "Begin Your Practice" button on Welcome page
+   *
+   * Important: This function is now IDEMPOTENT.
+   * - If demo metrics already exist → user is resuming an existing session → preserve data
+   * - If no metrics exist → user is starting a new session → clear IndexedDB and initialize
+   *
+   * This prevents data loss when users navigate back to welcome page via logo click.
    */
-  initializeDemoMode(): void {
+  async initializeDemoMode(): Promise<void> {
     const now = new Date().toISOString();
+
+    // Check if there's an existing demo session
+    const existingMetrics = this.getDemoMetrics();
+
+    if (existingMetrics) {
+      // User is returning to an existing demo session - preserve their data
+      console.log('[DemoMode] Resuming existing demo session (data preserved)');
+
+      // Just update last_visit timestamp to track activity
+      this.updateDemoMetrics({
+        demo_last_visit: now,
+      });
+
+      return; // Early exit - do not clear data!
+    }
+
+    // No existing metrics - this is a NEW demo session
+    console.log('[DemoMode] Initializing new demo session - clearing all data');
+    try {
+      const { storageService } = await import('./storage');
+      await storageService.clearAll();
+      console.log('[DemoMode] IndexedDB cleared for fresh demo session');
+    } catch (error) {
+      console.error('[DemoMode] Failed to clear IndexedDB:', error);
+      // Non-blocking - continue initialization
+    }
+
+    // Initialize fresh metrics for new session
     const metrics: DemoMetrics = {
       demo_start_date: now,
       demo_habits_added: 0,
@@ -195,14 +229,20 @@ class DemoModeService {
   }
 
   /**
-   * Clears all demo data from localStorage
+   * Clears all demo data from localStorage and IndexedDB
    * Called on expiry or after successful migration
    */
-  clearDemoData(): void {
+  async clearDemoData(): Promise<void> {
     try {
+      // Clear localStorage
       localStorage.removeItem(DEMO_METRICS_KEY);
       localStorage.removeItem(SHOWN_MILESTONES_KEY);
       console.log('[DemoMode] Cleared all demo data from localStorage');
+
+      // Clear IndexedDB to prevent stale data in future demo sessions
+      const { storageService } = await import('./storage');
+      await storageService.clearAll();
+      console.log('[DemoMode] Cleared all demo data from IndexedDB');
     } catch (error) {
       console.error('[DemoMode] Failed to clear demo data:', error);
     }
@@ -421,8 +461,9 @@ class DemoModeService {
    *
    * Process:
    * 1. Calls existing syncService.fullSync() to sync IndexedDB → Supabase
-   * 2. Clears demo metrics from localStorage on success
-   * 3. Propagates errors to caller for error handling
+   * 2. Clears demo data from localStorage AND IndexedDB
+   * 3. Re-syncs from Supabase to repopulate IndexedDB with authenticated data
+   * 4. Propagates errors to caller for error handling
    *
    * @throws Error if migration fails (caller should handle)
    */
@@ -430,16 +471,77 @@ class DemoModeService {
     console.log('[DemoMode] Starting data migration...');
 
     try {
-      // Import syncService dynamically to avoid circular dependencies
+      // Import services dynamically to avoid circular dependencies
       const { syncService } = await import('./syncService');
+      const { storageService } = await import('./storage');
+      const { supabaseDataService } = await import('./supabaseDataService');
 
-      // Sync all IndexedDB data to Supabase
-      await syncService.fullSync();
+      // DEBUG: Check what data exists before migration
+      const preHabits = await storageService.getHabits();
+      const preLogs = await storageService.getLogs();
+      console.log(`[DemoMode] Pre-migration check: ${preHabits.length} habits, ${preLogs.length} logs in IndexedDB`);
 
-      console.log('[DemoMode] Migration complete, clearing demo metrics');
-      this.clearDemoData();
+      // Step 1: Manually upload ALL IndexedDB data to Supabase
+      // (fullSync only processes queued operations, but demo data was never queued)
+      console.log('[DemoMode] Step 1: Uploading all habits and logs to Supabase...');
+
+      // Upload habits
+      for (const habit of preHabits) {
+        try {
+          await supabaseDataService.createHabit({
+            habit_id: habit.habit_id,
+            name: habit.name,
+            category: habit.category,
+            status: habit.status,
+          });
+        } catch (error) {
+          console.error(`[DemoMode] Failed to upload habit ${habit.habit_id}:`, error);
+          // Continue with other habits
+        }
+      }
+      console.log(`[DemoMode] Uploaded ${preHabits.length} habits to Supabase`);
+
+      // Upload logs
+      for (const log of preLogs) {
+        try {
+          await supabaseDataService.createLog({
+            log_id: log.log_id,
+            habit_id: log.habit_id,
+            date: log.date,
+            status: log.status,
+            notes: log.notes || null,
+          });
+        } catch (error) {
+          console.error(`[DemoMode] Failed to upload log ${log.log_id}:`, error);
+          // Continue with other logs
+        }
+      }
+      console.log(`[DemoMode] Uploaded ${preLogs.length} logs to Supabase`);
+      console.log('[DemoMode] Step 1 complete: Demo data uploaded to Supabase');
+
+      // Step 2: Clear demo data (localStorage + IndexedDB)
+      console.log('[DemoMode] Step 2: Clearing local demo data...');
+      await this.clearDemoData();
+      console.log('[DemoMode] Step 2 complete: Local demo data cleared');
+
+      // DEBUG: Verify IndexedDB is empty
+      const postClearHabits = await storageService.getHabits();
+      const postClearLogs = await storageService.getLogs();
+      console.log(`[DemoMode] Post-clear check: ${postClearHabits.length} habits, ${postClearLogs.length} logs in IndexedDB`);
+
+      // Step 3: Pull data back from Supabase to repopulate IndexedDB
+      // This ensures data comes from single source of truth (Supabase)
+      console.log('[DemoMode] Step 3: Pulling data from Supabase...');
+      await syncService.syncFromRemote();
+      console.log('[DemoMode] Step 3 complete: Data re-synced from Supabase');
+
+      // DEBUG: Final verification
+      const finalHabits = await storageService.getHabits();
+      const finalLogs = await storageService.getLogs();
+      console.log(`[DemoMode] Final check: ${finalHabits.length} habits, ${finalLogs.length} logs in IndexedDB`);
+      console.log('[DemoMode] Migration complete!');
     } catch (error) {
-      console.error('[DemoMode] Migration failed:', error);
+      console.error('[DemoMode] Migration failed at some step:', error);
       // Re-throw error - caller will handle (show error banner, retry, etc.)
       throw error;
     }

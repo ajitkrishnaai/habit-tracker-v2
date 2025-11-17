@@ -22,6 +22,7 @@ export const WelcomePage = (): JSX.Element => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [authInitialized, setAuthInitialized] = useState(false);
+  const [hasExistingDemoSession, setHasExistingDemoSession] = useState(false);
 
   useEffect(() => {
     // Initialize auth on component mount
@@ -34,6 +35,10 @@ export const WelcomePage = (): JSX.Element => {
         if (isAuthenticated()) {
           navigate('/daily-log');
         }
+
+        // Check if user has an existing demo session (for UX messaging)
+        const demoMetrics = demoModeService.getDemoMetrics();
+        setHasExistingDemoSession(!!demoMetrics);
       } catch (err) {
         logError('WelcomePage:init', err);
       }
@@ -42,12 +47,17 @@ export const WelcomePage = (): JSX.Element => {
     init();
   }, [navigate]);
 
-  const handleBeginPractice = () => {
+  const handleBeginPractice = async () => {
     setLoading(true);
-    // Initialize demo mode
-    demoModeService.initializeDemoMode();
-    // Navigate to daily log
-    navigate('/daily-log');
+    try {
+      // Initialize demo mode (now async - clears IndexedDB for new sessions)
+      await demoModeService.initializeDemoMode();
+      // Navigate to daily log
+      navigate('/daily-log');
+    } catch (err) {
+      logError('WelcomePage:handleBeginPractice', err);
+      setLoading(false);
+    }
   };
 
   return (
@@ -70,9 +80,9 @@ export const WelcomePage = (): JSX.Element => {
             onClick={handleBeginPractice}
             disabled={loading || !authInitialized}
             className="btn-primary welcome-hero-cta"
-            aria-label="Begin your daily practice with Amara.day"
+            aria-label={hasExistingDemoSession ? "Continue your daily practice" : "Begin your daily practice with Amara.day"}
           >
-            {loading ? 'Starting...' : 'Begin Your Practice'}
+            {loading ? 'Loading...' : hasExistingDemoSession ? 'Continue Practice' : 'Begin Your Practice'}
           </button>
           <p className="welcome-hero-signin">
             Have an account? <a href="/daily-log" className="welcome-hero-signin-link">Sign in</a>

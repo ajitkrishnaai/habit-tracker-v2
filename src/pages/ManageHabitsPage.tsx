@@ -5,12 +5,12 @@
  * This is the main habit management interface.
  */
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { storageService } from '../services/storage';
 import { parseError, formatErrorMessage, logError } from '../utils/errorHandler';
 import { demoModeService } from '../services/demoMode';
 import { triggerConfetti } from '../utils/confetti';
-import { ConversionModal } from '../components/ConversionModal';
 import { Toast } from '../components/Toast';
 import { HabitForm } from '../components/HabitForm';
 import { HabitListItem } from '../components/HabitListItem';
@@ -20,6 +20,7 @@ import type { Habit } from '../types/habit';
 import './ManageHabitsPage.css';
 
 export const ManageHabitsPage = (): JSX.Element => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [habits, setHabits] = useState<Habit[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -27,19 +28,36 @@ export const ManageHabitsPage = (): JSX.Element => {
   const [showHabitForm, setShowHabitForm] = useState(false);
 
   // Demo mode state (Task 3.4 - REQ-15, REQ-28, REQ-29)
-  const [showConversionModal, setShowConversionModal] = useState(false);
-  const [conversionTrigger, setConversionTrigger] = useState<'habits_threshold' | 'first_log' | 'progress_page'>('habits_threshold');
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
 
   // Confetti canvas ref (Task 2.6 - REQ for first habit creation)
   const confettiCanvasRef = useRef<HTMLCanvasElement | null>(null);
 
+  // Handler to open habit form (memoized for useEffect dependency)
+  const handleOpenHabitForm = useCallback(() => {
+    // Open form in add mode (not editing)
+    setEditingHabit(null);
+    setShowHabitForm(true);
+    // Scroll to top to show form
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
+
   // Scroll to top and load habits on component mount
   useEffect(() => {
     window.scrollTo(0, 0);
     loadHabits();
   }, []);
+
+  // Check for 'add=true' URL parameter to auto-open form
+  useEffect(() => {
+    const shouldAdd = searchParams.get('add');
+    if (shouldAdd === 'true' && !loading) {
+      handleOpenHabitForm();
+      // Clear the URL parameter after opening the form
+      setSearchParams({});
+    }
+  }, [searchParams, loading, setSearchParams, handleOpenHabitForm]);
 
   const loadHabits = async () => {
     try {
@@ -96,14 +114,6 @@ export const ManageHabitsPage = (): JSX.Element => {
         setToastMessage(milestoneMsg);
         setShowToast(true);
       }
-
-      // Check for conversion trigger
-      const trigger = demoModeService.shouldShowConversionModal();
-      if (trigger) {
-        setShowConversionModal(true);
-        setConversionTrigger(trigger as 'habits_threshold' | 'first_log' | 'progress_page');
-        demoModeService.markConversionShown();
-      }
     }
   };
 
@@ -115,14 +125,6 @@ export const ManageHabitsPage = (): JSX.Element => {
   const handleEditHabit = (habit: Habit) => {
     // Set habit to edit mode and show form
     setEditingHabit(habit);
-    setShowHabitForm(true);
-    // Scroll to top to show form
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
-  const handleOpenHabitForm = () => {
-    // Open form in add mode (not editing)
-    setEditingHabit(null);
     setShowHabitForm(true);
     // Scroll to top to show form
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -228,13 +230,7 @@ export const ManageHabitsPage = (): JSX.Element => {
           </ul>
         )}
 
-        {/* Demo Mode Modals and Toasts (Task 3.4) */}
-        {showConversionModal && (
-          <ConversionModal
-            trigger={conversionTrigger}
-            onClose={() => setShowConversionModal(false)}
-          />
-        )}
+        {/* Demo Mode Toasts (Task 3.4) */}
         {showToast && (
           <Toast
             message={toastMessage}

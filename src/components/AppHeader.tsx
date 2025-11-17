@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import './AppHeader.css';
 
 interface AppHeaderProps {
@@ -19,7 +20,7 @@ interface AppHeaderProps {
  * AppHeader Component
  *
  * Displays the "AMARA DAY" branding with "Daily Eternal" tagline
- * consistently across all pages.
+ * consistently across all pages. Logo is clickable and navigates to home page.
  *
  * Design System:
  * - Primary text: "AMARA DAY" in uppercase, DM Sans, moss-700
@@ -52,10 +53,12 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
       className={`app-header ${isHero ? 'app-header--hero' : 'app-header--compact'} ${className}`}
       role="banner"
     >
-      <div className="app-header-brand">
-        <h1 className="app-header-logo">AMARA DAY</h1>
-        <p className="app-header-tagline">Daily Eternal</p>
-      </div>
+      <Link to="/" className="app-header-link" aria-label="Go to home page">
+        <div className="app-header-brand">
+          <h1 className="app-header-logo">AMARA DAY</h1>
+          <p className="app-header-tagline">Daily Eternal</p>
+        </div>
+      </Link>
     </header>
   );
 };

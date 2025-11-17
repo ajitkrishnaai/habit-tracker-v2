@@ -4,6 +4,7 @@ import { ManageHabitsPage } from './pages/ManageHabitsPage';
 import { DailyLogPage } from './pages/DailyLogPage';
 import { ProgressPage } from './pages/ProgressPage';
 import { ProtectedRoute } from './components/ProtectedRoute';
+import Layout from './components/Layout';
 import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
 import TermsOfServicePage from './pages/TermsOfServicePage';
 
@@ -23,9 +24,9 @@ export const router = createBrowserRouter([
   {
     path: '/progress',
     element: (
-      <ProtectedRoute>
+      <Layout>
         <ProgressPage />
-      </ProtectedRoute>
+      </Layout>
     ),
   },
   {

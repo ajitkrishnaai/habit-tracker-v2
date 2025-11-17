@@ -18,6 +18,29 @@
   width: 100%;
 }
 
+.app-header-link {
+  text-decoration: none;
+  display: inline-block;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+  cursor: pointer;
+}
+
+.app-header-link:hover,
+.app-header-link:focus {
+  transform: scale(1.02);
+  opacity: 0.85;
+}
+
+.app-header-link:focus {
+  outline: 2px solid var(--moss-500);
+  outline-offset: 4px;
+  border-radius: var(--radius-sm);
+}
+
+.app-header-link:active {
+  transform: scale(0.98);
+}
+
 .app-header-brand {
   display: inline-block;
 }
@@ -118,6 +141,19 @@
 @media (prefers-reduced-motion: reduce) {
   .app-header {
     transition: none;
+  }
+
+  .app-header-link {
+    transition: none;
+  }
+
+  .app-header-link:hover,
+  .app-header-link:focus {
+    transform: none;
+  }
+
+  .app-header-link:active {
+    transform: none;
   }
 }
 

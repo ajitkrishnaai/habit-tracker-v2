@@ -5,10 +5,11 @@
  * Includes character counter, duplicate detection, and inline error messages.
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { storageService } from '../services/storage';
 import { syncService } from '../services/syncService';
 import { supabaseDataService } from '../services/supabaseDataService';
+import { demoModeService } from '../services/demoMode';
 import { generateUUID } from '../utils/uuid';
 import {
   validateHabitName,
@@ -33,7 +34,15 @@ export const HabitForm = ({ editingHabit, onSuccess, onCancel }: HabitFormProps)
   const [generalError, setGeneralError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
+  // Ref for auto-focusing the name input
+  const nameInputRef = useRef<HTMLInputElement>(null);
+
   const isEditing = !!editingHabit;
+
+  // Auto-focus the name input when form is mounted
+  useEffect(() => {
+    nameInputRef.current?.focus();
+  }, []);
 
   // Populate form when editing
   useEffect(() => {
@@ -112,35 +121,37 @@ export const HabitForm = ({ editingHabit, onSuccess, onCancel }: HabitFormProps)
       // Save to local storage (IndexedDB)
       await storageService.saveHabit(habit);
 
-      // Also save to Supabase if online
-      try {
-        if (editingHabit) {
-          // Update existing habit
-          // @ts-expect-error - Type mismatch between local and Supabase Habit types
-          await supabaseDataService.updateHabit({
-            habit_id: habit.habit_id,
-            name: habit.name,
-            category: habit.category,
-            status: habit.status,
-          });
-        } else {
-          // Create new habit
-          await supabaseDataService.createHabit({
-            habit_id: habit.habit_id,
-            name: habit.name,
-            category: habit.category,
-            status: habit.status,
-          });
+      // Only sync to Supabase if user is authenticated (not in demo mode)
+      if (!demoModeService.isDemoMode()) {
+        try {
+          if (editingHabit) {
+            // Update existing habit
+            // @ts-expect-error - Type mismatch between local and Supabase Habit types
+            await supabaseDataService.updateHabit({
+              habit_id: habit.habit_id,
+              name: habit.name,
+              category: habit.category,
+              status: habit.status,
+            });
+          } else {
+            // Create new habit
+            await supabaseDataService.createHabit({
+              habit_id: habit.habit_id,
+              name: habit.name,
+              category: habit.category,
+              status: habit.status,
+            });
+          }
+        } catch (supabaseError) {
+          // Log error but don't block user - IndexedDB save succeeded
+          logError('HabitForm:supabaseSync', supabaseError);
         }
-      } catch (supabaseError) {
-        // Log error but don't block user - IndexedDB save succeeded
-        logError('HabitForm:supabaseSync', supabaseError);
-      }
 
-      // Trigger background sync for any queued operations
-      syncService.syncToRemote().catch((err) => {
-        logError('HabitForm:backgroundSync', err);
-      });
+        // Trigger background sync for any queued operations
+        syncService.syncToRemote().catch((err) => {
+          logError('HabitForm:backgroundSync', err);
+        });
+      }
 
       // Clear form and notify parent
       setName('');
@@ -204,6 +215,7 @@ export const HabitForm = ({ editingHabit, onSuccess, onCancel }: HabitFormProps)
         </label>
 
         <input
+          ref={nameInputRef}
           id="habit-name"
           type="text"
           value={name}
