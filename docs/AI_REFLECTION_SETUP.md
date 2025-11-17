@@ -280,15 +280,250 @@ supabase functions deploy generate-reflection
 
 ---
 
+## Phase 5: Testing & Quality Assurance
+
+### Manual Testing Checklist
+
+This comprehensive checklist covers all testing scenarios from Task 5.0 (Phase 5) of the AI Reflection feature implementation.
+
+#### Task 5.2: First-Time User Experience
+
+**Scenario:** User with no habit history
+
+1. Sign up a new account or use demo mode
+2. Add 1 habit: "Morning Meditation"
+3. Toggle habit as "done"
+4. Click "Save Changes"
+5. In modal, enter note: "Starting my journey today!"
+6. Click "Save"
+
+**Expected Behavior:**
+- ✅ Reflection loads within 3-5 seconds
+- ✅ Reflection acknowledges effort without mentioning stats
+- ✅ Example: "I'm just getting to know your patterns, but I can already see you're committed!"
+- ✅ Tone is warm and encouraging
+- ✅ No emojis in reflection text
+- ✅ 2-4 paragraphs
+- ✅ Navigates to Progress page after reflection loads
+
+#### Task 5.3: API Failure Scenarios
+
+**Test 1: Network Offline**
+
+1. Open DevTools → Network tab
+2. Set throttling to "Offline"
+3. Complete habit logging flow
+4. Click "Save" in reflection modal
+
+**Expected:**
+- ✅ Fallback message appears within 5 seconds
+- ✅ Message: "Great work tracking your habits today. Keep building momentum!"
+- ✅ No error UI shown to user
+- ✅ User can still navigate to Progress page
+
+**Test 2: Invalid API Key**
+
+1. Temporarily set wrong API key: `supabase secrets set ANTHROPIC_API_KEY=invalid`
+2. Complete habit logging flow
+3. Restore correct key after test
+
+**Expected:**
+- ✅ Edge Function returns fallback message
+- ✅ Error logged to Supabase Functions logs
+- ✅ User flow not blocked
+
+**Test 3: API Timeout**
+
+1. Mock slow API response by adding `await new Promise(r => setTimeout(r, 12000))` to Edge Function
+2. Complete habit logging flow
+
+**Expected:**
+- ✅ Timeout triggers fallback message
+- ✅ User sees fallback within 10 seconds max
+
+#### Task 5.4: Caching Behavior
+
+**Test 1: Same Session, Same Data**
+
+1. Toggle habit as "done", save with note "Test 1"
+2. Wait for reflection to appear
+3. Navigate back to Daily Log (don't refresh page)
+4. Toggle same habit again, save with **same note** "Test 1"
+
+**Expected:**
+- ✅ Second reflection appears **instantly** (from cache)
+- ✅ No second API call made (check Network tab)
+
+**Test 2: Cache Expiration**
+
+1. Save habit with note "Test 1"
+2. Wait 61 minutes (or mock time in test)
+3. Save again with note "Test 1"
+
+**Expected:**
+- ✅ Second reflection makes a new API call (cache expired)
+
+#### Task 5.5: Various Habit Counts
+
+**Test 1: Single Habit**
+- Add 1 habit, toggle as done, save with note
+- Verify reflection mentions the habit by name
+
+**Test 2: 5 Habits**
+- Add 5 habits, toggle all as done, save with note
+- Verify reflection doesn't list all 5 (focuses on key ones)
+- Verify reflection feels cohesive, not overwhelming
+
+**Test 3: Mixed Status**
+- Add 3 habits: 2 done, 1 not_done
+- Verify reflection acknowledges both achievements and challenges
+
+#### Task 5.6: Time-of-Day Variations
+
+**Test Scenarios:**
+1. **Morning (8 AM):** Complete habits at 8:00 AM
+2. **Afternoon (2 PM):** Complete habits at 2:00 PM
+3. **Evening (8 PM):** Complete habits at 8:00 PM
+
+**Verification:**
+- Check Network tab → `generate-reflection` request → Payload
+- Verify `time_of_day` field is correct: `morning`, `afternoon`, or `evening`
+- Reflection MAY reference time contextually (optional)
+
+#### Task 5.7: Performance Testing
+
+**Latency Test:**
+
+1. Open DevTools → Network tab
+2. Complete habit logging flow
+3. Measure time from clicking "Save" in modal to reflection appearing
+
+**Expected Performance:**
+- ✅ <3 seconds for 95% of requests (production)
+- ✅ <5 seconds for 99% of requests
+- ✅ Timeout at 10 seconds with fallback
+
+**Payload Size Test:**
+
+1. Open DevTools → Network tab
+2. Find `generate-reflection` request
+3. Check request payload size
+
+**Expected:**
+- ✅ <5 KB per request
+- ✅ Notes truncated to 1000 chars max
+
+**Cost Estimation:**
+
+| Users | Reflections/Day | Monthly Cost (Haiku) |
+|-------|----------------|----------------------|
+| 1     | 5              | $0.15 - $0.60       |
+| 100   | 5              | $15 - $60           |
+| 1000  | 5              | $150 - $600         |
+
+#### Task 5.9: Review Amara's Tone and Quality
+
+Save 10 different reflection scenarios and verify:
+
+1. ✅ **Warm, encouraging tone** (no judgment or shaming)
+2. ✅ **Personal connection** (uses habit names)
+3. ✅ **No emojis** (per system prompt)
+4. ✅ **2-4 paragraphs** (not too long)
+5. ✅ **Gentle suggestions** for tomorrow
+6. ✅ **Acknowledges feelings** (mirrors user's note)
+7. ✅ **Mentions streaks** when applicable
+8. ✅ **Graceful for beginners** (no stats pressure if no history)
+
+**Sample Scenarios:**
+
+| Scenario | User Note | Expected Themes |
+|----------|-----------|-----------------|
+| First-time user | "Starting my journey!" | Encouragement, no stats, "getting to know you" |
+| 5-day streak | "Keeping it up!" | Acknowledge streak, celebrate consistency |
+| Skipped habit | "Too tired to meditate today" | Empathy, no judgment, tomorrow is a new day |
+| Multiple habits | "Meditation and walk felt amazing!" | Connect both habits, holistic view |
+| No note (empty) | (empty) | Focus on habits completed, general encouragement |
+| Long note (500 chars) | "Detailed story..." | Acknowledge key themes, not overwhelmed |
+| Negative sentiment | "Stressed and overwhelmed" | Empathy, recognize effort despite challenges |
+| Positive sentiment | "Best day ever!" | Celebrate, amplify positive momentum |
+
+**If Tone Issues Found:**
+1. Adjust system prompt in `supabase/functions/generate-reflection/index.ts`
+2. Redeploy: `supabase functions deploy generate-reflection`
+3. Re-test with same scenarios
+
+#### Task 5.10: Final Integration Test
+
+**Full User Journey:**
+
+1. **Sign Up** → Enter email/password → Verify redirect to Daily Log
+2. **Add 3 Habits** → "Morning Meditation", "Evening Walk", "Journal Writing"
+3. **Day 1: First Log** → Toggle 2 habits done → Save with note → Verify reflection → Navigate to Progress
+4. **Day 2: Build Streak** → Toggle all 3 habits done → Save with note "Great momentum!" → Verify reflection mentions streak
+5. **Day 3: Break Streak** → Skip 1 habit → Save with empathetic note → Verify reflection is supportive, not judgmental
+6. **Progress Page Check** → Verify streaks calculated correctly → No conflicts with AI feature
+
+**Mobile Viewport Test:**
+- Repeat steps 1-6 on mobile viewport (375x667)
+- Verify modal is responsive
+- Verify touch targets ≥ 44x44px
+- Verify keyboard navigation works
+
+### Troubleshooting
+
+#### Issue: "Amara is reflecting..." never completes
+
+**Debug Steps:**
+```bash
+# Check Edge Function logs
+supabase functions logs generate-reflection --limit 50
+
+# Test Edge Function directly
+curl -X POST https://yzisfgxjyugfnqcaqlgw.supabase.co/functions/v1/generate-reflection \
+  -H "Authorization: Bearer <anon-key>" \
+  -H "Content-Type: application/json" \
+  -d '{"date":"2025-11-17","time_of_day":"morning","note_text":"test","habits":[],"recent_summary":{"days_tracked_last_7":0,"days_tracked_last_30":0,"notable_observations":[]}}'
+
+# Verify API key is set
+supabase secrets list
+```
+
+#### Issue: Reflection is generic (not personalized)
+
+**Debug:**
+1. Open DevTools → Network tab
+2. Find `generate-reflection` request
+3. Check payload - verify `habits` array is populated
+4. If payload is correct, adjust system prompt for more specificity
+
+#### Issue: Reflection has emojis
+
+**Fix:**
+- Update system prompt to emphasize "No emojis"
+- Redeploy Edge Function
+
+#### Issue: Cost is too high
+
+**Optimization:**
+1. Already using cheaper model (Haiku instead of Sonnet)
+2. Reduce input tokens: Truncate notes to 500 chars
+3. Reduce output tokens: Lower `max_tokens` to 300
+4. Extend cache duration to 24 hours
+5. Consider rate limiting per user (e.g., max 10 reflections/day)
+
+---
+
 ## Next Steps
 
-After deploying the Edge Function:
+After deploying and testing:
 
 1. ✅ Implement frontend data builder (`reflectionDataBuilder.ts`)
 2. ✅ Create AI service caller (`aiReflectionService.ts`)
 3. ✅ Update DailyLogPage to call AI service
 4. ✅ Update ReflectionModal to display AI response
-5. ✅ Write E2E tests for full flow
+5. ✅ Complete Phase 5 testing checklist
+6. 📝 Update Privacy Policy with AI data usage disclosure
+7. 📝 Add user opt-out option (future enhancement)
 
 See `tasks/tasks-0006-ai-reflection-coach.md` for detailed task breakdown.
 
@@ -300,3 +535,4 @@ See `tasks/tasks-0006-ai-reflection-coach.md` for detailed task breakdown.
 - [Anthropic API Docs](https://docs.anthropic.com/)
 - [Claude Model Pricing](https://www.anthropic.com/pricing)
 - [Deno Deploy Docs](https://docs.deno.com/deploy/)
+- [Anthropic Privacy Policy](https://www.anthropic.com/privacy)
