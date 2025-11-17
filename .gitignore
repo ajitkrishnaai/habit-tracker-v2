@@ -51,3 +51,4 @@ playwright/.cache/
 !E2E_TESTING_GUIDE.md
 !.github/SECRETS_SETUP.md
 !e2e/README.md
+!docs/AI_REFLECTION_SETUP.md
