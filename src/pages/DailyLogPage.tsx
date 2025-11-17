@@ -19,7 +19,6 @@ import { storageService } from '../services/storage';
 import { syncService } from '../services/syncService';
 import { supabaseDataService } from '../services/supabaseDataService';
 import { demoModeService } from '../services/demoMode';
-import { ConversionModal } from '../components/ConversionModal';
 import { Toast } from '../components/Toast';
 import { MigrationToast } from '../components/MigrationToast';
 import type { Habit } from '../types/habit';
@@ -58,8 +57,6 @@ export const DailyLogPage: React.FC = () => {
   const [isSaving, setIsSaving] = useState<boolean>(false);
 
   // Demo mode state (Task 3.5 - REQ-16, REQ-30)
-  const [showConversionModal, setShowConversionModal] = useState(false);
-  const [conversionTrigger, setConversionTrigger] = useState<'habits_threshold' | 'first_log' | 'progress_page'>('first_log');
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
   const [showMigrationToast, setShowMigrationToast] = useState(false);
@@ -299,13 +296,6 @@ export const DailyLogPage: React.FC = () => {
           setToastMessage(milestoneMsg);
           setShowToast(true);
         }
-
-        const trigger = demoModeService.shouldShowConversionModal();
-        if (trigger) {
-          setShowConversionModal(true);
-          setConversionTrigger(trigger as 'habits_threshold' | 'first_log' | 'progress_page');
-          demoModeService.markConversionShown();
-        }
       }
     } catch (err) {
       console.error('Error saving changes:', err);
@@ -348,7 +338,7 @@ export const DailyLogPage: React.FC = () => {
           title="No habits yet"
           message="Add your first habit to get started!"
           actionText="Add Habit"
-          actionLink="/manage-habits"
+          actionLink="/manage-habits?add=true"
         />
       </div>
     );
@@ -436,13 +426,7 @@ export const DailyLogPage: React.FC = () => {
         />
       )}
 
-      {/* Demo Mode Modals and Toasts (Task 3.5) */}
-      {showConversionModal && (
-        <ConversionModal
-          trigger={conversionTrigger}
-          onClose={() => setShowConversionModal(false)}
-        />
-      )}
+      {/* Demo Mode Toasts (Task 3.5) */}
       {showToast && (
         <Toast
           message={toastMessage}

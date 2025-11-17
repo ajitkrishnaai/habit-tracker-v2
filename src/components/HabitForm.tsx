@@ -5,7 +5,7 @@
  * Includes character counter, duplicate detection, and inline error messages.
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { storageService } from '../services/storage';
 import { syncService } from '../services/syncService';
 import { supabaseDataService } from '../services/supabaseDataService';
@@ -34,7 +34,15 @@ export const HabitForm = ({ editingHabit, onSuccess, onCancel }: HabitFormProps)
   const [generalError, setGeneralError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
+  // Ref for auto-focusing the name input
+  const nameInputRef = useRef<HTMLInputElement>(null);
+
   const isEditing = !!editingHabit;
+
+  // Auto-focus the name input when form is mounted
+  useEffect(() => {
+    nameInputRef.current?.focus();
+  }, []);
 
   // Populate form when editing
   useEffect(() => {
@@ -207,6 +215,7 @@ export const HabitForm = ({ editingHabit, onSuccess, onCancel }: HabitFormProps)
         </label>
 
         <input
+          ref={nameInputRef}
           id="habit-name"
           type="text"
           value={name}
