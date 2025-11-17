@@ -465,8 +465,8 @@ This feature is being built with:
 
 ### Phase 3: Frontend Service Integration (1 day)
 
-- [ ] **3.0 Create AI Reflection Service**
-  - [ ] 3.1 Implement Supabase Edge Function caller
+- [x] **3.0 Create AI Reflection Service**
+  - [x] 3.1 Implement Supabase Edge Function caller
     - Create `src/services/aiReflectionService.ts` file
     - Import `supabase` from `../lib/supabaseClient`
     - Import types from `../types/reflection`
@@ -486,7 +486,7 @@ This feature is being built with:
     - Extract reflection text: `return data.reflection`
     - **Acceptance:** Function calls Edge Function successfully, returns reflection string
 
-  - [ ] 3.2 Add caching to prevent duplicate API calls
+  - [x] 3.2 Add caching to prevent duplicate API calls
     - Create in-memory cache: `const reflectionCache = new Map<string, { text: string, timestamp: number }>()`
     - Generate cache key from payload: `const cacheKey = JSON.stringify(payload)`
     - Before API call, check cache:
@@ -494,7 +494,7 @@ This feature is being built with:
     - After API call, store in cache with current timestamp
     - **Acceptance:** Duplicate calls within 1 hour return cached result
 
-  - [ ] 3.3 Implement fallback message on error
+  - [x] 3.3 Implement fallback message on error
     - Wrap API call in try-catch
     - On error, log to console: `console.error('[AI Reflection]', error)`
     - Return fallback message:
@@ -503,13 +503,13 @@ This feature is being built with:
       ```
     - **Acceptance:** API failures return fallback message within 3 seconds
 
-  - [ ] 3.4 Add timeout handling
+  - [x] 3.4 Add timeout handling
     - Use `Promise.race()` with 5-second timeout
     - If timeout, return fallback message
     - Log timeout event for monitoring
     - **Acceptance:** Slow API calls timeout gracefully
 
-  - [ ] 3.5 Write unit tests for AI service
+  - [x] 3.5 Write unit tests for AI service
     - Create `src/services/aiReflectionService.test.ts`
     - Mock `supabase.functions.invoke()` using Vitest mocks
     - Test case: Successful API call
