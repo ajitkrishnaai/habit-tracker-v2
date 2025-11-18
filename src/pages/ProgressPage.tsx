@@ -7,6 +7,7 @@
  */
 
 import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import './ProgressPage.css';
 import { Habit } from '../types/habit';
 import { LogEntry } from '../types/logEntry';
@@ -22,9 +23,13 @@ interface HabitWithLogs {
 }
 
 export const ProgressPage: React.FC = () => {
+  const location = useLocation();
   const [habitsWithLogs, setHabitsWithLogs] = useState<HabitWithLogs[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  // Get AI reflection from navigation state (passed from DailyLogPage)
+  const aiReflection = location.state?.aiReflection as string | null;
 
   // Demo mode state (Task 3.6 - REQ-17, REQ-35, AC-8)
   const isDemo = demoModeService.isDemoMode();
@@ -121,6 +126,14 @@ export const ProgressPage: React.FC = () => {
         <h1 className="page-title">Progress</h1>
         <p className="page-subtitle">Track your habits and discover patterns</p>
       </header>
+
+      {/* AI Reflection Section - shown when navigated from Daily Log */}
+      {aiReflection && (
+        <div className="progress-page__ai-reflection">
+          <h2 className="progress-page__ai-title">Amara's Reflection</h2>
+          <p className="progress-page__ai-text">{aiReflection}</p>
+        </div>
+      )}
 
       <div className="progress-list">
         {habitsWithLogs.map(({ habit, logs }) => (

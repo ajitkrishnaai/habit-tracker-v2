@@ -5,7 +5,7 @@
  * Shows what habits were changed and provides a space for emotional reflection.
  */
 
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { PendingChange } from '../pages/DailyLogPage';
 import './ReflectionModal.css';
@@ -14,34 +14,53 @@ interface ReflectionModalProps {
   pendingChanges: Map<string, PendingChange>;
   onSave: (notes?: string) => void;
   onSkip: () => void;
+  aiReflection?: string | null;
+  isGeneratingReflection?: boolean;
 }
 
 export const ReflectionModal: React.FC<ReflectionModalProps> = ({
   pendingChanges,
   onSave,
   onSkip,
+  aiReflection,
+  isGeneratingReflection,
 }) => {
   const navigate = useNavigate();
   const [notes, setNotes] = useState<string>('');
-  const [isSaving, setIsSaving] = useState<boolean>(false);
+  const [hasSaved, setHasSaved] = useState<boolean>(false);
   const maxLength = 5000;
 
   const handleSave = async () => {
-    setIsSaving(true);
+    setHasSaved(true);
 
     // Save the changes
     await onSave(notes.trim() || undefined);
 
-    // Brief animation delay before navigation
-    setTimeout(() => {
-      navigate('/progress');
-    }, 800);
+    // Parent component will generate AI reflection
+    // Navigation happens automatically when reflection is ready (see useEffect below)
   };
 
   const handleSkip = () => {
     onSkip();
-    navigate('/progress');
+    // Navigate immediately without reflection
+    navigate('/progress', {
+      state: { aiReflection: null }
+    });
   };
+
+  // Auto-navigate to progress page when AI reflection is ready
+  React.useEffect(() => {
+    if (aiReflection && !isGeneratingReflection && hasSaved) {
+      // Brief delay to show the user that reflection is complete
+      const timer = setTimeout(() => {
+        navigate('/progress', {
+          state: { aiReflection }
+        });
+      }, 500);
+
+      return () => clearTimeout(timer);
+    }
+  }, [aiReflection, isGeneratingReflection, hasSaved, navigate]);
 
   // Convert pending changes to array for rendering
   const changes = Array.from(pendingChanges.values());
@@ -112,32 +131,30 @@ export const ReflectionModal: React.FC<ReflectionModalProps> = ({
           />
         </div>
 
-        {/* Actions */}
-        <div className="reflection-modal__actions">
-          <button
-            type="button"
-            className={`reflection-modal__btn reflection-modal__btn--primary ${isSaving ? 'reflection-modal__btn--saving' : ''}`}
-            onClick={handleSave}
-            disabled={isSaving}
-          >
-            {isSaving ? (
-              <>
-                <span className="reflection-modal__spinner animate-spin" aria-hidden="true" />
-                Saving...
-              </>
-            ) : (
-              'Save'
-            )}
-          </button>
-          <button
-            type="button"
-            className="reflection-modal__btn reflection-modal__btn--secondary"
-            onClick={handleSkip}
-            disabled={isSaving}
-          >
-            Skip
-          </button>
-        </div>
+        {/* Loading States & Actions */}
+        {hasSaved || isGeneratingReflection ? (
+          <div className="reflection-modal__loading">
+            <span className="reflection-modal__spinner animate-spin" aria-hidden="true" />
+            <p>{isGeneratingReflection ? 'Amara is reflecting on your day...' : 'Saving...'}</p>
+          </div>
+        ) : (
+          <div className="reflection-modal__actions">
+            <button
+              type="button"
+              className="reflection-modal__btn reflection-modal__btn--primary"
+              onClick={handleSave}
+            >
+              Save
+            </button>
+            <button
+              type="button"
+              className="reflection-modal__btn reflection-modal__btn--secondary"
+              onClick={handleSkip}
+            >
+              Skip
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

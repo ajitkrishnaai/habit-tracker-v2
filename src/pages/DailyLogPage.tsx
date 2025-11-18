@@ -19,6 +19,8 @@ import { storageService } from '../services/storage';
 import { syncService } from '../services/syncService';
 import { supabaseDataService } from '../services/supabaseDataService';
 import { demoModeService } from '../services/demoMode';
+import { buildReflectionPayload } from '../utils/reflectionDataBuilder';
+import { generateReflection } from '../services/aiReflectionService';
 import { Toast } from '../components/Toast';
 import { MigrationToast } from '../components/MigrationToast';
 import type { Habit } from '../types/habit';
@@ -55,6 +57,10 @@ export const DailyLogPage: React.FC = () => {
   const [syncing, setSyncing] = useState<boolean>(false);
   const [showReflectionModal, setShowReflectionModal] = useState<boolean>(false);
   const [isSaving, setIsSaving] = useState<boolean>(false);
+
+  // AI Reflection state (Task 4.1 - Phase 4)
+  const [aiReflectionText, setAiReflectionText] = useState<string | null>(null);
+  const [isGeneratingReflection, setIsGeneratingReflection] = useState<boolean>(false);
 
   // Demo mode state (Task 3.5 - REQ-16, REQ-30)
   const [showToast, setShowToast] = useState(false);
@@ -278,11 +284,24 @@ export const DailyLogPage: React.FC = () => {
         })
       );
 
+      // Generate AI reflection (Task 4.1 - Phase 4)
+      // Only generate reflection if there are pending changes
+      if (pendingChanges.size > 0) {
+        setIsGeneratingReflection(true);
+        try {
+          const payload = await buildReflectionPayload(pendingChanges, reflectionNotes || '');
+          const aiReflection = await generateReflection(payload);
+          setAiReflectionText(aiReflection);
+        } catch (aiError) {
+          console.error('AI reflection generation error:', aiError);
+          // Don't block user flow if AI fails - fallback will be handled by service
+        } finally {
+          setIsGeneratingReflection(false);
+        }
+      }
+
       // Clear pending changes
       setPendingChanges(new Map());
-
-      // Close modal
-      setShowReflectionModal(false);
 
       // Trigger background sync
       triggerSync();
@@ -423,6 +442,8 @@ export const DailyLogPage: React.FC = () => {
           pendingChanges={pendingChanges}
           onSave={handleSaveWithReflection}
           onSkip={() => handleSaveWithReflection(undefined)}
+          aiReflection={aiReflectionText}
+          isGeneratingReflection={isGeneratingReflection}
         />
       )}
 
