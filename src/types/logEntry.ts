@@ -7,6 +7,7 @@
 export interface LogEntry {
   log_id: string; // UUID
   habit_id: string; // Reference to Habit
+  user_id?: string; // Optional user ID (populated by Supabase RLS)
   date: string; // ISO 8601 date (YYYY-MM-DD)
   status: 'done' | 'not_done' | 'no_data'; // Completion status
   notes?: string; // Optional notes (max 5000 chars)

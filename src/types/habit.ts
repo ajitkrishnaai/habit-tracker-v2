@@ -6,6 +6,7 @@
 
 export interface Habit {
   habit_id: string; // UUID
+  user_id?: string; // Optional user ID (populated by Supabase RLS)
   name: string; // 1-100 characters
   category?: string; // Optional category for organization
   status: 'active' | 'inactive'; // Never permanently delete, mark as inactive

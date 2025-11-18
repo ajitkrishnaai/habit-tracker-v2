@@ -69,17 +69,17 @@ describe('reflectionDataBuilder', () => {
         name: 'Meditation',
         category: 'Mindfulness',
         status: 'active',
-        created_date: new Date('2025-11-10'),
-        modified_date: new Date('2025-11-10')
+        created_date: '2025-11-10',
+        modified_date: '2025-11-10'
       };
 
       // Mock logs (5-day streak)
       const mockLogs: LogEntry[] = [
-        { log_id: 'log_1', habit_id: 'habit_1', user_id: 'user_1', date: '2025-11-16', status: 'done', notes: '', created_date: new Date(), modified_date: new Date() },
-        { log_id: 'log_2', habit_id: 'habit_1', user_id: 'user_1', date: '2025-11-15', status: 'done', notes: '', created_date: new Date(), modified_date: new Date() },
-        { log_id: 'log_3', habit_id: 'habit_1', user_id: 'user_1', date: '2025-11-14', status: 'done', notes: '', created_date: new Date(), modified_date: new Date() },
-        { log_id: 'log_4', habit_id: 'habit_1', user_id: 'user_1', date: '2025-11-13', status: 'done', notes: '', created_date: new Date(), modified_date: new Date() },
-        { log_id: 'log_5', habit_id: 'habit_1', user_id: 'user_1', date: '2025-11-12', status: 'done', notes: '', created_date: new Date(), modified_date: new Date() }
+        { log_id: 'log_1', habit_id: 'habit_1', user_id: 'user_1', date: '2025-11-16', status: 'done', notes: '', timestamp: '2025-11-16T12:00:00Z' },
+        { log_id: 'log_2', habit_id: 'habit_1', user_id: 'user_1', date: '2025-11-15', status: 'done', notes: '', timestamp: '2025-11-15T12:00:00Z' },
+        { log_id: 'log_3', habit_id: 'habit_1', user_id: 'user_1', date: '2025-11-14', status: 'done', notes: '', timestamp: '2025-11-14T12:00:00Z' },
+        { log_id: 'log_4', habit_id: 'habit_1', user_id: 'user_1', date: '2025-11-13', status: 'done', notes: '', timestamp: '2025-11-13T12:00:00Z' },
+        { log_id: 'log_5', habit_id: 'habit_1', user_id: 'user_1', date: '2025-11-12', status: 'done', notes: '', timestamp: '2025-11-12T12:00:00Z' }
       ];
 
       vi.mocked(storageService.getHabits).mockResolvedValue([mockHabit]);
@@ -118,8 +118,8 @@ describe('reflectionDataBuilder', () => {
           name: 'Meditation',
           category: 'Mindfulness',
           status: 'active',
-          created_date: new Date('2025-11-01'),
-          modified_date: new Date('2025-11-01')
+          created_date: '2025-11-01',
+          modified_date: '2025-11-01'
         },
         {
           habit_id: 'habit_2',
@@ -127,21 +127,21 @@ describe('reflectionDataBuilder', () => {
           name: 'Running',
           category: 'Fitness',
           status: 'active',
-          created_date: new Date('2025-11-01'),
-          modified_date: new Date('2025-11-01')
+          created_date: '2025-11-01',
+          modified_date: '2025-11-01'
         }
       ];
 
       const mockLogs: LogEntry[] = [
         // Meditation: 3-day streak
-        { log_id: 'log_1', habit_id: 'habit_1', user_id: 'user_1', date: '2025-11-16', status: 'done', notes: '', created_date: new Date(), modified_date: new Date() },
-        { log_id: 'log_2', habit_id: 'habit_1', user_id: 'user_1', date: '2025-11-15', status: 'done', notes: '', created_date: new Date(), modified_date: new Date() },
-        { log_id: 'log_3', habit_id: 'habit_1', user_id: 'user_1', date: '2025-11-14', status: 'done', notes: '', created_date: new Date(), modified_date: new Date() },
+        { log_id: 'log_1', habit_id: 'habit_1', user_id: 'user_1', date: '2025-11-16', status: 'done', notes: '', timestamp: '2025-11-16T12:00:00Z' },
+        { log_id: 'log_2', habit_id: 'habit_1', user_id: 'user_1', date: '2025-11-15', status: 'done', notes: '', timestamp: '2025-11-15T12:00:00Z' },
+        { log_id: 'log_3', habit_id: 'habit_1', user_id: 'user_1', date: '2025-11-14', status: 'done', notes: '', timestamp: '2025-11-14T12:00:00Z' },
 
         // Running: 1-day streak (broke yesterday)
-        { log_id: 'log_4', habit_id: 'habit_2', user_id: 'user_1', date: '2025-11-16', status: 'done', notes: '', created_date: new Date(), modified_date: new Date() },
-        { log_id: 'log_5', habit_id: 'habit_2', user_id: 'user_1', date: '2025-11-15', status: 'not_done', notes: '', created_date: new Date(), modified_date: new Date() },
-        { log_id: 'log_6', habit_id: 'habit_2', user_id: 'user_1', date: '2025-11-14', status: 'done', notes: '', created_date: new Date(), modified_date: new Date() }
+        { log_id: 'log_4', habit_id: 'habit_2', user_id: 'user_1', date: '2025-11-16', status: 'done', notes: '', timestamp: '2025-11-16T12:00:00Z' },
+        { log_id: 'log_5', habit_id: 'habit_2', user_id: 'user_1', date: '2025-11-15', status: 'not_done', notes: '', timestamp: '2025-11-15T12:00:00Z' },
+        { log_id: 'log_6', habit_id: 'habit_2', user_id: 'user_1', date: '2025-11-14', status: 'done', notes: '', timestamp: '2025-11-14T12:00:00Z' }
       ];
 
       vi.mocked(storageService.getHabits).mockResolvedValue(mockHabits);
@@ -186,8 +186,8 @@ describe('reflectionDataBuilder', () => {
         name: 'Meditation',
         category: 'Mindfulness',
         status: 'active',
-        created_date: new Date('2025-11-16'),
-        modified_date: new Date('2025-11-16')
+        created_date: '2025-11-16',
+        modified_date: '2025-11-16'
       };
 
       vi.mocked(storageService.getHabits).mockResolvedValue([mockHabit]);
@@ -249,17 +249,17 @@ describe('reflectionDataBuilder', () => {
         name: 'Meditation',
         category: 'Mindfulness',
         status: 'active',
-        created_date: new Date('2025-10-20'),
-        modified_date: new Date('2025-10-20')
+        created_date: '2025-10-20',
+        modified_date: '2025-10-20'
       };
 
       // Create 5 logs with strongly positive sentiment notes in last 30 days
       const mockLogs: LogEntry[] = [
-        { log_id: 'log_1', habit_id: 'habit_1', user_id: 'user_1', date: '2025-11-16', status: 'done', notes: 'Feeling wonderful, calm and peaceful today!', created_date: new Date(), modified_date: new Date() },
-        { log_id: 'log_2', habit_id: 'habit_1', user_id: 'user_1', date: '2025-11-15', status: 'done', notes: 'Very calm and great session, absolutely amazing!', created_date: new Date(), modified_date: new Date() },
-        { log_id: 'log_3', habit_id: 'habit_1', user_id: 'user_1', date: '2025-11-14', status: 'done', notes: 'Calm and focused, feeling fantastic!', created_date: new Date(), modified_date: new Date() },
-        { log_id: 'log_4', habit_id: 'habit_1', user_id: 'user_1', date: '2025-11-13', status: 'done', notes: 'Peaceful meditation, so relaxing and joyful', created_date: new Date(), modified_date: new Date() },
-        { log_id: 'log_5', habit_id: 'habit_1', user_id: 'user_1', date: '2025-11-12', status: 'done', notes: 'Amazing calm feeling, incredibly happy!', created_date: new Date(), modified_date: new Date() }
+        { log_id: 'log_1', habit_id: 'habit_1', user_id: 'user_1', date: '2025-11-16', status: 'done', notes: 'Feeling wonderful, calm and peaceful today!', timestamp: '2025-11-16T12:00:00Z' },
+        { log_id: 'log_2', habit_id: 'habit_1', user_id: 'user_1', date: '2025-11-15', status: 'done', notes: 'Very calm and great session, absolutely amazing!', timestamp: '2025-11-15T12:00:00Z' },
+        { log_id: 'log_3', habit_id: 'habit_1', user_id: 'user_1', date: '2025-11-14', status: 'done', notes: 'Calm and focused, feeling fantastic!', timestamp: '2025-11-14T12:00:00Z' },
+        { log_id: 'log_4', habit_id: 'habit_1', user_id: 'user_1', date: '2025-11-13', status: 'done', notes: 'Peaceful meditation, so relaxing and joyful', timestamp: '2025-11-13T12:00:00Z' },
+        { log_id: 'log_5', habit_id: 'habit_1', user_id: 'user_1', date: '2025-11-12', status: 'done', notes: 'Amazing calm feeling, incredibly happy!', timestamp: '2025-11-12T12:00:00Z' }
       ];
 
       vi.mocked(storageService.getHabits).mockResolvedValue([mockHabit]);
@@ -290,29 +290,29 @@ describe('reflectionDataBuilder', () => {
           user_id: 'user_1',
           name: 'Meditation',
           status: 'active',
-          created_date: new Date('2025-10-01'),
-          modified_date: new Date('2025-10-01')
+          created_date: '2025-10-01',
+          modified_date: '2025-10-01'
         },
         {
           habit_id: 'habit_2',
           user_id: 'user_1',
           name: 'Running',
           status: 'active',
-          created_date: new Date('2025-10-01'),
-          modified_date: new Date('2025-10-01')
+          created_date: '2025-10-01',
+          modified_date: '2025-10-01'
         }
       ];
 
       // 6 unique dates in last 7 days, multiple habits per day
       const mockLogs: LogEntry[] = [
-        { log_id: 'log_1', habit_id: 'habit_1', user_id: 'user_1', date: '2025-11-16', status: 'done', notes: '', created_date: new Date(), modified_date: new Date() },
-        { log_id: 'log_2', habit_id: 'habit_2', user_id: 'user_1', date: '2025-11-16', status: 'done', notes: '', created_date: new Date(), modified_date: new Date() },
-        { log_id: 'log_3', habit_id: 'habit_1', user_id: 'user_1', date: '2025-11-15', status: 'done', notes: '', created_date: new Date(), modified_date: new Date() },
-        { log_id: 'log_4', habit_id: 'habit_2', user_id: 'user_1', date: '2025-11-15', status: 'done', notes: '', created_date: new Date(), modified_date: new Date() },
-        { log_id: 'log_5', habit_id: 'habit_1', user_id: 'user_1', date: '2025-11-14', status: 'done', notes: '', created_date: new Date(), modified_date: new Date() },
-        { log_id: 'log_6', habit_id: 'habit_1', user_id: 'user_1', date: '2025-11-13', status: 'done', notes: '', created_date: new Date(), modified_date: new Date() },
-        { log_id: 'log_7', habit_id: 'habit_1', user_id: 'user_1', date: '2025-11-12', status: 'done', notes: '', created_date: new Date(), modified_date: new Date() },
-        { log_id: 'log_8', habit_id: 'habit_1', user_id: 'user_1', date: '2025-11-11', status: 'done', notes: '', created_date: new Date(), modified_date: new Date() }
+        { log_id: 'log_1', habit_id: 'habit_1', user_id: 'user_1', date: '2025-11-16', status: 'done', notes: '', timestamp: '2025-11-16T12:00:00Z' },
+        { log_id: 'log_2', habit_id: 'habit_2', user_id: 'user_1', date: '2025-11-16', status: 'done', notes: '', timestamp: '2025-11-16T12:00:00Z' },
+        { log_id: 'log_3', habit_id: 'habit_1', user_id: 'user_1', date: '2025-11-15', status: 'done', notes: '', timestamp: '2025-11-15T12:00:00Z' },
+        { log_id: 'log_4', habit_id: 'habit_2', user_id: 'user_1', date: '2025-11-15', status: 'done', notes: '', timestamp: '2025-11-15T12:00:00Z' },
+        { log_id: 'log_5', habit_id: 'habit_1', user_id: 'user_1', date: '2025-11-14', status: 'done', notes: '', timestamp: '2025-11-14T12:00:00Z' },
+        { log_id: 'log_6', habit_id: 'habit_1', user_id: 'user_1', date: '2025-11-13', status: 'done', notes: '', timestamp: '2025-11-13T12:00:00Z' },
+        { log_id: 'log_7', habit_id: 'habit_1', user_id: 'user_1', date: '2025-11-12', status: 'done', notes: '', timestamp: '2025-11-12T12:00:00Z' },
+        { log_id: 'log_8', habit_id: 'habit_1', user_id: 'user_1', date: '2025-11-11', status: 'done', notes: '', timestamp: '2025-11-11T12:00:00Z' }
       ];
 
       vi.mocked(storageService.getHabits).mockResolvedValue(mockHabits);
