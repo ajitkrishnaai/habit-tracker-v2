@@ -568,7 +568,7 @@ test.describe('AI Reflection - Time of Day', () => {
     // Mock system time to specific hour (e.g., 8 AM)
     await page.addInitScript(() => {
       const originalDate = Date;
-      // @ts-ignore
+      // @ts-expect-error - Overriding global Date for time mocking in tests
       global.Date = class extends originalDate {
         constructor(...args: any[]) {
           if (args.length === 0) {
