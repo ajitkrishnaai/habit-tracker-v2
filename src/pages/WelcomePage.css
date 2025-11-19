@@ -127,11 +127,26 @@
   font-weight: 500;
   transition: color var(--transition-fast);
   border-bottom: 1px solid transparent;
+  background: none;
+  border: none;
+  border-bottom: 1px solid transparent;
+  padding: 0;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
+  display: inline;
 }
 
-.welcome-hero-signin-link:hover {
+.welcome-hero-signin-link:hover,
+.welcome-hero-signin-link:focus {
   color: var(--river-700);
   border-bottom-color: var(--river-600);
+}
+
+.welcome-hero-signin-link:focus-visible {
+  outline: 2px solid var(--river-600);
+  outline-offset: 2px;
+  border-radius: 2px;
 }
 
 /* Scroll Indicator */

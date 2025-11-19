@@ -16,6 +16,7 @@ import { demoModeService } from '../services/demoMode';
 import { TreeOfLife } from '../components/TreeOfLife';
 import { BotanicalCorners } from '../components/BotanicalCorners';
 import AppHeader from '../components/AppHeader';
+import { AuthModal } from '../components/AuthModal';
 import './WelcomePage.css';
 
 export const WelcomePage = (): JSX.Element => {
@@ -23,6 +24,7 @@ export const WelcomePage = (): JSX.Element => {
   const [loading, setLoading] = useState(false);
   const [authInitialized, setAuthInitialized] = useState(false);
   const [hasExistingDemoSession, setHasExistingDemoSession] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
 
   useEffect(() => {
     // Initialize auth on component mount
@@ -60,6 +62,14 @@ export const WelcomePage = (): JSX.Element => {
     }
   };
 
+  const handleSignInClick = () => {
+    setShowAuthModal(true);
+  };
+
+  const handleCloseAuthModal = () => {
+    setShowAuthModal(false);
+  };
+
   return (
     <div className="welcome-page">
       <BotanicalCorners />
@@ -85,7 +95,15 @@ export const WelcomePage = (): JSX.Element => {
             {loading ? 'Loading...' : hasExistingDemoSession ? 'Continue Practice' : 'Begin Your Practice'}
           </button>
           <p className="welcome-hero-signin">
-            Have an account? <a href="/daily-log" className="welcome-hero-signin-link">Sign in</a>
+            Have an account?{' '}
+            <button
+              type="button"
+              onClick={handleSignInClick}
+              className="welcome-hero-signin-link"
+              aria-label="Sign in to your account"
+            >
+              Sign in
+            </button>
           </p>
 
           {/* Scroll Indicator */}
@@ -202,6 +220,11 @@ export const WelcomePage = (): JSX.Element => {
           </p>
         </footer>
       </div>
+
+      {/* Auth Modal - opens when user clicks "Sign in" */}
+      {showAuthModal && (
+        <AuthModal onClose={handleCloseAuthModal} initialMode="signin" />
+      )}
     </div>
   );
 };
