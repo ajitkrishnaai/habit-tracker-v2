@@ -185,7 +185,7 @@ const PrivacyPolicyPage: React.FC = () => {
             If you have questions about this Privacy Policy or wish to exercise your GDPR rights, please contact us:
           </p>
           <ul>
-            <li><strong>GitHub:</strong> Open an issue at our <a href="https://github.com/yourusername/habit-tracker" target="_blank" rel="noopener noreferrer">GitHub repository</a></li>
+            <li><strong>GitHub:</strong> Open an issue at our <a href="https://github.com/ajitkrishnaai/habit-tracker-v2" target="_blank" rel="noopener noreferrer">GitHub repository</a></li>
             <li><strong>Email:</strong> support@amara.day (coming soon)</li>
           </ul>
         </section>

@@ -121,7 +121,7 @@ const TermsOfServicePage: React.FC = () => {
           <h2>8. Intellectual Property</h2>
           <p>
             The Service's source code is open source and available under the MIT license
-            (see our <a href="https://github.com/yourusername/habit-tracker" target="_blank" rel="noopener noreferrer">GitHub repository</a>).
+            (see our <a href="https://github.com/ajitkrishnaai/habit-tracker-v2" target="_blank" rel="noopener noreferrer">GitHub repository</a>).
             You are free to view, modify, and distribute the code according to the license terms.
           </p>
           <p>
@@ -212,7 +212,7 @@ const TermsOfServicePage: React.FC = () => {
             For questions about these Terms, please contact us:
           </p>
           <ul>
-            <li><strong>GitHub:</strong> Open an issue at our <a href="https://github.com/yourusername/habit-tracker" target="_blank" rel="noopener noreferrer">GitHub repository</a></li>
+            <li><strong>GitHub:</strong> Open an issue at our <a href="https://github.com/ajitkrishnaai/habit-tracker-v2" target="_blank" rel="noopener noreferrer">GitHub repository</a></li>
             <li><strong>Email:</strong> support@amara.day (coming soon)</li>
           </ul>
         </section>

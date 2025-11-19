@@ -196,7 +196,7 @@ export const WelcomePage = (): JSX.Element => {
           <p className="welcome-footer-text">
             <a href="/privacy" className="welcome-footer-link">Privacy</a>
             {' • '}
-            <a href="https://github.com/yourusername/habit-tracker" className="welcome-footer-link" target="_blank" rel="noopener noreferrer">Open Source</a>
+            <a href="https://github.com/ajitkrishnaai/habit-tracker-v2" className="welcome-footer-link" target="_blank" rel="noopener noreferrer">Open Source</a>
             {' • '}
             Built with care
           </p>
